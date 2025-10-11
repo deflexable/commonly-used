@@ -1,0 +1,76 @@
+.general-arrow-left,
+.general-arrow-right {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.general-arrow-left button,
+.general-arrow-right button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+
+.light_mode_body .general-arrow-left button,
+.light_mode_body .general-arrow-right button {
+    background-color: rgb(240, 240, 240);
+}
+
+.dark_mode_body .general-arrow-left button,
+.dark_mode_body .general-arrow-right button {
+    background-color: rgb(52, 52, 52);
+}
+
+.general-arrow-left div,
+.general-arrow-right div {
+    width: 50%;
+    height: 50%;
+}
+
+.dark_mode_body .general-arrow-left div,
+.dark_mode_body .general-arrow-right div {
+    filter: invert(1);
+}
+
+.general-arrow-right div {
+    transform: rotate(180deg);
+}
+
+/* .light_mode_body .general-arrow-left {
+    background: linear-gradient(var(--appBackground), transparent);
+    background: -moz-linear-gradient(var(--appBackground), transparent);
+    background: -webkit-linear-gradient(var(--appBackground), transparent);
+}
+
+.dark_mode_body .general-arrow-left {
+    background: linear-gradient(var(--black), transparent);
+    background: -moz-linear-gradient(var(--black), transparent);
+    background: -webkit-linear-gradient(var(--black), transparent);
+}
+
+.light_mode_body .general-arrow-right {
+    background: linear-gradient(transparent, var(--appBackground));
+    background: -moz-linear-gradient(transparent, var(--appBackground));
+    background: -webkit-linear-gradient(transparent, var(--appBackground));
+}
+
+.dark_mode_body .general-arrow-right {
+    background: linear-gradient(transparent, var(--black));
+    background: -moz-linear-gradient(transparent, var(--black));
+    background: -webkit-linear-gradient(transparent, var(--black));
+} */
+
+.general-arrow-scroller::-webkit-scrollbar {
+    display: none;
+}
+
+.general-arrow-scroller {
+    scrollbar-width: none;
+}

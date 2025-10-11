@@ -1,0 +1,23 @@
+{
+  "name": "bbx-commonly-used",
+  "version": "1.0.0",
+  "sideEffects": false,
+  "exports": {
+    "./web/*": "./web/*",
+    "./*": "./common/*"
+  },
+  "description": "Commonly utilities",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deflexable/commonly-used.git"
+  },
+  "author": "Anthony",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deflexable/commonly-used/issues"
+  },
+  "homepage": "https://github.com/deflexable/commonly-used#readme"
+}

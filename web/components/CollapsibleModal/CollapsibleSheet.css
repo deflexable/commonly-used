@@ -1,0 +1,41 @@
+.collapsible-modal-ancestor {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 99;
+    overflow: hidden;
+}
+
+.collapsible-modal-descendant {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
+    background-color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+}
+
+.collapsible-modal-descendant>* {
+    flex-shrink: 0;
+}
+
+.collapsible-modal-handle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+}
+
+.collapsible-modal-handle div {
+    width: 40px;
+    height: 4px;
+    border-radius: 7px;
+    background-color: rgb(176, 176, 176);
+    flex-shrink: 0;
+}

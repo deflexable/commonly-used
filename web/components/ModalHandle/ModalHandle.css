@@ -1,0 +1,21 @@
+.general-modal-handle {
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: none;
+}
+
+.general-modal-handle div {
+    height: 4px;
+    width: 30px;
+    border-radius: 10px;
+}
+
+.dark_mode_body .general-modal-handle div {
+    background-color: var(--darktext);
+}
+
+.light_mode_body .general-modal-handle div {
+    background-color: var(--lightBorder);
+}
