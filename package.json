@@ -4,6 +4,7 @@
   "sideEffects": false,
   "exports": {
     "./web/*": "./web/*",
+    "./react-native/*": "./react-native/*",
     "./*": "./common/*"
   },
   "description": "Commonly utilities",
