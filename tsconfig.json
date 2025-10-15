@@ -9,8 +9,7 @@
         "target": "esnext",
         "jsx": "react-jsx",
         "types": [
-            "react",
-            "react-native"
+            "react"
         ],
         "skipLibCheck": true
     },

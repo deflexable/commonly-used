@@ -2,11 +2,11 @@ export function purifyFilepath(filename: any): string;
 /**
  * @type {(callback: import('react-native').ScrollViewProps['onScroll'], offset: number) => Function}
  */
-export const useScrollViewPagination: (callback: import("react-native").ScrollViewProps["onScroll"], offset: number) => Function;
+export const useScrollViewPagination: (callback: any["onScroll"], offset: number) => Function;
 /**
  * @type {(callback: (index: number) => void, childrenRefs: []) => import('react-native').ScrollViewProps['onScroll']}
  */
-export const handleScrollViewChildrenVisibility: (callback: (index: number) => void, childrenRefs: []) => import("react-native").ScrollViewProps["onScroll"];
+export const handleScrollViewChildrenVisibility: (callback: (index: number) => void, childrenRefs: []) => any["onScroll"];
 export function shouldCover([w1, h1]: [any, any], [w2, h2]: [any, any], threshold?: number): boolean;
 export function useGridSpacing({ widthCountMap, spacing, maxWidth }: {
     widthCountMap: any;
@@ -16,8 +16,8 @@ export function useGridSpacing({ widthCountMap, spacing, maxWidth }: {
     width: number;
     spacing: any;
     counts: any;
-    windowWidth: number;
-    windowHeight: number;
+    windowWidth: any;
+    windowHeight: any;
 };
 export function showToast(message: any, type: any): void;
 export function alertNull(locales: any, isDarkMode: any, title: any, message: any, onPress: any, dismissTxt: any, cancelable: any, onDismiss: any): void;
