@@ -30,19 +30,6 @@ export function shuffleArray(array = []) {
   return arr;
 };
 
-export const downScaleImage = (link, size = 90) => {
-    try {
-        const url = new URL(link);
-        if ((size && typeof size === 'number') || size?.w)
-            url.searchParams.set('w', `${size?.w || size}`);
-        if (size?.h) url.searchParams.set('h', `${size.h}`);
-        if (size?.q) url.searchParams.set('q', `${size?.q}`);
-        return url.href;
-    } catch (error) {
-        return link;
-    }
-};
-
 export const interpolate = (x, [y1, x1], [y2, x2]) => {
     return y1 + ((x - x1) * ((y2 - y1) / (x2 - x1)));
 };

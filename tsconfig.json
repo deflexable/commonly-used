@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "outDir": "dist",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "esnext",
+        "jsx": "react-jsx",
+        "types": [
+            "react",
+            "react-native"
+        ],
+        "skipLibCheck": true
+    },
+    "include": [
+        "common",
+        "web",
+        "react-native"
+    ]
+}

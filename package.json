@@ -3,9 +3,18 @@
   "version": "1.0.0",
   "sideEffects": false,
   "exports": {
-    "./web/*": "./web/*",
-    "./react-native/*": "./react-native/*",
-    "./*": "./common/*"
+    "./web/*": {
+      "import": "./web/*",
+      "types": "./dist/web/*.d.ts"
+    },
+    "./react-native/*": {
+      "import": "./react-native/*",
+      "types": "./dist/react-native/*.d.ts"
+    },
+    "./*": {
+      "import": "./common/*",
+      "types": "./dist/common/*.d.ts"
+    }
   },
   "description": "Commonly utilities",
   "scripts": {
@@ -20,5 +29,10 @@
   "bugs": {
     "url": "https://github.com/deflexable/commonly-used/issues"
   },
-  "homepage": "https://github.com/deflexable/commonly-used#readme"
+  "homepage": "https://github.com/deflexable/commonly-used#readme",
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "react-native": "*",
+    "typescript": "^5.9.3"
+  }
 }

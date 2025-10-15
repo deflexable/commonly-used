@@ -14,6 +14,12 @@ export const serializeStorage = async (key, value) => {
     }
 }
 
+/**
+ * 
+ * @param {string} key 
+ * @param {( res: string, err?: Error | undefined ) => void} callback 
+ * @returns {Promise<string | undefined>}
+ */
 export const deserializeStorage = async (key, callback) => {
     let output, error;
 

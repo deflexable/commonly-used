@@ -2,6 +2,11 @@ import { errorCodes, keepLocalCopy, pick } from "@react-native-documents/picker"
 import { recordException } from "./exception";
 import { alertError, prefixStoragePath } from "./page_helper";
 
+/**
+ * Open a file picker dialog to select files from the device storage.
+ * 
+ * @type {(types: string | import('@react-native-documents/picker').PredefinedFileTypes | Array<import('@react-native-documents/picker').PredefinedFileTypes | string>, multiple?: boolean) => Promise<import('@react-native-documents/picker').DocumentPickerResponse | Array<import('@react-native-documents/picker').DocumentPickerResponse>>}
+ */
 export const pickFile = async (types, multiple = true) => {
     try {
         const results = await Promise.all(

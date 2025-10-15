@@ -18,7 +18,7 @@ export const useScrollViewPagination = (callback, offset = 100) => {
 };
 
 /**
- * @type {(callback: (index: number)=> void, childrenRefs: []) => import('react-native').ScrollViewProps['onScroll']}
+ * @type {(callback: (index: number) => void, childrenRefs: []) => import('react-native').ScrollViewProps['onScroll']}
  */
 export const handleScrollViewChildrenVisibility = (callback, childrenRefs) => {
     return event => {
