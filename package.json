@@ -5,15 +5,15 @@
   "exports": {
     "./web/*": {
       "import": "./web/*",
-      "types": "./dist/web/*.d.ts"
+      "types": "./dist/web/*"
     },
     "./react-native/*": {
       "import": "./react-native/*",
-      "types": "./dist/react-native/*.d.ts"
+      "types": "./dist/react-native/*"
     },
     "./*": {
       "import": "./common/*",
-      "types": "./dist/common/*.d.ts"
+      "types": "./dist/common/*"
     }
   },
   "description": "Commonly utilities",
