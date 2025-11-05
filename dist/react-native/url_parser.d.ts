@@ -7,7 +7,7 @@ export class StandardURL {
     _search: any;
     _hash: any;
     _initSearchParams(): void;
-    _searchParams: any;
+    _searchParams: URLSearchParams;
     set protocol(v: any);
     get protocol(): any;
     set hostname(v: any);
@@ -20,7 +20,7 @@ export class StandardURL {
     get search(): any;
     set hash(v: any);
     get hash(): any;
-    get searchParams(): any;
+    get searchParams(): URLSearchParams;
     get host(): string;
     get origin(): string;
     set href(v: string);

@@ -11,11 +11,13 @@
         "types": [
             "react"
         ],
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "rootDir": "./"
     },
     "include": [
         "common",
         "web",
-        "react-native"
+        "react-native",
+        "server"
     ]
 }

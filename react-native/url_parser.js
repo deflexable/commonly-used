@@ -1,10 +1,9 @@
-import url_search_params from "./url_search_params";
 
 export class StandardURL {
     constructor(url, base) {
         // Resolve relative URLs if a base is provided
         if (base) {
-            let baseObj = new CustomURL(base);
+            let baseObj = new StandardURL(base);
             if (url.startsWith('/')) {
                 url = baseObj.origin + url;
             } else {
@@ -33,7 +32,7 @@ export class StandardURL {
 
     // (Re)create and hook searchParams from this._search
     _initSearchParams() {
-        this._searchParams = new url_search_params(this._search.slice(1));
+        this._searchParams = new URLSearchParams(this._search.slice(1));
         const updateSearch = () => {
             const s = this._searchParams.toString();
             this._search = s ? `?${s}` : "";
@@ -100,7 +99,7 @@ export class StandardURL {
         return this.origin + this._pathname + this._search + this._hash;
     }
     set href(v) {
-        const tmp = new CustomURL(v);
+        const tmp = new StandardURL(v);
         this._protocol = tmp._protocol;
         this._hostname = tmp._hostname;
         this._port = tmp._port;
