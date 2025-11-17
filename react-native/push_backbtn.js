@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import { BackHandler } from "react-native";
 
 const BackActionScope = {
@@ -41,3 +42,14 @@ export const pushBackListener = (callback) => {
         } else listener.remove();
     }
 };
+
+export const useBackButton = (callback, disabled) => {
+    const thisCallback = useRef();
+    thisCallback.current = callback;
+
+    useEffect(() => {
+        if (!disabled) return pushBackListener(() => thisCallback.current());
+    }, [!disabled]);
+
+    return callback;
+}
