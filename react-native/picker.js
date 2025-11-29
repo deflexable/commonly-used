@@ -36,7 +36,7 @@ export const pickFile = async (types, multiple = true) => {
     } catch (e) {
         console.log('pickErr:', e);
         if (e?.code !== errorCodes.OPERATION_CANCELED) {
-            alertError(undefined, e);
+            alertError(e);
             recordException(e, 'FILE_PICKER');
         }
         throw e;

@@ -30,7 +30,7 @@ export const verifyCaptcha = async (token) => {
     ) throw `${errorCodes}`;
 };
 
-export const verifyDeviceIntegrity = async (token, IS_DEV) => {
+export const verifyDeviceIntegrity = async (token) => {
     if (IS_DEV) console.log('verifying device integrity:', token);
     try {
         // TODO: fix this also

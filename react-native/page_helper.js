@@ -1,5 +1,12 @@
 import { Alert, Platform, ToastAndroid, useWindowDimensions } from "react-native";
+import { useEffect, useState } from "react";
 import { simplifyCaughtError } from "simplify-error";
+import { ThemeHelperScope } from "./scope";
+import { locales } from "@this_app_root/src/locale";
+import { CustomValue, useCustomStyle } from "./styling";
+import { useDarkMode } from "./theme_helper";
+import { Scope } from "@this_app_root/src/utils/scope";
+import listeners, { EVENT_NAMES } from '@this_app_root/src/utils/listeners';
 
 /**
  * @type {(callback: import('react-native').ScrollViewProps['onScroll'], offset: number) => Function}
@@ -37,6 +44,28 @@ export const handleScrollViewChildrenVisibility = (callback, childrenRefs) => {
     };
 };
 
+export const usePrefferedSettings = () => {
+    const [prefferedSettings, setPrefferedSettings] = useState({ ...Scope.prefferedSettingsValue });
+
+    useEffect(() => {
+        return listeners.listenTo(EVENT_NAMES.prefferedSettings, l => {
+            setPrefferedSettings({ ...l });
+        });
+    }, []);
+
+    return prefferedSettings || {};
+};
+
+export const themeStyle = (light, dark) => new CustomValue({ dark, light });
+
+/**
+ * @type {useCustomStyle}
+ */
+export const useStyle = (styles) => {
+    const isDarkMode = useDarkMode();
+    return { isDarkMode, ...useCustomStyle(styles, { prioritiseMap: [isDarkMode ? 'dark' : 'light'] }) };
+};
+
 export const shouldCover = ([w1, h1], [w2, h2], threshold = .2) => Math.abs((w1 / h1) - (w2 / h2)) < threshold;
 
 export const useGridSpacing = ({ widthCountMap, spacing, maxWidth }) => {
@@ -60,7 +89,7 @@ export const showToast = (message, type) => {
     }
 }
 
-export const alertNull = (locales, isDarkMode, title, message, onPress, dismissTxt, cancelable, onDismiss) => {
+export const alertNull = (title, message, onPress, dismissTxt, cancelable, onDismiss) => {
     let hasDismiss;
     const doDismiss = () => {
         if (hasDismiss) return;
@@ -78,14 +107,14 @@ export const alertNull = (locales, isDarkMode, title, message, onPress, dismissT
             }
         }],
         {
-            userInterfaceStyle: isDarkMode ? 'dark' : 'light',
+            userInterfaceStyle: ThemeHelperScope.isDarkMode ? 'dark' : 'light',
             cancelable: cancelable === undefined ? !onPress : cancelable,
             onDismiss: doDismiss
         }
     );
 }
 
-export const alertDialog = (locales, isDarkMode, title, message, onYesPress, onNoPress, yesTxt, noTxt, cancelable, onDismiss, maybeOnpress, maybeTxt) => {
+export const alertDialog = (title, message, onYesPress, onNoPress, yesTxt, noTxt, cancelable, onDismiss, maybeOnpress, maybeTxt) => {
     let hasDismiss;
     const doDismiss = () => {
         if (hasDismiss) return;
@@ -122,7 +151,7 @@ export const alertDialog = (locales, isDarkMode, title, message, onYesPress, onN
             }
         ],
         {
-            userInterfaceStyle: isDarkMode ? 'dark' : 'light',
+            userInterfaceStyle: ThemeHelperScope.isDarkMode ? 'dark' : 'light',
             cancelable,
             onDismiss: doDismiss
         }
@@ -153,10 +182,10 @@ export function purifyFilepath(filename) {
         .trim(); // Remove leading/trailing whitespace
 };
 
-export const alertError = (locales, e) => {
+export const alertError = (e) => {
     const { error, message } = simplifyCaughtError(e).simpleError;
     alertNull(
-        locales?.[error] || error,
-        locales?.[message] || message
+        locales[error] || error,
+        locales[message] || message
     );
 };

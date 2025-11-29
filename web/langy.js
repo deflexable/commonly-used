@@ -1,6 +1,7 @@
 import { isBrowser } from "./is_browser";
 import { Validator } from "guard-object";
 import { useLastLoaderData } from "./nav";
+import { SUPPORTED_LANGUAGES } from "core/common_values";
 
 export const langifyLink = (link = '', url = '') => {
     const urlObj = new URL(isBrowser() ? location.href : url),

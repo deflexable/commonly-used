@@ -22,7 +22,8 @@
   },
   "description": "Commonly utilities",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-types": "rm -r ./dist && npx tsc"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
   "homepage": "https://github.com/deflexable/commonly-used#readme",
   "devDependencies": {
     "@types/react": "^19.2.2",
+    "react-native-mosquito-transport": "^0.0.47",
     "typescript": "^5.9.3"
   }
 }
