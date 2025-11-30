@@ -9,6 +9,9 @@ RNMT.initializeCache({
     maxLocalDatabaseSize: one_mb * 30
 });
 
+/**
+ * @type {(options?: import('react-native-mosquito-transport').RNMTConfig) => import('react-native-mosquito-transport').default}
+ */
 export const createMserver = extras =>
     new RNMT({
         projectUrl: API_BASE_URL,
@@ -18,6 +21,9 @@ export const createMserver = extras =>
         ...extras
     });
 
+/**
+ * @type {import('react-native-mosquito-transport').default}
+ */
 export const mserver = createMserver();
 
 // TODO: resume and cleanup residue mserver

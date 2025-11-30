@@ -1,7 +1,12 @@
-export function createMserver(extras: any): RNMT;
-export const mserver: RNMT;
+/**
+ * @type {(options?: import('react-native-mosquito-transport').RNMTConfig) => import('react-native-mosquito-transport').default}
+ */
+export const createMserver: (options?: import("react-native-mosquito-transport").RNMTConfig) => import("react-native-mosquito-transport").default;
+/**
+ * @type {import('react-native-mosquito-transport').default}
+ */
+export const mserver: import("react-native-mosquito-transport").default;
 export function emulatedMserver(host: string, options: any): [import("react-native-mosquito-transport").default, () => void];
-import RNMT from 'react-native-mosquito-transport';
 export const collection: (path: string) => import("react-native-mosquito-transport", { with: { "resolution-mode": "import" } }).RNMTCollection;
 export const auth: () => import("react-native-mosquito-transport", { with: { "resolution-mode": "import" } }).RNMTAuth;
 export const fetchHttp: (endpoint: string, init?: RequestInit, config?: import("react-native-mosquito-transport", { with: { "resolution-mode": "import" } }).FetchHttpConfig) => Promise<import("react-native-mosquito-transport", { with: { "resolution-mode": "import" } }).FetchHttpResponse>;
