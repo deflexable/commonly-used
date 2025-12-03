@@ -1,29 +1,10 @@
 {
   "name": "bbx-commonly-used",
   "version": "1.0.0",
-  "sideEffects": false,
-  "exports": {
-    "./server/*": {
-      "import": "./server/*",
-      "types": "./dist/server/*"
-    },
-    "./web/*": {
-      "import": "./web/*",
-      "types": "./dist/web/*"
-    },
-    "./react-native/*": {
-      "import": "./react-native/*",
-      "types": "./dist/react-native/*"
-    },
-    "./*": {
-      "import": "./common/*",
-      "types": "./dist/common/*"
-    }
-  },
+  "type": "module",
   "description": "Commonly utilities",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build-types": "rm -r ./dist && npx tsc"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

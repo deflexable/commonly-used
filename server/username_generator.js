@@ -1,5 +1,5 @@
 import { DbPath } from "core/common_values.js";
-import { randomString } from "bbx-commonly-used/methods.js";
+import { randomString } from "../common/methods.js";
 
 const MAX_USERNAME_GENERATOR = 99;
 const ProcessingMentionName = {};

@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "core/env.js";
-import { randomString } from "bbx-commonly-used/methods.js";
+import { randomString } from "../common/methods.js";
 
 const SERVER_FAULTS = {
     DISCONNECTED: 'DISCONNECTED',
