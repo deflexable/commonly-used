@@ -50,7 +50,7 @@ export const AppTitleBar = function ({
 
   const tabbarStyle = useMemo(() => {
     return {
-      ...statusTint === true ? styles.containerBGTint : styles.containerBG,
+      ...(statusTint === true && Platform.OS !== 'android') ? styles.containerBGTint : styles.containerBG,
       ...backgroundColor ? { backgroundColor } : {}
     };
   }, [backgroundColor, styles.containerBG]);
@@ -110,11 +110,11 @@ const virtualSideViewStyle = {
 
 const appTitleBarStyle = StyleSheet.create({
   containerBG: {
-    // backgroundColor: themeStyle(Colors.white, Colors.dark)
+    backgroundColor: themeStyle(Colors.white, Colors.dark)
   },
 
   containerBGTint: {
-    // backgroundColor: themeStyle(Colors.white, Colors.lightDark)
+    backgroundColor: themeStyle(Colors.white, Colors.lightDark)
   },
 
   container: {

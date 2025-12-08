@@ -71,7 +71,6 @@ const AppModal = forwardRef(({
 
   return (
     <SnapSheetModal
-      fillScreen={true}
       {...restProps}
       ref={ref}
       disabled={disabled}

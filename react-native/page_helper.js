@@ -59,7 +59,7 @@ export const usePrefferedSettings = () => {
 export const themeStyle = (light, dark) => new CustomValue({ dark, light });
 
 /**
- * @type {useCustomStyle}
+ * @type {import('./styling').useCustomStyle}
  */
 export const useStyle = (styles) => {
     const isDarkMode = useDarkMode();
