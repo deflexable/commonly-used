@@ -20,7 +20,6 @@ export default function ({
             uri,
             onDestroy,
             onHref,
-            forceTheme,
             webProps,
             useDocumentEvent
         }
@@ -36,7 +35,8 @@ export default function ({
     const [canGoBack, setCanGoBack] = useState(false);
     const [canGoForward, setCanGoForward] = useState(false);
     const [pageDark, setPageDark] = useState();
-    const [baseTheme, setBaseTheme] = useState();
+    const [barDark, setBarDark] = useState();
+    const [barColor, setBarColor] = useState();
     // const [loading, setLoading] = useState();
 
     const loading = loadProgress < 1;
@@ -44,17 +44,20 @@ export default function ({
     const awaitingTasks = useRef({});
     const taskIterator = useRef(0);
 
-    const isDarkMode = forceTheme ? (forceTheme === 'dark') : pageDark === undefined ? defaultDarkMode : pageDark;
-    const styles = useCustomStyle(styling, { prioritiseMap: [isDarkMode ? 'dark' : 'light'] }).styles;
+    const thisPageDark = (pageDark || barDark) ?? defaultDarkMode;
+    const thisBarDark = (barDark || pageDark) ?? defaultDarkMode;
+
+    const pageStyles = useCustomStyle(pageStyling, { prioritiseMap: [thisPageDark ? 'dark' : 'light'] }).styles;
+    const barStyles = useCustomStyle(barStyling, { prioritiseMap: [thisBarDark ? 'dark' : 'light'] }).styles;
 
     const {
         doBottomSpacing,
-        tabbarColor = baseTheme,
+        tabbarColor = barColor,
         doTabbar,
         doTitleContent,
         tabbarTint,
         subTxtTint
-    } = useDocumentEvent?.(documentMessage, { styles, isDarkMode, insets, href }) || {};
+    } = useDocumentEvent?.(documentMessage, { pageDark, barDark, insets, href }) || {};
 
     const pressBackBtn = useBackButton(() => {
         if (canGoBack) {
@@ -90,27 +93,30 @@ export default function ({
         try {
             const { domColor, bodyColor, barColor, ignore } = await getWindowColoring();
             if (ignore) return;
+            let baseColor;
 
             console.log('computeWindowTheme res:', { domColor, bodyColor, barColor });
             try {
-                const baseColor = bodyColor || (domColor === 'rgba(0, 0, 0, 0)' ? undefined : domColor);
+                baseColor = bodyColor || (domColor === 'rgba(0, 0, 0, 0)' ? undefined : domColor);
 
                 const { status } = getColorLuminance(baseColor);
                 setPageDark(status === 'too_dark');
             } catch (_) {
-                try {
-                    const { status } = getColorLuminance(barColor);
-                    if (status === 'normal_brightness') {
-                        setPageDark();
-                    } else setPageDark(status === 'too_dark');
-                } catch (_) {
-                    setPageDark();
-                }
+                setPageDark();
             }
-            setBaseTheme(barColor);
+
+            setBarColor(barColor);
+            try {
+                const { status } = getColorLuminance(barColor);
+                if (status === 'normal_brightness') {
+                    setBarDark();
+                } else setBarDark(status === 'too_dark');
+            } catch (_) {
+                setBarDark();
+            }
         } catch (error) {
             console.log('computeWindowTheme err:', error);
-            setBaseTheme();
+            setBarColor();
             setPageDark();
         }
     }
@@ -147,21 +153,21 @@ export default function ({
     }
 
     const tabbarRightBtnImg = useMemo(() => ([
-        styles.titleBarIcon,
+        barStyles.titleBarIcon,
         loading ? { transform: [{ rotate: '45deg' }] } : undefined
-    ]), [loading, styles.titleBarIcon]);
+    ]), [loading, barStyles.titleBarIcon]);
 
     const renderTitleBar = () =>
         doTabbar ? doTabbar?.() : (
             <AppTitleBar
-                backgroundColor={tabbarColor || styles.tabbarBG.backgroundColor}
+                backgroundColor={tabbarColor || barStyles.tabbarBG.backgroundColor}
                 leading={
                     <TouchableOpacity
-                        style={styles.tabbarBtnLeft}
+                        style={barStyles.tabbarBtnLeft}
                         onPress={pressBackBtn}>
                         <Image
                             tintColor={tabbarTint}
-                            style={styles.titleBarIcon}
+                            style={barStyles.titleBarIcon}
                             source={Back}
                         />
                     </TouchableOpacity>
@@ -171,7 +177,7 @@ export default function ({
                     doTitleContent ?
                         doTitleContent?.() :
                         <TouchableOpacity
-                            style={styles.barCenterCon}
+                            style={barStyles.barCenterCon}
                             onPress={() => {
                                 Share.share({ title: webTitle, url: href, message: href });
                             }}
@@ -180,13 +186,13 @@ export default function ({
                             }}>
                             <TextView
                                 numberOfLines={1}
-                                style={styles.screenTitle}
+                                style={barStyles.screenTitle}
                                 forceColor={tabbarTint}>
                                 {webTitle || ' '}
                             </TextView>
                             <TextView
                                 numberOfLines={1}
-                                style={styles.screenSubTitle}
+                                style={barStyles.screenSubTitle}
                                 forceColor={subTxtTint}>
                                 {href || ' '}
                             </TextView>
@@ -195,7 +201,7 @@ export default function ({
                 trailing={
                     loading === undefined ? null :
                         <TouchableOpacity
-                            style={styles.tabbarBtnRight}
+                            style={barStyles.tabbarBtnRight}
                             onPress={() => {
                                 if (loading) {
                                     webviewRef.current.stopLoading();
@@ -212,18 +218,18 @@ export default function ({
         );
 
     return (
-        <View style={styles.main}>
+        <View style={pageStyles.main}>
             {renderTitleBar()}
-            <View style={styles.flexer}>
+            <View style={pageStyles.flexer}>
                 <WebView
                     {...webProps}
                     ref={webviewRef}
-                    style={styles.flexer}
+                    style={pageStyles.flexer}
                     source={{ uri }}
                     cacheEnabled
                     originWhitelist={['*']}
                     allowsInlineMediaPlayback
-                    forceDarkOn={isDarkMode}
+                    forceDarkOn={thisPageDark}
                     onLoadEnd={computeWindowTheme}
                     onMessage={message => {
                         // console.log('onMessage:', message.nativeEvent.data);
@@ -262,7 +268,13 @@ export default function ({
     );
 };
 
-const styling = {
+const pageStyling = {
+    flexer: { flex: 1 },
+
+    main: commonAppBarStyle.main
+};
+
+const barStyling = {
     ...commonAppBarStyle,
 
     tabbarBG: {

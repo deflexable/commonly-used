@@ -24,7 +24,7 @@ export const getColorLuminance = (color) => {
 
     color = normalizeColor(color);
     const luminance = getLuminance(...color);
-    const brightness = classifyBrightness(lum);
+    const brightness = classifyBrightness(luminance);
 
     return { status: brightness, value: luminance };
 }
