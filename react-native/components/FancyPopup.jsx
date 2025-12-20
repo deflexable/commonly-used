@@ -167,6 +167,7 @@ const styling = {
     topImg: {
         width: '40%',
         maxWidth: 100,
+        maxHeight: 100,
         aspectRatio: 1
     },
 

@@ -7,41 +7,49 @@ import { CustomValue, useCustomStyle } from "./styling";
 import { useDarkMode } from "./theme_helper";
 import { Scope } from "@this_app_root/src/utils/scope";
 import listeners, { EVENT_NAMES } from '@this_app_root/src/utils/listeners';
+import { StandardURL } from "./url_parser.js";
+import { IS_DEV, HOST_NAME } from '@this_app_root/env';
 
 /**
- * @type {(callback: import('react-native').ScrollViewProps['onScroll'], offset: number) => Function}
+ * auto optimize image quality
+ * @param {string} link 
+ * @param {{ w?: number, h: number, q: number } | number} opts 
+ * @returns {string}
  */
-export const useScrollViewPagination = (callback, offset = 100) => {
+export const optimizeImage = (link, opts = 90) => {
+    try {
+        link = devTransformLocalhostURL(link);
+        const q = new URLSearchParams();
 
-    return e => {
-        const {
-            contentOffset: { y },
-            contentSize: { height },
-            layoutMeasurement: { height: layHeight }
-        } = e.nativeEvent;
-        const hasReachDown = y + layHeight + offset >= height;
-        if (hasReachDown) callback(e);
+        if (Number.isInteger(opts?.w)) q.append('w', `${opts.w}`);
+        if (Number.isInteger(opts?.h)) q.append('h', `${opts.h}`);
+        if (Number.isInteger(opts)) q.append('w', `${opts}`);
+
+        if (opts?.q === undefined) {
+            if (!q.has('w') && !q.has('h')) {
+                q.append('q', '0.7');
+            }
+        } else q.append('q', `${opts.q}`);
+        const qValue = q.toString();
+
+        return `${link}${qValue ? '?' + qValue : ''}`;
+    } catch (error) {
+        return link;
     }
 };
 
-/**
- * @type {(callback: (index: number) => void, childrenRefs: []) => import('react-native').ScrollViewProps['onScroll']}
- */
-export const handleScrollViewChildrenVisibility = (callback, childrenRefs) => {
-    return event => {
-        const {
-            nativeEvent: { contentOffset: { y }, layoutMeasurement: { height } }
-        } = event;
-
-        childrenRefs.forEach((e, i) => {
-            if (e) {
-                e.measureLayout(event.currentTarget, (_, fixedY, _w, itemHeight) => {
-                    const isVisible = y >= (fixedY - height) && y <= fixedY + itemHeight;
-                    if (isVisible) callback(i);
-                });
+export const devTransformLocalhostURL = (url) => {
+    if (!url) return url;
+    if (IS_DEV && Platform.OS === 'android') {
+        try {
+            const p = new StandardURL(url);
+            if (p.hostname === 'localhost') {
+                p.hostname = HOST_NAME;
+                return p.href;
             }
-        });
-    };
+        } catch (_) { }
+    }
+    return url;
 };
 
 export const usePrefferedSettings = () => {

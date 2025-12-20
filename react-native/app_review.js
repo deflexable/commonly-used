@@ -14,8 +14,11 @@ export const softRequestReview = () => {
     if (JSONCacher.APP_OPEN_COUNTER >= 3 && Scope.IS_ONLINE) requestReview();
 };
 
+let hasRequested;
+
 export async function requestReview() {
-    if (Scope.prefferedSettingsValue?.has_rated || !Scope.user || JSONCacher.RATED_APP) return;
+    if (Scope.prefferedSettingsValue?.has_rated || !Scope.user || JSONCacher.RATED_APP || hasRequested) return;
+    hasRequested = true;
 
     const flagDoReview = (props) => {
         JSONCacher.RATED_APP = true;
@@ -37,7 +40,7 @@ export async function requestReview() {
                 props = { rated_huawei: true };
             });
         } else throw 'no gms found';
-        if (Date.now() - now < 2000) throw 'too fast';
+        if (Date.now() - now < 2000) throw 'too quick';
 
         flagDoReview(props);
     } catch (error) {
