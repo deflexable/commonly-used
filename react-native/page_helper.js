@@ -16,8 +16,9 @@ import { IS_DEV, HOST_NAME } from '@this_app_root/env';
  * @param {{ w?: number, h: number, q: number } | number} opts 
  * @returns {string}
  */
-export const optimizeImage = (link, opts = 90) => {
+export const optimizeImage = (link = '', opts = 90) => {
     try {
+        if (!['https://', 'http://'].some(v => link.startsWith(v))) return link;
         link = devTransformLocalhostURL(link);
         const q = new URLSearchParams();
 

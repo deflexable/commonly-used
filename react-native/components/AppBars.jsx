@@ -48,12 +48,14 @@ export const AppTitleBar = function ({
     </View>
   ) : null;
 
+  const isTinted = statusTint === true && Platform.OS !== 'android';
+
   const tabbarStyle = useMemo(() => {
     return {
-      ...(statusTint === true && Platform.OS !== 'android') ? styles.containerBGTint : styles.containerBG,
+      ...isTinted ? styles.containerBGTint : styles.containerBG,
       ...backgroundColor ? { backgroundColor } : {}
     };
-  }, [backgroundColor, styles.containerBG]);
+  }, [backgroundColor, styles.containerBG, isTinted]);
 
   const tabbarContStyle = useMemo(() => {
     return tabHeight ? [styles.container, { height: tabHeight }] : styles.container;
@@ -81,7 +83,7 @@ export const AppTitleBar = function ({
         {hideBanner ?
           renderStatusTint() :
           <NoInternetBanner
-            statusHeight={statusTint === true ? 10 : undefined}
+            statusHeight={isTinted ? 10 : undefined}
             renderStatusTint={renderStatusTint} />}
 
         <View style={tabbarContStyle}>

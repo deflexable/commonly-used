@@ -26,72 +26,10 @@ export const createMserver = extras =>
  */
 export const mserver = createMserver();
 
-// TODO: resume and cleanup residue mserver
-
-const EmulatedServerCount = {};
-const EmulatedServers = {};
-
-/**
- * @param {string} host 
- * @param {any} options 
- * @returns {[import('react-native-mosquito-transport').default, () => void]}
- */
-export const emulatedMserver = (host, options) => {
-    if (!EmulatedServerCount[host])
-        EmulatedServerCount[host] = 0;
-
-    ++EmulatedServerCount[host];
-
-    if (!EmulatedServers[host]) {
-        EmulatedServers[host] = new RNMT({
-            projectUrl: host,
-            enableE2E_Encryption: !IS_DEV,
-            serverE2E_PublicKey: E2E_Public_Key,
-            disableCache: !ENABLE_CACHE,
-            ...options
-        });
-        EmulatedServers[host].auth().emulate(API_BASE_URL);
-    }
-    let hasClose;
-
-    return [
-        EmulatedServers[host],
-        () => {
-            if (hasClose) return;
-            hasClose = true;
-            if (--EmulatedServerCount[host]) return;
-
-            if (host in EmulatedServers) {
-                if (IS_DEV) console.warn('cleaning up mt_emulation:', host);
-                const destoyPromise = EmulatedServers[host].auth().signOut();
-                delete EmulatedServers[host];
-                return destoyPromise;
-            }
-        }
-    ];
-};
-
 const collection = mserver.collection,
     auth = mserver.auth,
     storage = mserver.storage,
     fetchHttp = mserver.fetchHttp;
-
-const uploadContent = (file, destination, domain, createHash, onProgress) => new Promise((resolve, reject) => {
-    const [instanceServer, cleanup] = domain ? emulatedMserver(domain) : [];
-
-    (domain ? instanceServer.storage() : storage())
-        .uploadFile(file, destination, (err, url) => {
-            if (url) resolve(url);
-            else reject(err);
-            cleanup?.();
-        }, onProgress, { createHash });
-});
-
-const deleteContent = async (path, domain) => {
-    const [instanceServer, cleanup] = domain ? emulatedMserver(domain) : [];
-    await (domain ? instanceServer.storage() : storage()).deleteFile(path);
-    cleanup?.();
-};
 
 mserver.listenReachableServer(connected => {
     Scope.IS_ONLINE = connected;
@@ -121,7 +59,5 @@ export {
     auth,
     fetchHttp,
     storage,
-    useIsOnline,
-    uploadContent,
-    deleteContent
+    useIsOnline
 };
