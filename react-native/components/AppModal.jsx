@@ -25,6 +25,7 @@ const AppModal = forwardRef(({
   modalBackGround = [Colors.white, Colors.modalBlack],
   centered,
   style,
+  disableBackHandler,
   ...restProps
 }, ref) => {
   const isDarkMode = useDarkMode();
@@ -72,8 +73,10 @@ const AppModal = forwardRef(({
   return (
     <SnapSheetModal
       {...restProps}
+      {...(restProps.fillScreen && !modalName && !isFocused) ? { containerStyle: { display: 'none', zIndex: -99, elevation: 0 } } : {}}
       ref={ref}
       disabled={disabled}
+      disableBackHandler={disableBackHandler || !isFocused}
       style={modalStyle}
       centered={centered}
       handleColor={isDarkMode ? Colors.gray : Colors.borderColor}
