@@ -158,9 +158,9 @@ const styling = {
         padding: 15,
         alignItems: 'center',
         alignSelf: 'center',
-        shadowOffset: { width: 3, height: 3 },
+        shadowOffset: { width: 2, height: 2 },
         shadowColor: Colors.gray,
-        shadowOpacity: .5,
+        shadowOpacity: .3,
         elevation: 7
     },
 

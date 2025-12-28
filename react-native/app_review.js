@@ -40,7 +40,7 @@ export async function requestReview() {
                 props = { rated_huawei: true };
             });
         } else throw 'no gms found';
-        if (Date.now() - now < 2000) throw 'too quick';
+        if (Platform.OS === 'android' && Date.now() - now < 1500) throw 'too quick';
 
         flagDoReview(props);
     } catch (error) {

@@ -10,7 +10,7 @@ import { useDarkMode } from '../theme_helper';
  * @typedef {object} SnapSheetModalExtraProps
  * @property {string} [modalName]
  * @property {any} [navigationGesture]
- * @property {[string, string]} [modalBackGround]
+ * @property {[string, string] | undefined} [modalBackGround]
  */
 
 /**
@@ -22,7 +22,7 @@ const AppModal = forwardRef(({
   disabled,
   navigationGesture,
   modalName,
-  modalBackGround = [Colors.white, Colors.modalBlack],
+  modalBackGround,
   centered,
   style,
   disableBackHandler,
@@ -60,6 +60,9 @@ const AppModal = forwardRef(({
     }
   }, [isOpen, !!disabled, isFocused]);
 
+  if (!centered && modalBackGround === undefined)
+    modalBackGround = [Colors.white, Colors.modalBlack];
+
   const modalStyle = useMemo(() => ({
     ...centered ? {} : {
       borderTopLeftRadius: 20,
@@ -68,12 +71,12 @@ const AppModal = forwardRef(({
     },
     ...modalBackGround ? { backgroundColor: modalBackGround[isDarkMode ? 1 : 0] } : {},
     ...style,
-  }), [isDarkMode, ...modalBackGround || []]);
+  }), [isDarkMode, `${modalBackGround}`, style]);
 
   return (
     <SnapSheetModal
       {...restProps}
-      {...(restProps.fillScreen && !modalName && !isFocused) ? { containerStyle: { display: 'none', zIndex: -99, elevation: 0 } } : {}}
+      {...(restProps.fillScreen && !modalName && !isFocused) ? { containerStyle: { opacity: 0, zIndex: -99, elevation: 0 } } : {}}
       ref={ref}
       disabled={disabled}
       disableBackHandler={disableBackHandler || !isFocused}

@@ -26,7 +26,6 @@ export default function ({
     }
 }) {
     const insets = useSafeAreaInsets();
-    const defaultDarkMode = useDarkMode();
 
     const [documentMessage, setDocumentMessage] = useState();
     const [webTitle, setWebTitle] = useState();
@@ -44,11 +43,7 @@ export default function ({
     const awaitingTasks = useRef({});
     const taskIterator = useRef(0);
 
-    const thisPageDark = (pageDark || barDark) ?? defaultDarkMode;
-    const thisBarDark = (barDark || pageDark) ?? defaultDarkMode;
-
-    const pageStyles = useCustomStyle(pageStyling, { prioritiseMap: [thisPageDark ? 'dark' : 'light'] }).styles;
-    const barStyles = useCustomStyle(barStyling, { prioritiseMap: [thisBarDark ? 'dark' : 'light'] }).styles;
+    const defaultDarkMode = useDarkMode();
 
     const {
         doBottomSpacing,
@@ -56,8 +51,16 @@ export default function ({
         doTabbar,
         doTitleContent,
         tabbarTint,
-        subTxtTint
+        subTxtTint,
+        forcePageDarkMode,
+        forceBarDarkMode
     } = useDocumentEvent?.(documentMessage, { pageDark, barDark, insets, href }) || {};
+
+    const thisPageDark = (forcePageDarkMode ?? (pageDark || barDark)) ?? defaultDarkMode;
+    const thisBarDark = (forceBarDarkMode ?? (barDark || pageDark)) ?? defaultDarkMode;
+
+    const pageStyles = useCustomStyle(pageStyling, { prioritiseMap: [thisPageDark ? 'dark' : 'light'] }).styles;
+    const barStyles = useCustomStyle(barStyling, { prioritiseMap: [thisBarDark ? 'dark' : 'light'] }).styles;
 
     const pressBackBtn = useBackButton(() => {
         if (canGoBack) {
@@ -152,10 +155,16 @@ export default function ({
         });
     }
 
-    const tabbarRightBtnImg = useMemo(() => ([
-        barStyles.titleBarIcon,
-        loading ? { transform: [{ rotate: '45deg' }] } : undefined
-    ]), [loading, barStyles.titleBarIcon]);
+    const tabbarRightBtnImg = useMemo(() => ({
+        ...barStyles.titleBarIcon,
+        ...loading ? { transform: [{ rotate: '45deg' }] } : undefined,
+        ...tabbarTint ? { tintColor: tabbarTint } : {}
+    }), [loading, barStyles.titleBarIcon, tabbarTint]);
+
+    const tabbarLeftBtnImg = useMemo(() => ({
+        ...barStyles.titleBarIcon,
+        ...tabbarTint ? { tintColor: tabbarTint } : {}
+    }), [tabbarTint, barStyles.titleBarIcon]);
 
     const renderTitleBar = () =>
         doTabbar ? doTabbar?.() : (
@@ -166,8 +175,7 @@ export default function ({
                         style={barStyles.tabbarBtnLeft}
                         onPress={pressBackBtn}>
                         <Image
-                            tintColor={tabbarTint}
-                            style={barStyles.titleBarIcon}
+                            style={tabbarLeftBtnImg}
                             source={Back}
                         />
                     </TouchableOpacity>
@@ -208,7 +216,6 @@ export default function ({
                                 } else webviewRef.current.reload();
                             }}>
                             <Image
-                                tintColor={tabbarTint}
                                 style={tabbarRightBtnImg}
                                 source={loading ? Plus : Refresh}
                             />
