@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBackButton } from "react-native-push-back";
 import { useCustomStyle } from "../styling.js";
 import { getColorLuminance } from "../../common/color_status";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function ({
     navigation,
@@ -26,6 +27,7 @@ export default function ({
     }
 }) {
     const insets = useSafeAreaInsets();
+    const isFocused = useIsFocused();
 
     const [documentMessage, setDocumentMessage] = useState();
     const [webTitle, setWebTitle] = useState();
@@ -66,7 +68,7 @@ export default function ({
         if (canGoBack) {
             webviewRef.current.goBack()
         } else navigation.goBack();
-    });
+    }, !isFocused);
 
     const addWebviewTask = (ref, script, timeout = 15_000) => new Promise((resolve, reject) => {
         const taskTimeout = setTimeout(() => {

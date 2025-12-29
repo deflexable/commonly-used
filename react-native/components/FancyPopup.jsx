@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
-import AppModal from "./AppModal";
+import AppModal, { PlainModalBG } from "./AppModal";
 import { Colors } from "@this_app_root/src/utils/values";
 import { locales } from "@this_app_root/src/locale";
 import listeners, { EVENT_NAMES } from "@this_app_root/src/utils/listeners";
@@ -74,6 +74,7 @@ function FancyDialog({ data, shouldClose, onRemove }) {
             modalName={'fancyPopup'}
             unMountChildrenWhenClosed={false}
             fillScreen={false}
+            modalBackGround={PlainModalBG}
             style={styling.cont}
             onClosed={() => {
                 onRemove();
@@ -166,9 +167,10 @@ const styling = {
 
     topImg: {
         width: '40%',
-        maxWidth: 100,
-        maxHeight: 100,
-        aspectRatio: 1
+        maxWidth: 80,
+        maxHeight: 80,
+        aspectRatio: 1,
+        height: undefined
     },
 
     title: {
