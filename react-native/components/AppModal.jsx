@@ -67,6 +67,8 @@ const AppModal = forwardRef(({
     ...centered ? {} : {
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
+      maxWidth: MaxModalWidth,
+      alignSelf: 'center'
       // overflow: 'hidden'
     },
     ...modalBackGround ? { backgroundColor: modalBackGround[isDarkMode ? 1 : 0] } : {},
@@ -95,3 +97,4 @@ const AppModal = forwardRef(({
 export default AppModal;
 
 export const PlainModalBG = [Colors.appBackgroundColor, Colors.black];
+export const MaxModalWidth = 750;

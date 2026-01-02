@@ -79,10 +79,11 @@ export const shouldCover = ([w1, h1], [w2, h2], threshold = .2) => Math.abs((w1 
 
 export const useGridSpacing = ({ widthCountMap, spacing, maxWidth }) => {
     const { width, height } = useWindowDimensions();
+    const fullWidth = maxWidth ? Math.min(maxWidth, width) : width;
 
-    const gridCount = widthCountMap.find(v => width <= v[0])?.[1] || widthCountMap.slice(-1)[0][1];
+    const gridCount = widthCountMap.find(v => fullWidth <= v[0])?.[1] || widthCountMap.slice(-1)[0][1];
     return {
-        width: ((Math.min(maxWidth || width, width) - (spacing * (gridCount + 1))) / gridCount),
+        width: ((fullWidth - (spacing * (gridCount + 1))) / gridCount),
         spacing,
         counts: gridCount,
         windowWidth: width,

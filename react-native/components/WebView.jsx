@@ -1,4 +1,4 @@
-import { Image, Share, TouchableOpacity, View } from "react-native";
+import { Image, Share, TouchableOpacity, View, StatusBar } from "react-native";
 import { AppTitleBar, commonAppBarStyle } from "./AppBars";
 import { themeStyle } from "../page_helper";
 import { Back, Plus, Refresh } from "@this_app_root/src/utils/assets";
@@ -13,6 +13,7 @@ import { useBackButton } from "react-native-push-back";
 import { useCustomStyle } from "../styling.js";
 import { getColorLuminance } from "../../common/color_status";
 import { useIsFocused } from "@react-navigation/native";
+import { KeyboardPlaceholderView } from "react-native-dodge-keyboard";
 
 export default function ({
     navigation,
@@ -171,6 +172,7 @@ export default function ({
     const renderTitleBar = () =>
         doTabbar ? doTabbar?.() : (
             <AppTitleBar
+                statusTint={false}
                 backgroundColor={tabbarColor || barStyles.tabbarBG.backgroundColor}
                 leading={
                     <TouchableOpacity
@@ -228,6 +230,7 @@ export default function ({
 
     return (
         <View style={pageStyles.main}>
+            <StatusBar barStyle={thisBarDark ? 'light-content' : 'dark-content'} />
             {renderTitleBar()}
             <View style={pageStyles.flexer}>
                 <WebView
@@ -273,6 +276,7 @@ export default function ({
                         }} />}
             </View>
             {doBottomSpacing?.()}
+            <KeyboardPlaceholderView />
         </View>
     );
 };
