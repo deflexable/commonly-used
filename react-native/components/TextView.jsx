@@ -25,7 +25,7 @@ const TextView = ({ children, style, invertColor, forceColor, forceSize, ...prop
 
     return (
         <Text
-            allowFontScaling={!!Scope.prefferedSettingsValue?.scale_font}
+            allowFontScaling={!Scope.prefferedSettingsValue?.no_scale_font}
             style={thisStyle}
             {...props}>
             {children}

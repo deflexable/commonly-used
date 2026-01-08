@@ -67,6 +67,7 @@ const AppModal = forwardRef(({
     ...centered ? {} : {
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
+      width: '100%',
       maxWidth: MaxModalWidth,
       alignSelf: 'center'
       // overflow: 'hidden'

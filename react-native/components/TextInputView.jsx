@@ -19,7 +19,7 @@ const TextInputView = forwardRef(function TextInputView({ style, invertColor, fo
     return (
         <TextInput
             ref={ref}
-            allowFontScaling={!!Scope.prefferedSettingsValue?.scale_font}
+            allowFontScaling={!Scope.prefferedSettingsValue?.no_scale_font}
             placeholderTextColor={isDarkMode ? 'gray' : undefined}
             keyboardAppearance={isDarkMode ? 'dark' : 'light'}
             dodge_keyboard_input
