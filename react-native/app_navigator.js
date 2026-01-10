@@ -6,25 +6,25 @@ import { StackActions } from '@react-navigation/native';
  */
 const navigationReference = React.createRef();
 
-const navigate = (name, params) => navigationReference.current?.navigate(name, params);
+const navigate = (name, params) => navigationReference.current?.navigate?.(name, params);
 
-const push = (name, params) => navigationReference.current?.push(name, params);
+const push = (name, params) => navigationReference.current?.push?.(name, params);
 
-const resetAndPush = (name, params) => navigationReference.current?.reset({
+const resetAndPush = (name, params) => navigationReference.current?.reset?.({
   index: 0,
   routes: [{ name, params }]
 });
 
 const popScreen = (n) => {
   const popAction = StackActions.pop(n);
-  navigationReference.current?.dispatch(popAction);
+  navigationReference.current?.dispatch?.(popAction);
 };
 
-const goBack = () => navigationReference.current.goBack();
+const goBack = () => navigationReference.current?.goBack?.();
 
-const currentScreen = () => navigationReference.current?.getCurrentRoute().name;
+const currentScreen = () => navigationReference.current?.getCurrentRoute?.()?.name;
 
-const replace = (name, params) => navigationReference.current.dispatch(StackActions.replace(name, params));
+const replace = (name, params) => navigationReference.current?.dispatch?.(StackActions.replace(name, params));
 
 export default {
   navigationReference,

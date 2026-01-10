@@ -18,7 +18,7 @@ import { IS_DEV, HOST_NAME } from '@this_app_root/env';
  */
 export const optimizeImage = (link = '', opts = 90) => {
     try {
-        if (!['https://', 'http://'].some(v => link.startsWith(v))) return link;
+        if (!['https://', 'http://'].some(v => link.startsWith(v)) || link.endsWith('.gif')) return link;
         link = devTransformLocalhostURL(link);
         const q = new URLSearchParams();
 
