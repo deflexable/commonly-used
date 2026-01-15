@@ -245,11 +245,16 @@ export default function ({
                     onLoadEnd={computeWindowTheme}
                     onMessage={message => {
                         // console.log('onMessage:', message.nativeEvent.data);
+                        const event = message.nativeEvent.data;
+                        if (event === '__close:this:webpage') {
+                            navigation?.goBack?.();
+                            return;
+                        }
                         try {
-                            const { ref, ...rest } = JSON.parse(message.nativeEvent.data);
+                            const { ref, ...rest } = JSON.parse(event);
                             awaitingTasks.current[ref](rest);
                         } catch (_) { }
-                        setDocumentMessage?.(message.nativeEvent.data);
+                        setDocumentMessage?.(event);
                     }}
                     onLoadProgress={({ nativeEvent }) => {
                         setHref(nativeEvent.url);
