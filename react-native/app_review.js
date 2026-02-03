@@ -10,10 +10,6 @@ import { Scope } from '@this_app_root/src/utils/scope';
 import { collection } from './client_server';
 import { JSONCacher } from '@this_app_root/src/utils/cacher';
 
-export const softRequestReview = () => {
-    if (JSONCacher.APP_OPEN_COUNTER >= 3 && Scope.IS_ONLINE) requestReview();
-};
-
 let hasRequested;
 
 export async function requestReview() {

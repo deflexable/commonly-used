@@ -2,14 +2,14 @@ import React, { forwardRef, useEffect, useMemo, useState } from 'react';
 import { Colors } from '@this_app_root/src/utils/values';
 import { LockedStickyTopModals } from '@this_app_root/src/utils/scope';
 import listeners, { EVENT_NAMES } from '@this_app_root/src/utils/listeners';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { SnapSheetModal } from 'react-native-snap-sheet';
 import { useDarkMode } from '../theme_helper';
+import { View } from "react-native";
 
 /**
  * @typedef {object} SnapSheetModalExtraProps
  * @property {string} [modalName]
- * @property {any} [navigationGesture]
  * @property {[string, string] | undefined} [modalBackGround]
  */
 
@@ -20,7 +20,6 @@ const AppModal = forwardRef(({
   onStateChanged,
   children,
   disabled,
-  navigationGesture,
   modalName,
   modalBackGround,
   centered,
@@ -33,12 +32,11 @@ const AppModal = forwardRef(({
   const [isOpen, setOpen] = useState(false);
 
   const isFocused = modalName || useIsFocused();
-
-  const getGesture = () => typeof navigationGesture === 'function' ? navigationGesture() : navigationGesture;
+  const navigation = !modalName && useNavigation();
 
   const toggleGestureEnabled = (enabled) => {
-    if (navigationGesture) {
-      getGesture().setOptions({ gestureEnabled: !!enabled });
+    if (navigation) {
+      navigation.setOptions({ gestureEnabled: !!enabled && undefined });
     } else if (modalName) {
       listeners.dispatch(EVENT_NAMES.lockedModalListener);
     }
@@ -53,7 +51,9 @@ const AppModal = forwardRef(({
 
       return () => {
         if (disabled) {
-          if (modalName) LockedStickyTopModals[modalName] = false;
+          if (modalName && Object.hasOwn(LockedStickyTopModals, modalName)) {
+            delete LockedStickyTopModals[modalName];
+          }
           toggleGestureEnabled(true);
         }
       }
@@ -99,3 +99,30 @@ export default AppModal;
 
 export const PlainModalBG = [Colors.appBackgroundColor, Colors.black];
 export const MaxModalWidth = 750;
+
+/**
+ * @type {AppModal}
+ */
+export const ModalScreen = ({ modalRef, onClosed, ...restProps }) => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    modalRef.current.open();
+  }, []);
+
+  return (
+    <View style={styling.flexer}>
+      <AppModal
+        {...restProps}
+        ref={modalRef}
+        onClosed={() => {
+          navigation.goBack();
+          onClosed?.();
+        }} />
+    </View>
+  );
+}
+
+const styling = {
+  flexer: { flex: 1 }
+};

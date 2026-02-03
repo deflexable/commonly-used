@@ -4,7 +4,7 @@ import { themeStyle, useStyle } from '../page_helper';
 import { Colors } from '@this_app_root/src/utils/values';
 import TextView from './TextView';
 import { DropDown } from '@this_app_root/src/utils/assets';
-import Spinner from '@this_app_root/src/components/Spinner';
+import Spinner from './Spinner';
 
 export default function ({
     selectedIndex,

@@ -16,7 +16,7 @@ export const createMserver = extras =>
     new RNMT({
         projectUrl: API_BASE_URL,
         disableCache: !ENABLE_CACHE,
-        enableE2E_Encryption: !IS_DEV,
+        enableE2E_Encryption: !!E2E_Public_Key && !IS_DEV,
         serverE2E_PublicKey: E2E_Public_Key,
         ...extras
     });

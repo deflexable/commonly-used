@@ -91,6 +91,21 @@ export const useGridSpacing = ({ widthCountMap, spacing, maxWidth }) => {
     };
 };
 
+export const createSegmentList = (list, row) => {
+    const segmentList = [];
+
+    if (list) {
+        list.forEach(e => {
+            if (
+                !segmentList.length ||
+                segmentList.slice(-1)[0].length >= row
+            ) segmentList.push([]);
+            segmentList.slice(-1)[0].push(e);
+        });
+    }
+    return segmentList;
+};
+
 export const showToast = (message, type) => {
     if (Platform.OS === 'android') {
         ToastAndroid.show(message, ToastAndroid.LONG);

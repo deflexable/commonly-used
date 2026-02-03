@@ -71,7 +71,7 @@ function FancyDialog({ data, shouldClose, onRemove }) {
             ref={dialogRef}
             centered
             disabled={data?.lockModal}
-            modalName={'fancyPopup'}
+            modalName={`fancyPopup-${data.id}`}
             unMountChildrenWhenClosed={false}
             fillScreen={false}
             modalBackGround={PlainModalBG}

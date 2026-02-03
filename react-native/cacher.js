@@ -33,15 +33,20 @@ export const deserializeStorage = async (key, callback) => {
     return output;
 };
 
-export const makeCacher = () => {
+export const makeCacher = (init = []) => {
     const InstantCacheData = {};
+    const promiseMapper = {};
 
-    return new Proxy({}, {
+    const proxy = new Proxy({}, {
         get: (_, n) => {
             if (InstantCacheData.hasOwnProperty(n)) return InstantCacheData[n];
             InstantCacheData[n] = undefined;
             deserializeStorage(n).then(v => {
                 InstantCacheData[n] = JSON.parse(v);
+                if (promiseMapper.hasOwnProperty(n)) {
+                    promiseMapper[n]();
+                    delete promiseMapper[n];
+                }
             });
             return undefined;
         },
@@ -50,4 +55,18 @@ export const makeCacher = () => {
             return true;
         }
     });
+
+    const resolution = {};
+
+    resolution.promise = Promise.all(init.map(v =>
+        new Promise(resolve => {
+            promiseMapper[v] = resolve;
+            proxy[v];
+        })
+    )).then(r => {
+        resolution.fullfilled = true;
+        return r;
+    });
+
+    return { proxy, resolution };
 }
