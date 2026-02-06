@@ -1,6 +1,8 @@
 import { useLocation, useNavigate, useMatches } from "@remix-run/react";
 import { useRef } from "react";
 
+export const useRootLoaderData = () => useMatches()[0].data;
+
 export const useLastLoaderData = () => {
     const rmatch = useMatches();
     return rmatch.slice(-1)[0].data;
