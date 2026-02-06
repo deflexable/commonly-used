@@ -1,5 +1,5 @@
 import RNMT from 'react-native-mosquito-transport';
-import { API_BASE_URL, IS_DEV, E2E_Public_Key, ENABLE_CACHE } from '@this_app_root/env';
+import { API_BASE_URL, E2E_Public_Key, ENABLE_CACHE } from '@this_app_root/env';
 import { useEffect, useState } from "react";
 import { Scope } from '@this_app_root/src/utils/scope';
 import { Endpoints, one_mb } from 'core/common_values';
@@ -16,7 +16,7 @@ export const createMserver = extras =>
     new RNMT({
         projectUrl: API_BASE_URL,
         disableCache: !ENABLE_CACHE,
-        enableE2E_Encryption: !!E2E_Public_Key && !IS_DEV,
+        enableE2E_Encryption: !!E2E_Public_Key,
         serverE2E_PublicKey: E2E_Public_Key,
         ...extras
     });

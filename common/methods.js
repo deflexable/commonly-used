@@ -136,6 +136,19 @@ const trimEnd = (string, char) => {
     return string.replace(regex, '');
 };
 
+export const downScaleImage = (link, size = 90) => {
+    try {
+        const url = new URL(link);
+        if ((size && typeof size === 'number') || size?.w)
+            url.searchParams.set('w', `${size?.w || size}`);
+        if (size?.h) url.searchParams.set('h', `${size.h}`);
+        if (size?.q) url.searchParams.set('q', `${size?.q}`);
+        return url.href;
+    } catch (error) {
+        return link;
+    }
+};
+
 export function haversineDistance([lat1, lon1], [lat2, lon2]) {
     const toRad = deg => deg * (Math.PI / 180);
 

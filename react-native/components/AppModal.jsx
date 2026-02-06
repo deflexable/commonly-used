@@ -83,6 +83,7 @@ const AppModal = forwardRef(({
       ref={ref}
       disabled={disabled}
       disableBackHandler={disableBackHandler || !isFocused}
+      backdropColor={isDarkMode ? 'rgba(0, 0, 0, 0.7)' : undefined}
       style={modalStyle}
       centered={centered}
       handleColor={isDarkMode ? Colors.gray : Colors.borderColor}
@@ -103,11 +104,14 @@ export const MaxModalWidth = 750;
 /**
  * @type {AppModal}
  */
-export const ModalScreen = ({ modalRef, onClosed, ...restProps }) => {
+export const ModalScreen = ({ modalRef, onClosed, autoOpen = true, ...restProps }) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    modalRef.current.open();
+    if (autoOpen)
+      requestIdleCallback(() => {
+        modalRef.current.open();
+      }, { timeout: 70 });
   }, []);
 
   return (
@@ -126,3 +130,5 @@ export const ModalScreen = ({ modalRef, onClosed, ...restProps }) => {
 const styling = {
   flexer: { flex: 1 }
 };
+
+export const MODAL_HANDLER_HEIGHT = 19;

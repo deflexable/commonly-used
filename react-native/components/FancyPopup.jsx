@@ -222,7 +222,7 @@ const styling = {
     btnNegativeCon: {
         borderColor: Colors.themeColor,
         padding: 11,
-        marginTop: 30,
+        marginTop: 15,
         borderRadius: 7,
         borderWidth: 1
     },
