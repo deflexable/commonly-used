@@ -200,7 +200,7 @@ export const HyperText = ({ doLink, children, linkColor = 'rgb(145, 181, 251)', 
 }
 
 function linkify(text = '') {
-    const regex = /https:\/\/[^\s"'<>]+/g;
+    const regex = /https?:\/\/[^\s"'<>]+/g;
     const result = [];
 
     let lastIndex = 0;
