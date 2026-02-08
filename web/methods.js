@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
-import { WEB_SCOPE } from "./scope.js";
+import { useEffect, useRef, useState } from "react";
+import { useLastLoaderData } from "./nav.js";
+import { CentralizeListener, ListenersKey } from "website/app/utils/listeners";
 
 export const getTimezoneOffset = (tz) => {
     if (!tz) return 0;
@@ -8,6 +9,76 @@ export const getTimezoneOffset = (tz) => {
 
     return tzTime - clientTime;
 };
+
+export const appendScriptSrc = (obj) => new Promise((resolve, reject) => {
+    if (typeof obj === 'string') obj = { src: obj };
+
+    if (isBrowser() && obj?.src) {
+        if (!document.head.querySelector(`script[src="${obj.src}"]`)) {
+            const scriptNode = document.createElement('script');
+
+            Object.entries(obj).forEach(([key, value]) => {
+                scriptNode[key] = value;
+            });
+
+            scriptNode.onload = () => {
+                resolve();
+            }
+
+            scriptNode.onerror = () => {
+                reject();
+            }
+
+            document.head.appendChild(scriptNode);
+        } else resolve();
+    }
+});
+
+export const removeScriptSrc = (obj) => {
+    if (typeof obj === 'string') obj = { src: obj };
+
+    if (isBrowser() && obj?.src) {
+        document.head.querySelector(`script[src="${obj.src}"]`)?.remove?.();
+    }
+};
+
+export const useScriptSrc = ({ src, onerror, onsuccess }) => {
+    const [state, setState] = useState({ success: undefined, error: undefined });
+
+    useEffect(() => {
+        let hasUnmounted;
+
+        appendScriptSrc(src).then(s => {
+            if (hasUnmounted) return;
+            onsuccess(s);
+            setState({ success: true });
+        }, e => {
+            if (hasUnmounted) return;
+            onerror(e);
+            setState({ error: true });
+        });
+
+        return () => {
+            hasUnmounted = true;
+            removeScriptSrc(src);
+        }
+    }, []);
+
+    return state;
+};
+
+export const usePrefferedSettings = () => {
+    const { userSettings } = useLastLoaderData();
+    const [prefferedSettings, setPrefferedSettings] = useState({ ...userSettings });
+
+    useEffect(() => {
+        return CentralizeListener.listenTo(ListenersKey.PREFFED_SETTINGS, l => {
+            setPrefferedSettings({ ...l });
+        });
+    }, []);
+
+    return prefferedSettings;
+}
 
 export const downloadBuffer = ({ data, href, type = "text/plain", rename }) => {
     const a = document.createElement("a");
@@ -111,7 +182,11 @@ export const useBodyLazyScroll = (callback) => {
     }, []);
 
     return undefined;
-}
+};
+
+const WEB_SCOPE = {
+    __scrollBlocker: 0
+};
 
 export const useBodyScrollBlocker = (block) => {
 

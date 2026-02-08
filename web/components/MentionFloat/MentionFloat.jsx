@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import PopupModal from "../PopupModal/PopupModal";
 import UserPhoto from "../UserPhoto/UserPhoto";
-import { useLastLoaderData, useRootLoaderData } from "../../nav";
+import { useLastLoaderData } from "../../nav";
 import { mentionRegex } from "../../cleanser";
 import { downScaleImage, joinPath } from "../../../common/methods";
+import { ENV } from "../../server_variables.js";
 
 function getCaretNode() {
     var selection = window.getSelection();
@@ -58,10 +59,9 @@ const sanitizeHtml = (text) => {
 };
 
 export default function ({ innerStyle, onMentionUser, inputID, children, searchUser, WEB_BASE_URL }) {
-    const { clientEnv } = useRootLoaderData();
     const { geo } = useLastLoaderData();
 
-    if (!WEB_BASE_URL) WEB_BASE_URL = clientEnv.WEB_BASE_URL;
+    if (!WEB_BASE_URL) WEB_BASE_URL = ENV.WEB_BASE_URL;
 
     const [users, setUsers] = useState([]),
         [open, setOpen] = useState(false);

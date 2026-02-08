@@ -1,7 +1,7 @@
 import ReactDOMServer from 'react-dom/server';
 import { useEffect, useRef, useState } from 'react';
 import { useLangLink } from '../../langy';
-import { useRootLoaderData } from '../../nav';
+import { ENV } from "../../server_variables.js";
 
 function linkify(text, replacer, langify, WEB_BASE_URL) {
     var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
@@ -35,9 +35,8 @@ export default function ({
     ...restProps
 }) {
     const shouldTruncate = !isNaN(truncateLines);
-    const { clientEnv } = useRootLoaderData();
 
-    if (!WEB_BASE_URL) WEB_BASE_URL = clientEnv.WEB_BASE_URL;
+    if (!WEB_BASE_URL) WEB_BASE_URL = ENV.WEB_BASE_URL;
 
     const [expanded, setExpanded] = useState(),
         [expandable, setExpandable] = useState(),
@@ -140,5 +139,5 @@ export default function ({
                         </button>}
                 </div> : null}
         </div>
-    )
+    );
 }

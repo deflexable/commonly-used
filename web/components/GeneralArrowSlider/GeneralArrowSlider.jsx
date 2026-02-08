@@ -1,5 +1,5 @@
 import ArrowSlider from "../ArrowSlider/ArrowSlider";
-import ArrowSrc from "~/assets/back.png";
+import { Back } from "website/app/utils/asset_map.js";
 
 export default function ({ children, disableArrow, arrowClass, scrollerClass, onPaginate, ...restProps }) {
 
@@ -10,14 +10,14 @@ export default function ({ children, disableArrow, arrowClass, scrollerClass, on
             leftArrowComponent={disableArrow ? null : (
                 <div className={`general-arrow-left ${arrowClass || ''}`}>
                     <button>
-                        <div style={{ backgroundImage: `url(${ArrowSrc})` }} />
+                        <div style={{ backgroundImage: `url(${Back})` }} />
                     </button>
                 </div>
             )}
             rightArrowComponent={disableArrow ? null : (
                 <div className={`general-arrow-right ${arrowClass || ''}`}>
                     <button>
-                        <div style={{ backgroundImage: `url(${ArrowSrc})` }} />
+                        <div style={{ backgroundImage: `url(${Back})` }} />
                     </button>
                 </div>
             )}>

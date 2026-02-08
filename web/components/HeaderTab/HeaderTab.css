@@ -1,0 +1,27 @@
+
+.profile-tabbar-arrow-slide button {
+    width: 30px;
+    height: 30px;
+}
+
+.profile-tabbar-btn {
+    min-width: 20%;
+    padding: 12px 30px;
+    box-sizing: border-box;
+    background-color: transparent;
+    border: none;
+    display: block;
+    text-transform: capitalize;
+    font-weight: bold;
+    color: unset;
+}
+
+.profile-tabbar-indicator-con div {
+    transition: width 700ms;
+}
+
+.profile-tabbar-indicator-con span {
+    background-color: var(--themeColor);
+    height: 2px;
+    transition: width 700ms;
+}

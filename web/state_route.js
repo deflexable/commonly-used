@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef } from "react";
-import { APP_STATES } from "./scope";
 import { isBrowser } from "./is_browser";
 import { useLastLoaderData } from "./nav";
+
+export const APP_STATES = {
+    routes: {}
+};
 
 /**
  * @type {() => ({ restoreData: {[key: string]: any}, wasRestore: boolean })}
@@ -10,7 +13,7 @@ export const useRouteState = () => {
     const { url: route, __init_restorables } = useLastLoaderData();
 
     const unmounted = useRef();
- 
+
     const wasRestore = useMemo(() => {
         if (isBrowser()) {
             if (APP_STATES.routes[route]) return true;
