@@ -1,6 +1,5 @@
 import { isBrowser } from './is_browser.js';
 import { ENV } from './server_variables.js';
-import { WEB_SCOPE } from "website/app/utils/scope.js";
 
 let counter = 0;
 
@@ -55,9 +54,13 @@ export const deserializeStorage = async (key) => {
     return null;
 }
 
-export const SSO_ReadyPromise = isBrowser() ?
+export const SSO_Resolution = {
+    callback: undefined
+};
+
+const SSO_ReadyPromise = isBrowser() ?
     new Promise(resolve => {
-        WEB_SCOPE.ssoReadyCallback = resolve;
+        SSO_Resolution.callback = resolve;
     })
     : undefined;
 
