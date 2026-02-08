@@ -1,15 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import { CentralizeListener, ListenersKey } from "website/app/utils/listeners";
 import { ENV } from "./server_variables";
-import { LANG_REF, LANG_STORE, LANG_URL } from "website/app/utils/values";
 import { useLastLoaderData } from "./nav.js";
 import { AuthScope } from "website/app/utils/scope.js";
 import { DbPath } from "core/common_values";
 import { collection, useIsOnline } from "./client_server";
+import { usePrefferedSettings } from "./methods.js";
 
 export const LANG_SCOPE = {
     session_lang: undefined
-}
+};
+
+export const LANG_STORE = new Proxy({}, {
+    get: (_, n) => globalThis.lang_store[n]
+});
+
+const LANG_REF = {
+    common: 'common'
+};
+
+const LANG_URL = (lang, ref) => `${ENV.WEB_BASE_URL}/translations/${ENV.translationHash}/${lang}/${ref}.json`;
 
 export const useTranslation = (reference = LANG_REF.common, isSecondary) => {
     const { country_lang, force_lang, session_lang, user, must_lang } = useLastLoaderData();
@@ -118,4 +128,4 @@ export const updateLanguage = (value) => {
             fetcher.submit(form, { method: 'POST', action: submissionAction });
         });
     }
-}
+};

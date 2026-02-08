@@ -2,9 +2,10 @@ import { MosquitoTransport } from 'mosquito-transport-js';
 import { isBrowser } from "./is_browser";
 import { ENV } from './server_variables';
 import { deserializeStorage, serializeStorage } from './cacher';
-import { MOSQUITO_STORAGE_PATH } from 'website/app/utils/values';
 import { WEB_SCOPE } from 'website/app/utils/scope';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+const MOSQUITO_STORAGE_PATH = 'MOSQUITO_STORAGE_PATH';
 
 export const releaseMosquitoCache = () => {
     if (isBrowser()) {
