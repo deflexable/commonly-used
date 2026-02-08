@@ -1,7 +1,4 @@
-
-export const WEB_PROCESS = {
-    env: undefined
-}
+import { WEB_PROCESS } from './scope';
 
 /**
  * @type {() => import('mosquito-transport').default}

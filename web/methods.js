@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useLastLoaderData } from "./nav.js";
-import { CentralizeListener, ListenersKey } from "website/app/utils/listeners";
+import { ListenersKey } from "website/app/utils/listeners";
+import { CentralizeListener } from "./listeners";
 import { isBrowser } from "./is_browser.js";
+import { WEB_SCOPE } from "./scope.js";
 
 export const getTimezoneOffset = (tz) => {
     if (!tz) return 0;
@@ -183,10 +185,6 @@ export const useBodyLazyScroll = (callback) => {
     }, []);
 
     return undefined;
-};
-
-const WEB_SCOPE = {
-    __scrollBlocker: 0
 };
 
 export const useBodyScrollBlocker = (block) => {

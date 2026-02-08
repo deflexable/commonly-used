@@ -1,7 +1,8 @@
 import { DbPath } from "core/common_values";
 import { collection } from "./client_server";
-import { CentralizeListener, ListenersKey } from "website/app/utils/listeners.js";
-import { AuthScope } from "website/app/utils/scope";
+import { ListenersKey } from "website/app/utils/listeners.js";
+import { CentralizeListener } from "./listeners";
+import { AuthScope } from "./scope";
 import { onUserThemeChanged } from "./theme_helper";
 
 const settingsMapper = {

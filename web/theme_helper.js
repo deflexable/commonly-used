@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { AuthScope, ThemeHelperScope } from "website/app/utils/scope";
-import { CentralizeListener } from "website/app/utils/listeners";
+import { AuthScope, ThemeHelperScope } from "./scope.js";
+import { CentralizeListener } from "./listeners";
 import { isBrowser } from "./is_browser";
 import { getTimezoneOffset } from './methods.js';
 import { useLastLoaderData } from "./nav.js";

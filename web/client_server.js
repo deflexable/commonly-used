@@ -2,7 +2,7 @@ import { MosquitoTransport } from 'mosquito-transport-js';
 import { isBrowser } from "./is_browser";
 import { ENV } from './server_variables';
 import { deserializeStorage, serializeStorage } from './cacher';
-import { WEB_SCOPE } from 'website/app/utils/scope';
+import { WEB_STATE } from './scope';
 import { useState, useEffect } from 'react';
 
 const MOSQUITO_STORAGE_PATH = 'MOSQUITO_STORAGE_PATH';
@@ -47,13 +47,13 @@ if (isBrowser()) {
         } catch (_) { return; }
         clearInterval(timer);
         mserver().listenReachableServer(connected => {
-            WEB_SCOPE.isOnline = connected;
+            WEB_STATE.isOnline = connected;
         });
     }, 3);
 }
 
 const useIsOnline = () => {
-    const [isOnline, setOnline] = useState(WEB_SCOPE.isOnline);
+    const [isOnline, setOnline] = useState(WEB_STATE.isOnline);
 
     useEffect(() => {
         return listenReachableServer(connected => {

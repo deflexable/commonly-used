@@ -1,12 +1,11 @@
 import { isBrowser } from './is_browser.js';
+import { WEB_SCOPE } from './scope.js';
 import { ENV } from './server_variables.js';
-
-let counter = 0;
 
 export const serializeStorage = async (key, value) => {
     if (!isBrowser()) throw 'serializeStorage only supported on a web client';
 
-    const session = `set-${key}${Math.random()}${++counter}`;
+    const session = `set-${key}${Math.random()}${++WEB_SCOPE.__absoluteIterator}`;
 
     await executeIframe({
         iframeID: 'sso-auth-iframe',
@@ -29,7 +28,7 @@ export const deserializeStorage = async (key) => {
     if (!isBrowser()) throw 'deserializeStorage only supported on a web client';
 
     try {
-        const session = `get-${key}${Math.random()}${++counter}`;
+        const session = `get-${key}${Math.random()}${++WEB_SCOPE.__absoluteIterator}`;
 
         const cacheData = await executeIframe({
             iframeID: 'sso-auth-iframe',

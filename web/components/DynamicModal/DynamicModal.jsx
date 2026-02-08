@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import CollapsibleSheet from "../CollapsibleModal/CollapsibleSheet";
 import DropModal from "../DropModal/DropModal";
 import ModalHandle from "../ModalHandle/ModalHandle";
-import { CentralizeListener } from "website/app/utils/listeners.js";
+import { CentralizeListener } from "../../listeners";
 
 export const PREVENT_OPEN_SIGNAL = Symbol();
 

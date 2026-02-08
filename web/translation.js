@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { CentralizeListener, ListenersKey } from "website/app/utils/listeners";
+import { ListenersKey } from "website/app/utils/listeners";
+import { CentralizeListener } from "./listeners";
 import { ENV } from "./server_variables";
 import { useLastLoaderData } from "./nav.js";
-import { AuthScope } from "website/app/utils/scope.js";
 import { DbPath } from "core/common_values";
 import { collection, useIsOnline } from "./client_server";
 import { usePrefferedSettings } from "./methods.js";
-
-export const LANG_SCOPE = {
-    session_lang: undefined
-};
+import { LANG_SCOPE, AuthScope } from "./scope.js";
 
 export const LANG_STORE = new Proxy({}, {
     get: (_, n) => globalThis.lang_store[n]
