@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
-import { isBrowser } from "./is_browser";
-import { useLastLoaderData } from "./nav";
-import { APP_STATES } from "./scope";
+import { isBrowser } from "bbx-commonly-used/web/is_browser";
+import { useLastLoaderData } from "bbx-commonly-used/web/nav";
+import { APP_STATES } from "bbx-commonly-used/web/scope";
 
 /**
  * @type {() => ({ restoreData: {[key: string]: any}, wasRestore: boolean })}

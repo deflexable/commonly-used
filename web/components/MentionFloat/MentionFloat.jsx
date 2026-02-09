@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import PopupModal from "../PopupModal/PopupModal";
-import UserPhoto from "../UserPhoto/UserPhoto";
-import { useLastLoaderData } from "../../nav";
-import { mentionRegex } from "../../cleanser";
-import { downScaleImage, joinPath } from "../../../common/methods";
-import { ENV } from "../../server_variables.js";
+import PopupModal from "bbx-commonly-used/web/components/PopupModal/PopupModal";
+import UserPhoto from "bbx-commonly-used/web/components/UserPhoto/UserPhoto";
+import { useLastLoaderData } from "bbx-commonly-used/web/nav";
+import { mentionRegex } from "bbx-commonly-used/web/cleanser";
+import { downScaleImage, joinPath } from "bbx-commonly-used/common/methods";
+import { ENV } from "bbx-commonly-used/web/server_variables";
 
 function getCaretNode() {
     var selection = window.getSelection();

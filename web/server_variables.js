@@ -1,4 +1,4 @@
-import { WEB_PROCESS } from './scope';
+import { WEB_PROCESS } from 'bbx-commonly-used/web/scope';
 
 /**
  * @type {() => import('mosquito-transport').default}

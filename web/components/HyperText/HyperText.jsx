@@ -1,7 +1,7 @@
 import ReactDOMServer from 'react-dom/server';
 import { useEffect, useRef, useState } from 'react';
-import { useLangLink } from '../../langy';
-import { ENV } from "../../server_variables.js";
+import { useLangLink } from 'bbx-commonly-used/web/langy';
+import { ENV } from "bbx-commonly-used/web/server_variables";
 
 function linkify(text, replacer, langify, WEB_BASE_URL) {
     var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;

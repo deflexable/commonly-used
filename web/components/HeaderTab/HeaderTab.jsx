@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import SimpleSlider from "../SimpleSlider/SimpleSlider";
-import GeneralArrowSlider from "../GeneralArrowSlider/GeneralArrowSlider";
+import SimpleSlider from "bbx-commonly-used/web/components/SimpleSlider/SimpleSlider";
+import GeneralArrowSlider from "bbx-commonly-used/web/components/GeneralArrowSlider/GeneralArrowSlider";
 
 export default function ({ Tabs = [], renderTabSlide, children, onTabChanged, slideContainerProps, tabbarClass }) {
     const [currentTab, setCurrentTab] = useState(0),

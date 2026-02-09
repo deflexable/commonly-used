@@ -1,6 +1,6 @@
-import { isBrowser } from './is_browser.js';
-import { WEB_SCOPE } from './scope.js';
-import { ENV } from './server_variables.js';
+import { isBrowser } from 'bbx-commonly-used/web/is_browser.js';
+import { WEB_SCOPE } from 'bbx-commonly-used/web/scope.js';
+import { ENV } from 'bbx-commonly-used/web/server_variables.js';
 
 export const serializeStorage = async (key, value) => {
     if (!isBrowser()) throw 'serializeStorage only supported on a web client';

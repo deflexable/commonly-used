@@ -15,10 +15,5 @@
   "bugs": {
     "url": "https://github.com/deflexable/commonly-used/issues"
   },
-  "homepage": "https://github.com/deflexable/commonly-used#readme",
-  "devDependencies": {
-    "@types/react": "^19.2.2",
-    "react-native-mosquito-transport": "^0.0.47",
-    "typescript": "^5.9.3"
-  }
+  "homepage": "https://github.com/deflexable/commonly-used#readme"
 }

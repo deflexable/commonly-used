@@ -1,9 +1,9 @@
 import { DbPath } from "core/common_values";
-import { collection } from "./client_server";
+import { collection } from "bbx-commonly-used/web/client_server";
 import { ListenersKey } from "website/app/utils/listeners.js";
-import { CentralizeListener } from "./listeners";
-import { AuthScope } from "./scope";
-import { onUserThemeChanged } from "./theme_helper";
+import { CentralizeListener } from "bbx-commonly-used/web/listeners";
+import { AuthScope } from "bbx-commonly-used/web/scope";
+import { onUserThemeChanged } from "bbx-commonly-used/web/theme_helper";
 
 const settingsMapper = {
     theme: onUserThemeChanged

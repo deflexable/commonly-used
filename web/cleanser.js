@@ -1,4 +1,4 @@
-import { isBrowser } from "./is_browser";
+import { isBrowser } from "bbx-commonly-used/web/is_browser";
 
 export const mentionRegex = (WEB_BASE_URL) => new RegExp(`^<a href="${(WEB_BASE_URL || location.origin).split('/').join('\\/')}\\/@([^"]+)">@\\1<\\/a>$`);
 

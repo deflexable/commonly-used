@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useBodyScrollBlocker } from "../../methods";
+import { useBodyScrollBlocker } from "bbx-commonly-used/web/methods";
 
 export default function ({ children, isOpen, onClickBackdrop, dropType = 'bottom', containerClass, containerStyle, durationMs = 300, disableOverflowToggle }) {
 

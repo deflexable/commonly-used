@@ -1,6 +1,6 @@
-import { isBrowser } from "./is_browser";
+import { isBrowser } from "bbx-commonly-used/web/is_browser";
 import { Validator } from "guard-object";
-import { useLastLoaderData } from "./nav";
+import { useLastLoaderData } from "bbx-commonly-used/web/nav";
 import { SUPPORTED_LANGUAGES } from "core/common_values";
 
 export const langifyLink = (link = '', url = '') => {

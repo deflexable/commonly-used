@@ -1,5 +1,5 @@
-import { Link } from "@remix-run/react"
-import { useLangLink } from "../../langy";
+import { Link } from "@remix-run/react";
+import { useLangLink } from "bbx-commonly-used/web/langy";
 
 export default function ({ style, size, src, classes, imgProps, vip, href, target }) {
     if (size) style = { ...style, width: `${size}px`, height: `${size}px` };

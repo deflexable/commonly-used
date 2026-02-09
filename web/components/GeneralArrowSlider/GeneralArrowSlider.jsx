@@ -1,4 +1,4 @@
-import ArrowSlider from "../ArrowSlider/ArrowSlider";
+import ArrowSlider from "bbx-commonly-used/web/components/ArrowSlider/ArrowSlider";
 import { Back } from "website/app/utils/asset_map.js";
 
 export default function ({ children, disableArrow, arrowClass, scrollerClass, onPaginate, ...restProps }) {

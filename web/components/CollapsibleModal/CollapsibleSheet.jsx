@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { useSpring, animated } from '@react-spring/web';
 import { DragGesture } from '@use-gesture/vanilla';
-import { useBodyScrollBlocker } from '../../methods';
+import { useBodyScrollBlocker } from 'bbx-commonly-used/web/methods';
 
 const CollapsibleSheet = forwardRef(({
     handle,

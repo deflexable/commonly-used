@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { ListenersKey } from "website/app/utils/listeners";
-import { CentralizeListener } from "./listeners";
-import { ENV } from "./server_variables";
-import { useLastLoaderData } from "./nav.js";
+import { CentralizeListener } from "bbx-commonly-used/web/listeners";
+import { ENV } from "bbx-commonly-used/web/server_variables";
+import { useLastLoaderData } from "bbx-commonly-used/web/nav.js";
 import { DbPath } from "core/common_values";
-import { collection, useIsOnline } from "./client_server";
-import { usePrefferedSettings } from "./methods.js";
-import { LANG_SCOPE, AuthScope } from "./scope.js";
+import { collection, useIsOnline } from "bbx-commonly-used/web/client_server";
+import { usePrefferedSettings } from "bbx-commonly-used/web/methods.js";
+import { LANG_SCOPE, AuthScope } from "bbx-commonly-used/web/scope.js";
 
 export const LANG_STORE = new Proxy({}, {
     get: (_, n) => globalThis.lang_store[n]

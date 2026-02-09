@@ -1,4 +1,4 @@
-import { useDarkMode } from "../../theme_helper";
+import { useDarkMode } from "bbx-commonly-used/web/theme_helper";
 
 export const RadioButton = ({ isSelected, size, style, buttonStyle, themeColor, themeColorFilter, isCheckBox }) => {
     const isDarkMode = useDarkMode();

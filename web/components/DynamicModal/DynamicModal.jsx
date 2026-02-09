@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import CollapsibleSheet from "../CollapsibleModal/CollapsibleSheet";
-import DropModal from "../DropModal/DropModal";
-import ModalHandle from "../ModalHandle/ModalHandle";
-import { CentralizeListener } from "../../listeners";
+import CollapsibleSheet from "bbx-commonly-used/web/components/CollapsibleModal/CollapsibleSheet";
+import DropModal from "bbx-commonly-used/web/components/DropModal/DropModal";
+import ModalHandle from "bbx-commonly-used/web/components/ModalHandle/ModalHandle";
+import { CentralizeListener } from "bbx-commonly-used/web/listeners";
 
 export const PREVENT_OPEN_SIGNAL = Symbol();
 
