@@ -34,7 +34,7 @@ const mserver = (options) => {
     return isBrowser() ? new MosquitoTransport({
         projectUrl: API_BASE_URL,
         enableE2E_Encryption: !!E2E_Public_Key,
-        serverE2E_PublicKey: E2E_Public_Key,
+        ...E2E_Public_Key ? { serverE2E_PublicKey: E2E_Public_Key } : {},
         disableCache: false,
         ...options
     }) : undefined;

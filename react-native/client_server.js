@@ -17,7 +17,7 @@ export const createMserver = extras =>
         projectUrl: API_BASE_URL,
         disableCache: !ENABLE_CACHE,
         enableE2E_Encryption: !!E2E_Public_Key,
-        serverE2E_PublicKey: E2E_Public_Key,
+        ...E2E_Public_Key ? { serverE2E_PublicKey: E2E_Public_Key } : {},
         ...extras
     });
 

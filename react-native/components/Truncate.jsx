@@ -17,7 +17,6 @@ export function Truncate({
     onLayout,
     numberOfLines,
     children,
-    key,
     ...restProps
 }) {
     const isDarkMode = useDarkMode();
