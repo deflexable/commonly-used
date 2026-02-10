@@ -1,4 +1,5 @@
 import { useDarkMode } from "bbx-commonly-used/web/theme_helper";
+import { Mark } from "website/app/utils/asset_map.js";
 
 export const RadioButton = ({ isSelected, size, style, buttonStyle, themeColor, themeColorFilter, isCheckBox }) => {
     const isDarkMode = useDarkMode();
@@ -22,7 +23,11 @@ export const RadioButton = ({ isSelected, size, style, buttonStyle, themeColor, 
                     ...isCheckBox ? { borderRadius: '3px' } : {}
                 }}>
                 {isSelected ?
-                    isCheckBox ? <span style={themeColorFilter ? { filter: themeColorFilter } : {}} /> :
+                    isCheckBox ?
+                        <span style={{
+                            ...themeColorFilter ? { filter: themeColorFilter } : {},
+                            backgroundImage: `url(${Mark})`
+                        }} /> :
                         <div style={themeColor ? { backgroundColor: themeColor } : {}} /> : null}
             </div>
         </div>
