@@ -149,7 +149,7 @@ export default function ({
                 barColor = document.head.querySelector('meta[name="theme-color"]').content;
             } catch (_) { }
 
-            window.ReactNativeWebView.postMessage(JSON.stringify({ ref, data: { barColor, domColor, bodyColor } }));
+            window.ReactNativeWebView.postMessage(JSON.stringify({ ref, data: { barColor, domColor, bodyColor }, __internal_event: true }));
         })();
         `;
         return addWebviewTask(ref, script).catch(e => {
@@ -251,8 +251,11 @@ export default function ({
                             return;
                         }
                         try {
-                            const { ref, ...rest } = JSON.parse(event);
-                            awaitingTasks.current[ref](rest);
+                            const { ref, __internal_event, ...rest } = JSON.parse(event);
+                            if (__internal_event) {
+                                awaitingTasks.current[ref](rest);
+                                return;
+                            }
                         } catch (_) { }
                         setDocumentMessage?.(event);
                     }}

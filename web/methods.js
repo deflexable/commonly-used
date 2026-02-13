@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLastLoaderData } from "bbx-commonly-used/web/nav.js";
 import { ListenersKey } from "website/app/utils/listeners";
 import { CentralizeListener } from "bbx-commonly-used/web/listeners";
 import { isBrowser } from "bbx-commonly-used/web/is_browser.js";
-import { WEB_SCOPE } from "bbx-commonly-used/web/scope.js";
+import { WEB_SCOPE, WEB_STATE } from "bbx-commonly-used/web/scope.js";
 
 export const getTimezoneOffset = (tz) => {
     if (!tz) return 0;
@@ -72,7 +72,13 @@ export const useScriptSrc = ({ src, onerror, onsuccess }) => {
 
 export const usePrefferedSettings = () => {
     const { userSettings } = useLastLoaderData();
-    const [prefferedSettings, setPrefferedSettings] = useState({ ...userSettings });
+    const initialData = useMemo(() =>
+        WEB_STATE.prefferedSettingsValue
+            ? { ...WEB_STATE.prefferedSettingsValue }
+            : { ...userSettings },
+        []);
+
+    const [prefferedSettings, setPrefferedSettings] = useState(initialData);
 
     useEffect(() => {
         return CentralizeListener.listenTo(ListenersKey.PREFFED_SETTINGS, l => {
@@ -81,7 +87,7 @@ export const usePrefferedSettings = () => {
     }, []);
 
     return prefferedSettings;
-}
+};
 
 export const downloadBuffer = ({ data, href, type = "text/plain", rename }) => {
     const a = document.createElement("a");

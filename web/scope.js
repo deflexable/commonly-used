@@ -5,7 +5,8 @@ export const WEB_SCOPE = {
 };
 
 export const WEB_STATE = {
-    isOnline: undefined
+    isOnline: undefined,
+    prefferedSettingsValue: undefined
 };
 
 export const WEB_PROCESS = {
