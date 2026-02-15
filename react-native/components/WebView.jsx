@@ -1,4 +1,4 @@
-import { Image, Share, TouchableOpacity, View, StatusBar } from "react-native";
+import { ActivityIndicator, Image, Share, TouchableOpacity, View, StatusBar } from "react-native";
 import { AppTitleBar, commonAppBarStyle } from "./AppBars";
 import { themeStyle } from "../page_helper";
 import { Back, Plus, Refresh } from "@this_app_root/src/utils/assets";
@@ -39,6 +39,7 @@ export default function ({
     const [pageDark, setPageDark] = useState();
     const [barDark, setBarDark] = useState();
     const [barColor, setBarColor] = useState();
+    const [mounted, setHasMounted] = useState();
     // const [loading, setLoading] = useState();
 
     const loading = loadProgress < 1;
@@ -84,6 +85,10 @@ export default function ({
         }
         webviewRef.current.injectJavaScript(script);
     });
+
+    useEffect(() => {
+        if (loadProgress >= .8) setHasMounted(true);
+    }, [loadProgress >= .8]);
 
     useEffect(() => onDestroy, []);
 
@@ -232,7 +237,7 @@ export default function ({
         <View style={pageStyles.main}>
             <StatusBar barStyle={thisBarDark ? 'light-content' : 'dark-content'} />
             {renderTitleBar()}
-            <View style={pageStyles.flexer}>
+            <View style={pageStyles.centerFlexer}>
                 <WebView
                     {...webProps}
                     ref={webviewRef}
@@ -282,6 +287,10 @@ export default function ({
                             top: 0,
                             left: 0
                         }} />}
+                {mounted ? null :
+                    <ActivityIndicator
+                        size={45}
+                        color={Colors.themeColor} />}
             </View>
             {doBottomSpacing?.()}
             <KeyboardPlaceholderView />
@@ -291,6 +300,12 @@ export default function ({
 
 const pageStyling = {
     flexer: { flex: 1 },
+
+    centerFlexer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
 
     main: commonAppBarStyle.main
 };

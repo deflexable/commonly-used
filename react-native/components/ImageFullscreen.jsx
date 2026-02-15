@@ -14,6 +14,7 @@ import { Back } from '@this_app_root/src/utils/assets';
 import { Colors } from '@this_app_root/src/utils/values';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { devTransformLocalhostURL, optimizeImage, shouldCover, useStyle } from './../page_helper.js';
+import { useBackButton } from "react-native-push-back";
 
 export default function ({ route: { params: { item = [], initialIndex } }, navigation }) {
     const { top: statusHeight } = useSafeAreaInsets();
@@ -49,6 +50,10 @@ export default function ({ route: { params: { item = [], initialIndex } }, navig
         outputRange: [0, 1, 0],
         extrapolate: 'clamp',
     });
+
+    useBackButton(() => {
+        navigation.goBack();
+    }, false);
 
     const panResponder = useMemo(() =>
         PanResponder.create({
@@ -90,7 +95,7 @@ export default function ({ route: { params: { item = [], initialIndex } }, navig
                 backgroundColor={Colors.transparent}
                 leading={
                     <TouchableOpacity
-                        style={[styles.titleBtn, { marginLeft: 15 }]}
+                        style={styles.titleBtn}
                         onPress={() => {
                             navigation.goBack();
                         }}>
@@ -179,7 +184,8 @@ const styles = StyleSheet.create({
 
     titleBtn: {
         backgroundColor: Colors.darkTransparent,
-        borderRadius: 50
+        borderRadius: 50,
+        marginLeft: 15
     },
 
     titleBarIcon: {
