@@ -86,9 +86,10 @@ export default function ({
         webviewRef.current.injectJavaScript(script);
     });
 
+    const isDone = loadProgress === 1;
     useEffect(() => {
-        if (loadProgress >= .8) setHasMounted(true);
-    }, [loadProgress >= .8]);
+        if (isDone) setHasMounted(true);
+    }, [isDone]);
 
     useEffect(() => onDestroy, []);
 
@@ -238,44 +239,44 @@ export default function ({
             <StatusBar barStyle={thisBarDark ? 'light-content' : 'dark-content'} />
             {renderTitleBar()}
             <View style={pageStyles.centerFlexer}>
-                <WebView
-                    {...webProps}
-                    ref={webviewRef}
-                    style={pageStyles.flexer}
-                    source={{ uri }}
-                    cacheEnabled
-                    originWhitelist={['*']}
-                    allowsInlineMediaPlayback
-                    forceDarkOn={thisPageDark}
-                    onLoadEnd={computeWindowTheme}
-                    onMessage={message => {
-                        // console.log('onMessage:', message.nativeEvent.data);
-                        const event = message.nativeEvent.data;
-                        if (event === '__close:this:webpage') {
-                            navigation?.goBack?.();
-                            return;
-                        }
-                        try {
-                            const { ref, __internal_event, ...rest } = JSON.parse(event);
-                            if (__internal_event) {
-                                awaitingTasks.current[ref](rest);
+                <View style={pageStyles.filler}>
+                    <WebView
+                        {...webProps}
+                        ref={webviewRef}
+                        style={pageStyles.flexer}
+                        source={{ uri }}
+                        cacheEnabled
+                        originWhitelist={['*']}
+                        allowsInlineMediaPlayback
+                        forceDarkOn={thisPageDark}
+                        onLoadEnd={computeWindowTheme}
+                        onMessage={message => {
+                            // console.log('onMessage:', message.nativeEvent.data);
+                            const event = message.nativeEvent.data;
+                            if (event === '__close:this:webpage') {
+                                navigation?.goBack?.();
                                 return;
                             }
-                        } catch (_) { }
-                        setDocumentMessage?.(event);
-                    }}
-                    onLoadProgress={({ nativeEvent }) => {
-                        setHref(nativeEvent.url);
-                        setWebTitle(nativeEvent.title);
-                        setLoadProgress(nativeEvent.progress || 0);
-                        setCanGoBack(nativeEvent.canGoBack);
-                        setCanGoForward(nativeEvent.canGoForward);
-                        // setLoading(nativeEvent.loading);
-                        console.log('web progress:', nativeEvent);
-                    }}
-                />
-                {/* {loading ?
-                    <LoadingOverlay size={40} /> : null} */}
+                            try {
+                                const { ref, __internal_event, ...rest } = JSON.parse(event);
+                                if (__internal_event) {
+                                    awaitingTasks.current[ref](rest);
+                                    return;
+                                }
+                            } catch (_) { }
+                            setDocumentMessage?.(event);
+                        }}
+                        onLoadProgress={({ nativeEvent }) => {
+                            setHref(nativeEvent.url);
+                            setWebTitle(nativeEvent.title);
+                            setLoadProgress(nativeEvent.progress || 0);
+                            setCanGoBack(nativeEvent.canGoBack);
+                            setCanGoForward(nativeEvent.canGoForward);
+                            // setLoading(nativeEvent.loading);
+                            console.log('web progress:', nativeEvent);
+                        }}
+                    />
+                </View>
                 {loadProgress === 1
                     ? null :
                     <View
@@ -290,7 +291,8 @@ export default function ({
                 {mounted ? null :
                     <ActivityIndicator
                         size={45}
-                        color={Colors.themeColor} />}
+                        color={Colors.themeColor}
+                        style={{ position: 'absolute' }} />}
             </View>
             {doBottomSpacing?.()}
             <KeyboardPlaceholderView />
@@ -305,6 +307,11 @@ const pageStyling = {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+
+    filler: {
+        width: '100%',
+        height: '100%'
     },
 
     main: commonAppBarStyle.main
