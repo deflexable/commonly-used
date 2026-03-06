@@ -109,6 +109,7 @@ export const EmptyLogo = ({ message, messageStyle, des, onPressTxt, onPress, src
                             </TextView> : null}
                         {onPress ?
                             <TouchableOpacity
+                                activeOpacity={.5}
                                 onPress={onPress}
                                 style={emptyStying.baseBtn}>
                                 <TextView

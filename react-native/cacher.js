@@ -68,5 +68,5 @@ export const makeCacher = (init = []) => {
         return r;
     });
 
-    return { proxy, resolution };
+    return { proxy, resolution, storage: InstantCacheData };
 }

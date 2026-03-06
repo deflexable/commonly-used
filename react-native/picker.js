@@ -85,7 +85,10 @@ export const openCamera = async (options) => {
         const res = await launchCamera(options);
         if (res.didCancel) throw { code: errorCodes.OPERATION_CANCELED };
         if (res.errorMessage || res.errorCode) throw simplifyError(res.errorCode, res.errorMessage);
-        return res.assets.map(v => reformatGalleryData(v));
+        const results = res.assets.map(v => reformatGalleryData(v));
+        const multiple = options?.multiple;
+
+        return Number.isInteger(multiple) ? results.slice(0, multiple) : multiple ? results : results[0];
     } catch (e) {
         if (e?.code !== errorCodes.OPERATION_CANCELED) {
             alertError(e);
