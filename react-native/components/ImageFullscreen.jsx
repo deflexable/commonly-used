@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import {
     View,
     Image,
@@ -15,6 +15,7 @@ import { Colors } from '@this_app_root/src/utils/values';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { devTransformLocalhostURL, optimizeImage, shouldCover, useStyle } from './../page_helper.js';
 import { useBackButton } from "react-native-push-back";
+import app_navigator from '../app_navigator.js';
 
 export default function ({ route: { params: { item = [], initialIndex } }, navigation }) {
     const { top: statusHeight } = useSafeAreaInsets();
@@ -26,17 +27,18 @@ export default function ({ route: { params: { item = [], initialIndex } }, navig
         );
     }, []);
 
-    const [list, setList] = useState(initList);
+    const [list, setList] = useReducer((prev, [index, dim]) => {
+        return [...prev.map((v, i) => i === index ? ({ ...v, dim }) : v)];
+    }, initList);
     const [currentIndex, setCurrentIndex] = useState(initialIndex || 0);
 
     const scrollRef = useRef();
     const scrollerReducer = useRef();
-    const instantImageSizing = useRef([]);
 
     const results = useMemo(() => {
         return list.map(v => ({
             ...v,
-            ...v.dim ? { cover: shouldCover(v.dim, [windowWidth, windowHeight], .3) } : undefined
+            ...v.dim ? { cover: shouldCover(v.dim, [windowWidth, windowHeight], .25) } : undefined
         }));
     }, [list, windowWidth, windowHeight]);
 
@@ -116,7 +118,7 @@ export default function ({ route: { params: { item = [], initialIndex } }, navig
         <View
             key={i}
             style={itemConStyle}>
-            {(instantImageSizing.current[i] || (Math.abs(i - currentIndex) <= 2)) ?
+            {Math.abs(i - currentIndex) <= 2 ?
                 <Image
                     source={{ uri: optimizeImage(v.src, null) }}
                     loadingIndicatorSource={
@@ -127,8 +129,7 @@ export default function ({ route: { params: { item = [], initialIndex } }, navig
                     style={styles.imageContent}
                     onLoad={e => {
                         const { width, height } = e.nativeEvent.source;
-                        instantImageSizing.current[i] = [width, height];
-                        setList(list.map((v, x) => ({ ...v, dim: instantImageSizing.current[x] || v.dim })));
+                        setList([i, [width, height]]);
                     }} /> : null}
         </View>;
 
@@ -140,35 +141,36 @@ export default function ({ route: { params: { item = [], initialIndex } }, navig
     console.log('mounted: ', results, ' currentIndex:', currentIndex);
     return (
         <View style={styles.flexer}>
-            <Animated.View
-                style={[
-                    styles.container,
-                    {
-                        transform: [{ translateY }],
-                        opacity
-                    }
-                ]}
-                {...panResponder.panHandlers}>
-                {renderAppBar()}
-                <ScrollView
-                    ref={scrollRef}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    style={styles.scroller}
-                    decelerationRate={'fast'}
-                    snapToInterval={windowWidth}
-                    snapToAlignment='start'
-                    scrollEventThrottle={30}
-                    onScroll={e => {
-                        const { x } = e.nativeEvent.contentOffset;
+            <Animated.View style={[styles.container, { opacity }]}>
+                <Animated.View
+                    style={[
+                        styles.flexer,
+                        {
+                            transform: [{ translateY }]
+                        }
+                    ]}
+                    {...panResponder.panHandlers}>
+                    {renderAppBar()}
+                    <ScrollView
+                        ref={scrollRef}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={styles.scroller}
+                        decelerationRate={'fast'}
+                        snapToInterval={windowWidth}
+                        snapToAlignment='start'
+                        scrollEventThrottle={30}
+                        onScroll={e => {
+                            const { x } = e.nativeEvent.contentOffset;
 
-                        clearTimeout(scrollerReducer.current);
-                        scrollerReducer.current = setTimeout(() => {
-                            setCurrentIndex(Math.round(x / windowWidth));
-                        }, 300);
-                    }}>
-                    {results.map(renderItem)}
-                </ScrollView>
+                            clearTimeout(scrollerReducer.current);
+                            scrollerReducer.current = setTimeout(() => {
+                                setCurrentIndex(Math.round(x / windowWidth));
+                            }, 300);
+                        }}>
+                        {results.map(renderItem)}
+                    </ScrollView>
+                </Animated.View>
             </Animated.View>
         </View>
     );
@@ -199,3 +201,17 @@ const styles = StyleSheet.create({
 
     imageContent: { width: '100%', height: '100%' }
 });
+
+
+/**
+ * @typedef {object} FullscreenImageParams
+ * @property {{placeholder?: string | undefined, src: string, dim?: [number, number]}} [item]
+ * @property {number | undefined} [initialIndex]
+ */
+
+/**
+ * @param {{item: FullscreenImageParams['item'] | FullscreenImageParams['item'][], initialIndex?: FullscreenImageParams['initialIndex']}} param0 
+ */
+export const openFullscreenImage = ({ item, initialIndex }) => {
+    app_navigator.navigate('ImageFullscreen', { item, initialIndex });
+}
