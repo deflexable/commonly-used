@@ -74,7 +74,7 @@ export const PaginationItem = ({ height = 100, size = 35, hidden, makeSpace = tr
     );
 };
 
-export const EmptyLogo = ({ message, messageStyle, des, onPressTxt, onPress, src, style, height }) => {
+export const EmptyLogo = ({ message, messageStyle, des, onPressTxt, onPress, onPressOut, src, style, height }) => {
     const { translations } = useTranslation();
 
     const conStyle = useMemo(() => {
@@ -101,16 +101,16 @@ export const EmptyLogo = ({ message, messageStyle, des, onPressTxt, onPress, src
                 {message || translations.no_result_found}
             </TextView>
             {
-                (des || onPress) ?
+                (des || onPressTxt) ?
                     <View style={emptyStying.baseInfoCon}>
                         {des ?
                             <TextView style={emptyStying.baseDes}>
                                 {des}
                             </TextView> : null}
-                        {onPress ?
+                        {onPressTxt ?
                             <TouchableOpacity
-                                activeOpacity={.5}
                                 onPress={onPress}
+                                onPressOut={onPressOut}
                                 style={emptyStying.baseBtn}>
                                 <TextView
                                     invertColor

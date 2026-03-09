@@ -12,6 +12,8 @@ import { simplifyError } from "simplify-error";
  */
 export const pickFile = async (types, multiple = true) => {
     try {
+        if (typeof multiple === 'number' && multiple <= 0) return [];
+
         const filterTypes = Array.isArray(types) ? types : [types];
 
         if (Platform.OS !== 'android') {
@@ -29,7 +31,7 @@ export const pickFile = async (types, multiple = true) => {
                 if (res.errorMessage || res.errorCode) throw simplifyError(res.errorCode, res.errorMessage);
                 const reformattedResult = res.assets.map(v => reformatGalleryData(v));
 
-                return multiple ? reformattedResult : reformattedResult[0];
+                return transformMediaResult(reformattedResult, multiple);
             }
         }
 
@@ -37,7 +39,7 @@ export const pickFile = async (types, multiple = true) => {
             (
                 await pick({
                     type: types,
-                    allowMultiSelection: multiple
+                    allowMultiSelection: !!multiple
                 })
             ).map(async result => {
                 if (!result.uri.startsWith('file://'))
@@ -56,7 +58,7 @@ export const pickFile = async (types, multiple = true) => {
         );
 
         console.log('results =', results);
-        return multiple ? results : results[0];
+        return transformMediaResult(results, multiple);
     } catch (e) {
         if (e?.code !== errorCodes.OPERATION_CANCELED) {
             alertError(e);
@@ -65,6 +67,9 @@ export const pickFile = async (types, multiple = true) => {
         throw e;
     }
 };
+
+const transformMediaResult = (results, multiple) =>
+    Number.isInteger(multiple) ? results.slice(0, multiple) : multiple ? results : results[0];
 
 const reformatGalleryData = v => ({
     uri: v.uri,
@@ -82,13 +87,15 @@ const reformatGalleryData = v => ({
  */
 export const openCamera = async (options) => {
     try {
+        const multiple = options?.multiple;
+        if (typeof multiple === 'number' && multiple <= 0) return [];
+
         const res = await launchCamera(options);
         if (res.didCancel) throw { code: errorCodes.OPERATION_CANCELED };
         if (res.errorMessage || res.errorCode) throw simplifyError(res.errorCode, res.errorMessage);
         const results = res.assets.map(v => reformatGalleryData(v));
-        const multiple = options?.multiple;
 
-        return Number.isInteger(multiple) ? results.slice(0, multiple) : multiple ? results : results[0];
+        return transformMediaResult(results, multiple);
     } catch (e) {
         if (e?.code !== errorCodes.OPERATION_CANCELED) {
             alertError(e);

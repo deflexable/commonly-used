@@ -46,8 +46,8 @@ export const timeSince = (time, options) => {
     const { currentTime, format, addAgo, addAbout, common } = options || {};
     const thisCommon = new Proxy({}, {
         get: (_, n) => {
-            if (common && n in common) return common[n];
-            return n;
+            if (common?.[n] === undefined) return n;
+            return common[n];
         }
     });
     const isEnglish = true;

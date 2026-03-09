@@ -66,7 +66,7 @@ export const AppTitleBar = function ({
   }, [styles.titleDefault, center]);
 
   const renderStatusTint = (bannerVisible) => {
-    const shouldLightup = bannerVisible ? !isDarkMode : isDarkMode;
+    const shouldLightup = bannerVisible || isDarkMode;
 
     return (
       statusTint === false ? null :
