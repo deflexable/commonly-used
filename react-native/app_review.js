@@ -9,6 +9,7 @@ import { Scope } from '@this_app_root/src/utils/scope';
 import { collection } from './client_server';
 import { JSONCacher } from '@this_app_root/src/utils/cacher';
 import { getBusy } from "./uptime";
+import { wait } from '../common/methods';
 
 JSONCacher.RATED_APP;
 JSONCacher.RATED_IN_APP;
@@ -21,6 +22,8 @@ export async function requestReview({ withUser, withBusy }) {
     if (hasRequested) return;
     hasRequested = true;
 
+    await wait(500);
+
     const dialogRating = JSONCacher.RATED_APP;
     if (dialogRating === true || (!isNaN(dialogRating) && dialogRating >= 3)) return;
 
@@ -30,14 +33,14 @@ export async function requestReview({ withUser, withBusy }) {
     try {
         console.log('try opening in-app rating');
         if (InAppReview.isAvailable()) {
-            JSONCacher.RATED_IN_APP = (JSONCacher.RATED_IN_APP || 0) + 1;
+            JSONCacher.RATED_IN_APP = (inAppRating || 0) + 1;
 
             if (!(await InAppReview.RequestInAppReview())) throw 'cant presented';
         } else throw 'in app rating not supported';
     } catch (error) {
         console.error('requestReview err:', error);
         setTimeout(() => {
-            JSONCacher.RATED_APP = (JSONCacher.RATED_APP || 0) + 1;
+            JSONCacher.RATED_APP = (dialogRating || 0) + 1;
             showFancyDialog({
                 title: locales.rate_this_app,
                 des: locales.rate_app_des,
@@ -55,6 +58,6 @@ export async function requestReview({ withUser, withBusy }) {
                 yesTxt: locales.rate_now,
                 noTxt: locales.dismiss
             });
-        }, 1300);
+        }, 300);
     }
 };

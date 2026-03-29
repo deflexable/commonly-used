@@ -13,29 +13,30 @@ export const getTimezoneOffset = (tz) => {
     return tzTime - clientTime;
 };
 
-export const appendScriptSrc = (obj) => new Promise((resolve, reject) => {
-    if (typeof obj === 'string') obj = { src: obj };
+export const appendScriptSrc = (obj) =>
+    new Promise((resolve, reject) => {
+        if (typeof obj === 'string') obj = { src: obj };
 
-    if (isBrowser() && obj?.src) {
-        if (!document.head.querySelector(`script[src="${obj.src}"]`)) {
-            const scriptNode = document.createElement('script');
+        if (isBrowser() && obj?.src) {
+            if (!document.head.querySelector(`script[src="${obj.src}"]`)) {
+                const scriptNode = document.createElement('script');
 
-            Object.entries(obj).forEach(([key, value]) => {
-                scriptNode[key] = value;
-            });
+                Object.entries(obj).forEach(([key, value]) => {
+                    scriptNode[key] = value;
+                });
 
-            scriptNode.onload = () => {
-                resolve();
-            }
+                scriptNode.onload = () => {
+                    resolve();
+                }
 
-            scriptNode.onerror = () => {
-                reject();
-            }
+                scriptNode.onerror = () => {
+                    reject();
+                }
 
-            document.head.appendChild(scriptNode);
-        } else resolve();
-    }
-});
+                document.head.appendChild(scriptNode);
+            } else resolve();
+        }
+    });
 
 export const removeScriptSrc = (obj) => {
     if (typeof obj === 'string') obj = { src: obj };
@@ -46,19 +47,19 @@ export const removeScriptSrc = (obj) => {
 };
 
 export const useScriptSrc = ({ src, onerror, onsuccess }) => {
-    const [state, setState] = useState({ success: undefined, error: undefined });
+    const [state, setState] = useState({ success: undefined, error: undefined, loading: true });
 
     useEffect(() => {
         let hasUnmounted;
 
         appendScriptSrc(src).then(s => {
             if (hasUnmounted) return;
-            onsuccess(s);
             setState({ success: true });
+            onsuccess?.(s);
         }, e => {
             if (hasUnmounted) return;
-            onerror(e);
-            setState({ error: true });
+            setState({ error: `Error: ${e}` });
+            onerror?.(e);
         });
 
         return () => {
@@ -265,48 +266,50 @@ export const useDisableBackButton = (callback, enabled = true) => {
     return callback;
 };
 
-export const getImageRect = (file, options) => new Promise(async (resolve, reject) => {
-    try {
-        const { base64 } = options || {};
-        const img = new Image();
-        let width, height, src = base64 || await fileToBase64(file);
+export const getImageRect = (file, options) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const { base64 } = options || {};
+            const img = new Image();
+            let width, height, src = base64 || await fileToBase64(file);
 
-        await new Promise((resolve, reject) => {
-            const clearListener = () => {
-                img.onload = null;
-                img.onerror = null;
-            };
+            await new Promise((resolve, reject) => {
+                const clearListener = () => {
+                    img.onload = null;
+                    img.onerror = null;
+                };
 
-            img.onload = () => {
-                width = img.naturalWidth;
-                height = img.naturalHeight;
-                clearListener();
-                resolve();
-            };
+                img.onload = () => {
+                    width = img.naturalWidth;
+                    height = img.naturalHeight;
+                    clearListener();
+                    resolve();
+                };
 
-            img.onerror = () => {
-                clearListener();
-                reject();
-            };
-            img.src = src;
-        });
+                img.onerror = () => {
+                    clearListener();
+                    reject();
+                };
+                img.src = src;
+            });
 
-        if (isNaN(width) || isNaN(height)) throw new Error('Invalid image');
-        resolve([width, height, src]);
-    } catch (e) {
-        reject(e);
-    }
-});
+            if (isNaN(width) || isNaN(height)) throw new Error('Invalid image');
+            resolve([width, height, src]);
+        } catch (e) {
+            reject(e);
+        }
+    });
 
-export const fileToBase64 = (file) => new Promise(async (resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = r => {
-        resolve(r.target.result);
-    };
+export const fileToBase64 = (file) =>
+    new Promise(async (resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = r => {
+            resolve(r.target.result);
+        };
 
-    reader.onerror = e => {
-        reject(e.target.error);
-    };
+        reader.onerror = e => {
+            reject(e.target.error);
+        };
 
-    reader.readAsDataURL(file);
-});
+        reader.readAsDataURL(file);
+    });

@@ -113,3 +113,5 @@ export class StandardURL {
         return this.href;
     }
 }
+
+globalThis.__StandardURL = StandardURL;

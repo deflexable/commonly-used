@@ -88,7 +88,7 @@ function FancyDialog({ data, shouldClose, onRemove }) {
                 {title}
             </TextView>
             <TextView
-                numberOfLines={4}
+                numberOfLines={6}
                 style={styling.des}>
                 {des}
             </TextView>

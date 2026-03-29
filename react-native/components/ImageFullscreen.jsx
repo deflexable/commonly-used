@@ -37,8 +37,8 @@ export default function ({ route: { params: { item = [], initialIndex } }, navig
 
     const results = useMemo(() => {
         return list.map(v => ({
-            ...v,
-            ...v.dim ? { cover: shouldCover(v.dim, [windowWidth, windowHeight], .25) } : undefined
+            ...v.dim ? { cover: shouldCover(v.dim, [windowWidth, windowHeight], .25) } : undefined,
+            ...v
         }));
     }, [list, windowWidth, windowHeight]);
 
