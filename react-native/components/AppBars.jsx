@@ -16,37 +16,27 @@ export const AppTitleBar = function ({
   statusTint
 }) {
   const { styles } = useStyle(appTitleBarStyle);
-  const [leftWidth, setLeftWidth] = useState();
-  const [rightWidth, setRightWidth] = useState();
+  const [leftSizing, setLeftSizing] = useState();
+  const [rightSizing, setRightSizing] = useState();
 
   const isDarkMode = styles.containerBG.backgroundColor === Colors.dark;
 
-  const sidingStyle = useMemo(() => {
-    return { width: Math.max(leftWidth, rightWidth) };
-  }, [leftWidth, rightWidth]);
+  const maxSizing = useMemo(() => {
+    return Math.max(leftSizing?.width, rightSizing?.width);
+  }, [leftSizing?.width, rightSizing?.width]);
 
-  const renderSideView = (view, pos) => (
-    <View style={
-      center &&
-      (
-        [leftWidth, rightWidth].some(v => v === undefined)
-          ? tabbarSidingStyle[pos]
-          : sidingStyle
-      )}>
-      {view ? <View style={styles.leadingDefault}>{view}</View> : null}
-    </View>
-  );
-
-  const renderVirtualSideView = (view, setLayoutWidth) => center ? (
-    <View style={virtualSideViewStyle}>
+  const renderSideView = (view, layout, setLayout, extraStyle) => (
+    <>
+      {(!isNaN(maxSizing) && layout && center) ? <View style={{ width: maxSizing, height: layout.height }} /> : null}
       <View
+        style={center ? { position: 'absolute', ...extraStyle } : null}
         onLayout={e => {
-          setLayoutWidth(e.nativeEvent.layout.width);
+          setLayout(e.nativeEvent.layout);
         }}>
         {view ? <View style={styles.leadingDefault}>{view}</View> : null}
       </View>
-    </View>
-  ) : null;
+    </>
+  );
 
   const isTinted = statusTint === true && Platform.OS !== 'android';
 
@@ -87,27 +77,13 @@ export const AppTitleBar = function ({
             renderStatusTint={renderStatusTint} />}
 
         <View style={tabbarContStyle}>
-          {renderSideView(leading, 0)}
+          {renderSideView(leading, leftSizing, setLeftSizing)}
           <View style={tabbarTitleStyle}>{title}</View>
-          {renderSideView(trailing, 1)}
+          {renderSideView(trailing, rightSizing, setRightSizing, { right: 0 })}
         </View>
       </View>
-
-      {renderVirtualSideView(leading, setLeftWidth)}
-      {renderVirtualSideView(trailing, setRightWidth)}
     </View>
   );
-};
-
-const tabbarSidingStyle = [
-  { position: 'absolute', left: 0 },
-  { position: 'absolute', right: 0 }
-];
-
-const virtualSideViewStyle = {
-  position: 'absolute',
-  zIndex: -99,
-  opacity: 0
 };
 
 const appTitleBarStyle = StyleSheet.create({

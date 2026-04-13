@@ -344,3 +344,7 @@ export const usePageLoadingUI = () => {
         }
     }
 };
+
+export const togglePageLoader = (show, message) => {
+    listeners.dispatch(EVENT_NAMES.pageTransMessageModalListener, show ? { message } : undefined);
+}
