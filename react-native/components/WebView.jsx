@@ -58,7 +58,7 @@ export default function ({
         subTxtTint,
         forcePageDarkMode,
         forceBarDarkMode
-    } = useDocumentEvent?.(documentMessage, { pageDark, barDark, insets, href }) || {};
+    } = useDocumentEvent?.(documentMessage, { pageDark, barDark, insets, href, mounted }) || {};
 
     const thisPageDark = (forcePageDarkMode ?? (pageDark || barDark)) ?? defaultDarkMode;
     const thisBarDark = (forceBarDarkMode ?? (barDark || pageDark)) ?? defaultDarkMode;

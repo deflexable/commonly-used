@@ -1,6 +1,6 @@
 import kuromoji from 'kuromoji';
 import nodejieba from 'nodejieba';
-import { IS_DEV } from "core/env.js";
+import { IS_DEV } from "#/env";
 import cld from 'cld';
 
 function getCharacterByteSize(char) {

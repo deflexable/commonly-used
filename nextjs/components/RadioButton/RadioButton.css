@@ -1,0 +1,38 @@
+.radio-button-comp {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--theme-color);
+    border-radius: 50%;
+    position: relative;
+}
+
+.radio-button-comp div {
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    background-color: var(--theme-color);
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    margin: auto;
+}
+
+.radio-button-comp span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: -20%;
+    right: -20%;
+    filter: var(--theme-color-filter);
+}
+
+.light_mode_body .radio-button-blurred {
+    border-color: var(--light-border);
+}
+
+.dark_mode_body .radio-button-blurred {
+    border-color: var(--white-250-opacity);
+}

@@ -1,5 +1,5 @@
 import { parse, serialize } from "parse5";
-import { WEB_BASE_URL } from "core/env.js";
+import { WEB_BASE_URL } from "#/env";
 
 /**
  * @type {(node: import('parse5').DefaultTreeAdapterMap['childNode'])=> string}

@@ -1,4 +1,4 @@
-import { IS_DEV, DEV_PUBLIC_IP_ADDRESS, IP_NODE } from "core/env.js";
+import { IS_DEV, DEV_PUBLIC_IP_ADDRESS, IP_NODE } from "#/env";
 
 export const cleanseIP = (ip) => {
     if (typeof ip === 'string')

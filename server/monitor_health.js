@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "core/env.js";
+import { API_BASE_URL } from "#/env";
 import { randomString } from "../common/methods.js";
 
 const SERVER_FAULTS = {

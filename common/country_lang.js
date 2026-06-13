@@ -1822,6 +1822,7 @@ export const country_langs = [
 ];
 
 export const getCountryLangs = (country = '') => {
+    if (!country) return [];
     country = country.toLowerCase();
     const a = country_langs.find(v => v.code.toLowerCase() === country);
     return a?.langs || [];

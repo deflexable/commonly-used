@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central Cacher</title>
+</head>
+
+<body>
+    <h1 style="text-align: center;padding-top: 15px;">
+        Nothing to see here 👀
+    </h1>
+    <div style="text-align: center;margin-top: 7px;">
+        Powered By
+        <a href="https://brainbehindx.com" style="color: gray;">
+            <b>BrainbehindX</b>
+        </a>
+    </div>
+
+    <script>
+        window.addEventListener('message', (event) => {
+            const SUB_DOMAIN = [
+                '<ENV.WEB_BASE_URL>',
+                '<ENV.SSO_AUTH_URL>'
+            ];
+
+            if (SUB_DOMAIN.includes(event.origin)) {
+                const { signal, data, __check_ready } = event.data;
+
+                if (__check_ready) {
+                    window.parent.postMessage({ __signal_mounted: true }, '*');
+                } else if (signal === 'get-localstorage') {
+                    const { session, path } = data;
+
+                    window.parent.postMessage({
+                        data: localStorage.getItem(path),
+                        session,
+                        signal: 'respond-get-localstorage'
+                    }, '*');
+                } else if (signal === 'set-localstorage') {
+                    const { session, path, value } = data;
+
+                    if (value) {
+                        localStorage.setItem(path, value);
+                    } else localStorage.removeItem(path);
+
+                    window.parent.postMessage({
+                        session,
+                        signal: 'respond-set-localstorage'
+                    }, '*');
+                }
+            }
+        });
+
+        window.parent.postMessage({ __signal_mounted: true }, '*');
+    </script>
+</body>
+
+</html>

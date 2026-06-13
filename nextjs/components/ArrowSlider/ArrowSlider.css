@@ -1,0 +1,41 @@
+.arrow-slider-con {
+    position: relative;
+}
+
+.arrow-slider-scroller-con::-webkit-scrollbar,
+.arrow-slider-scroller-con::-webkit-scrollbar-track {
+    display: none;
+}
+
+.arrow-slider-scroller-con {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: 0px;
+}
+
+.arrow-slider-patch-con {
+    position: absolute;
+    min-height: 100%;
+    cursor: pointer;
+}
+
+.arrow-slider-patch-con:active {
+    opacity: 0.4;
+}
+
+.arrow-slider-left-arrow-con,
+.arrow-slider-right-arrow-con {
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+
+.arrow-slider-left-arrow-con {
+    left: 0;
+}
+
+.arrow-slider-right-arrow-con {
+    right: 0;
+    height: 100%;
+    position: absolute;
+}

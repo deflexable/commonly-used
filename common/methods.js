@@ -20,14 +20,14 @@ export const getWeekDate = () => {
 export const isNothing = (o) => o === undefined || o === null;
 
 export function shuffleArray(array = []) {
-  const arr = array.slice();
-  
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  
-  return arr;
+    const arr = array.slice();
+
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+
+    return arr;
 };
 
 export const interpolate = (x, [y1, x1], [y2, x2]) => {
@@ -55,6 +55,8 @@ export const wait = (ms = 1000) => new Promise(resolve => {
 });
 
 export const formatTimeCounter = (ms = 0) => {
+    const bomb = s => ((s + '').length > 1 ? s : ('0' + s));
+
     if (!ms || Math.floor(ms) === 0) return '00:00';
     // 1- Convert to seconds:
     let seconds = ms / 1000;
@@ -67,8 +69,6 @@ export const formatTimeCounter = (ms = 0) => {
     seconds = seconds % 60;
     return (hours ? bomb(Math.round(hours)) + ":" : '') + bomb(Math.round(minutes)) + ":" + bomb(Math.round(seconds));
 };
-
-const bomb = s => ((s + '').length > 1 ? s : ('0' + s));
 
 export const randomArrayItem = (arr = []) => arr[getRandomNumber(arr.length - 1, 0)];
 

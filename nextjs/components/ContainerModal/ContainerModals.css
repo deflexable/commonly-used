@@ -1,0 +1,90 @@
+/* fancy pop */
+
+.fancy-pop-up-con {
+    width: 85vw;
+    max-width: 400px;
+    border-radius: 10px;
+    text-align: center;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.fancy-pop-up-img {
+    width: 90px;
+    height: 90px;
+    margin: 20px auto;
+}
+
+.fancy-pop-up-head-html-con {
+    height: 120px;
+    margin: 10px;
+    overflow-y: auto;
+}
+
+.fancy-pop-up-message {
+    font-size: 17px;
+    line-clamp: 4;
+    -webkit-line-clamp: 4;
+    margin-top: 10px;
+}
+
+.fancy-pop-up-btn-con button {
+    width: 100%;
+    padding: 12px 0px;
+    box-sizing: border-box;
+    border: none;
+    margin-top: 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.fancy-pop-up-yes-btn {
+    background-color: var(--theme-color);
+    color: var(--rcolor);
+}
+
+.fancy-pop-up-no-btn {
+    background-color: var(--theme-color-blur-medium);
+    color: var(--color);
+}
+
+/* page loader */
+
+.page-loading-trans-con {
+    width: 100vw;
+    height: 100vh;
+    z-index: 3000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+.page-loading-trans-con .plainBG {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    right: 0;
+    opacity: 0.7;
+}
+
+.page-loading-trans-cont {
+    z-index: 2;
+}
+
+.page-loading-trans-cont div {
+    background-image: url(/assets/loading.gif);
+    width: 60px;
+    height: 60px;
+    margin: 0px auto;
+}
+
+.page-loading-trans-cont span {
+    text-align: center;
+    display: block;
+    margin: 15px auto 0px auto;
+}

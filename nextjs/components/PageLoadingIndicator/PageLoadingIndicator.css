@@ -1,0 +1,24 @@
+.page-loading-indicator-div-con {
+    height: 2px;
+    background-color: orange;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    /* transition: width 7s ease-out; */
+    /* // var(--dblue); */
+}
+
+.start-loading-page-transition {
+    width: 70%;
+    transition: width 3s ease-out;
+}
+
+.finish-loading-instant {
+    width: 100%;
+    transition: width 500ms;
+}
+
+.finish-loading-state-killer {
+    width: 0%;
+    transition: none;
+}

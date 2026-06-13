@@ -1,0 +1,20 @@
+.dynamic-pc-modal-con {
+    border-radius: 10px;
+    width: 90vw;
+    max-width: 450px;
+    max-height: 95vh;
+    padding: 20px 0px 10px 0px;
+    overflow-y: auto;
+}
+
+.dynamic-phone-modal-packer {
+    max-height: 90vh;
+}
+
+.dynamic-phone-scroller,
+.dynamic-pc-modal-scroller-con {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}

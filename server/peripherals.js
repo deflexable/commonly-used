@@ -14,3 +14,5 @@ export const niceJSONStringify = (obj) => {
         return value;
     });
 }
+
+export const storageDesinationToLink = (dest, domain = '') => domain.concat('/storage/').concat(dest);

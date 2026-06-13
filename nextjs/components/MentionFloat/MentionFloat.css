@@ -1,0 +1,27 @@
+/* .mention-float-popup-con {
+
+} */
+
+.mention-float-user-btn {
+    display: flex;
+    align-items: center;
+    padding: 4px 11px;
+    background-color: transparent;
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+.mention-float-user-name {
+    font-size: 13px;
+}
+
+.mention-float-user-at {
+    color: gray;
+    font-size: 12px;
+}
+
+.mention-editable-input a {
+    text-decoration: none;
+    color: var(--dblue);
+}

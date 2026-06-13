@@ -1,0 +1,16 @@
+.simple-slider-con::-webkit-scrollbar {
+    display: none;
+}
+
+.simple-slider-con {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+.simple-slider-con>* {
+    width: 100%;
+    scroll-snap-align: start;
+}
