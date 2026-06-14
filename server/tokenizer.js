@@ -1,7 +1,9 @@
 import kuromoji from 'kuromoji';
 import nodejieba from 'nodejieba';
-import { IS_DEV } from "#/env";
 import cld from 'cld';
+import importer from './importer';
+
+const { IS_DEV } = await importer('./env.js');
 
 function getCharacterByteSize(char) {
     const charCode = char.codePointAt(0);

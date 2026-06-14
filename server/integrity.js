@@ -1,6 +1,8 @@
 import { simplifyError } from 'simplify-error';
 import { timeoutFetch } from './fetcher';
-import { IS_DEV, WEB_HOST_NAME, HCAPTCH_SECRET } from "#/env";
+import importer from './importer';
+
+const { IS_DEV, WEB_HOST_NAME, HCAPTCH_SECRET } = await importer('./env.js');
 
 export const verifyCaptcha = async (token) => {
     if (IS_DEV) console.log('verifying captcha:', token);

@@ -1,6 +1,8 @@
-import { INTER_SERVER_PASSKEY } from "#/env";
-import mserver from "../mserver";
 import { COMMON_OBJECT_EXTRACTIONS, DbPath } from "core/common_values";
+import importer from "./importer";
+
+const { INTER_SERVER_PASSKEY } = await importer('./env.js');
+const mserver = await importer('./mserver.js');
 
 const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
 
