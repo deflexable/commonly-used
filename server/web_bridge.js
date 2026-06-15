@@ -2,13 +2,13 @@ import { COMMON_OBJECT_EXTRACTIONS, DbPath } from "core/common_values";
 import importer from "./importer";
 
 const { INTER_SERVER_PASSKEY } = await importer('./env.js');
-const mserver = await importer('./mserver.js');
+const mserver = (await importer('./mserver.js')).default;
 
 const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
 
 const AllowedIps = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1']);
 
-mserver.default.listenHttpsRequest('server_bridging', async (req, res) => {
+mserver.listenHttpsRequest('server_bridging', async (req, res) => {
     const { apiCommand, mserverCommand } = req.body;
 
     try {
@@ -36,6 +36,7 @@ mserver.default.listenHttpsRequest('server_bridging', async (req, res) => {
         }
         res.status(200).send({ data, success: true });
     } catch (error) {
+        console.error('web_bridging err:', error);
         res.status(200).send({ data: `${error}`, success: false });
     }
 });

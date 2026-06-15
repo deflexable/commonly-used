@@ -3,7 +3,7 @@ import { cookies, headers } from "next/headers";
 import { executeMserver } from "./server_bridge";
 import { getCountryLangs } from "../common/country_lang.js";
 import { SUPPORTED_LANGUAGES } from "core/common_values.js";
-import { getLocales } from "./config/locales";
+import { getLocales } from "./config/locale.js";
 import { getThemeDateContext, stripLangFromUrl } from "./methods.dual";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";

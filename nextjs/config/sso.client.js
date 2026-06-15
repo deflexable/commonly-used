@@ -7,8 +7,7 @@ import { useEffect, useRef } from "react";
 import { onUserThemeChanged, useDarkMode } from "../theme_helper";
 import { appendScriptSrc, updateCookie } from "../methods.client";
 import { auth } from "../client_server";
-import { logEvent, setUserId } from "firebase/analytics";
-import { FirebaseAnalytics } from "@/utils/firebase_utils";
+import { getAnalytics, logEvent, setUserId } from "firebase/analytics";
 import { one_day } from "../../common/timing";
 import { randomString, wait } from "../../common/methods";
 import { AuthScope, WEB_STATE } from "../scope";
@@ -32,6 +31,12 @@ if (isBrowser()) {
         }
         window.addEventListener('message', ssoMountedListener);
     }
+}
+
+let FirebaseApp;
+
+export function configureSSO({ firebase }) {
+    FirebaseApp = firebase;
 }
 
 export default function SSOClient({ serverTime, theme_config, timezone, machineCode, userId, userEntity, userTokenId, userConfig, ignoreRouteReloads = [], geo, onShouldDisableAutoLogin }) {
@@ -154,7 +159,7 @@ export default function SSOClient({ serverTime, theme_config, timezone, machineC
             console.log('currentUser: ', user?.uid, ' machineCode: ', machineCode);
             settingsListener?.();
 
-            setUserId(FirebaseAnalytics, user?.uid || null);
+            setUserId(getAnalytics(FirebaseApp), user?.uid || null);
             if (!user || !user.authVerified) return;
             settingsListener = listenUserConfig();
         });
@@ -182,7 +187,7 @@ export default function SSOClient({ serverTime, theme_config, timezone, machineC
                 console.log('onSuccess: ', response);
                 if (response?.credential) {
                     const user = await auth().googleSignin(response.credential);
-                    logEvent(FirebaseAnalytics, user.isNewUser ? 'sign_up' : 'login', {
+                    logEvent(getAnalytics(FirebaseApp), user.isNewUser ? 'sign_up' : 'login', {
                         value: 'google_onetap'
                     });
                 }
