@@ -23,8 +23,8 @@
 
 .fancy-pop-up-message {
     font-size: 17px;
-    line-clamp: 4;
-    -webkit-line-clamp: 4;
+    line-clamp: 4 !important;
+    -webkit-line-clamp: 4 !important;
     margin-top: 10px;
 }
 

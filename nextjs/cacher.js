@@ -81,7 +81,7 @@ function documentLoaded() {
     });
 }
 
-const executeIframe = async ({
+export const executeIframe = async ({
     inputData,
     iframeID,
     handler
@@ -89,8 +89,10 @@ const executeIframe = async ({
     try {
         await documentLoaded();
         await SSO_ReadyPromise;
-        const iframe = document.getElementById(iframeID);
-        if (inputData) iframe.contentWindow.postMessage(inputData, '*');
+        if (iframeID && inputData) {
+            const iframe = document.getElementById(iframeID);
+            iframe.contentWindow.postMessage(inputData, '*');
+        }
 
         const output = await new Promise((resolve, reject) => {
             const ssoListener = function (event) {

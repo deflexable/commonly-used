@@ -1,9 +1,12 @@
 import cors from 'cors';
 import { createHash } from "node:crypto";
-import { resolve } from "node:path";
+import { join, resolve } from "node:path";
 import http from "http";
 import { readFileSync } from "node:fs";
 import { SSO_HTML_CONTENT } from './sso.html';
+import { mkdir, writeFile } from 'node:fs/promises';
+
+const ERROR_LOG_DIR = resolve(process.cwd(), './.rendered-error');
 
 await new Promise((success, reject) => {
     if (!globalThis.__initedSSO_Config) {
@@ -41,6 +44,34 @@ await new Promise((success, reject) => {
                     });
 
                     res.end(favicon);
+                    return;
+                }
+
+                if (req.url === '/log_critical_error') {
+                    const body_list = [];
+
+                    req.on('data', chunk => {
+                        body_list.push(chunk);
+                    });
+
+                    req.on('end', () => {
+                        mkdir(ERROR_LOG_DIR, { recursive: true }).finally(() => {
+                            const data = JSON.stringify({
+                                date: new Date().toLocaleString?.(),
+                                time: Date.now(),
+                                headers: req.headers,
+                                info: JSON.parse(body_list.join(''))
+                            });
+
+                            return writeFile(join(ERROR_LOG_DIR, `${Date.now()}.txt`), data, 'utf8');
+                        });
+
+                        res.writeHead(200, {
+                            "Content-Type": "text/plain",
+                        });
+
+                        res.end('OK');
+                    });
                     return;
                 }
 

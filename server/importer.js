@@ -1,4 +1,11 @@
 import { resolve } from 'path';
 import { pathToFileURL } from 'url';
 
-export default (path) => import(pathToFileURL(resolve(process.cwd(), path)).href);
+const importer = (path, ...fallbacks) =>
+    import(pathToFileURL(resolve(process.cwd(), path)).href)
+        .catch(e => {
+            if (fallbacks.length) return importer(...fallbacks);
+            throw e;
+        });
+
+export default importer;

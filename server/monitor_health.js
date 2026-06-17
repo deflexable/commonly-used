@@ -1,7 +1,7 @@
 import { randomString } from "../common/methods.js";
 import importer from "./importer.js";
 
-const { API_BASE_URL } = await importer('./env.js');
+const { API_BASE_URL } = await importer('./env.js', '../env.js');
 
 const SERVER_FAULTS = {
     DISCONNECTED: 'DISCONNECTED',

@@ -2,29 +2,39 @@
 
 import { memo, useEffect, useRef } from "react";
 import { appendScriptSrc } from "../../methods.client";
+import LimitTask from "limit-task";
 
 export const importMathjax = () =>
     appendScriptSrc({ src: process.env.NEXT_PUBLIC_MATH_JAX_SCRIPT_SRC });
 
-export default memo(function ({ value }) {
+const queue = LimitTask(70);
+
+export default memo(function (props) {
     const ref = useRef();
 
     useEffect(() => {
         importMathjax().then(() => {
-            window.MathJax.typesetPromise([ref.current]);
+            queue(() =>
+                window.MathJax.typesetPromise([ref.current])
+            );
         });
-    }, [value]);
+    });
 
     return (
-        <div ref={ref}
-            dangerouslySetInnerHTML={{ __html: value }} />
+        <div
+            {...props}
+            ref={ref} />
     );
-}, (p, n) => p.value === n.value);
+}, (p, n) =>
+    (p.dangerouslySetInnerHTML || n.dangerouslySetInnerHTML)
+        ? p.dangerouslySetInnerHTML.__html === n.dangerouslySetInnerHTML.__html :
+        p.children === n.children
+);
 
 export const InitializeMathJax = () => {
     useEffect(() => {
         importMathjax().then(() => {
-            MathJax.typesetPromise([...document.querySelectorAll('.post-math-jax-item')]);
+            window.MathJax.typesetPromise([...document.querySelectorAll('.post-math-jax-item')]);
         });
     }, []);
 

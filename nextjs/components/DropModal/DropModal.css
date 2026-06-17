@@ -13,6 +13,7 @@
 
 .drop-modal-con-closed {
     background-color: transparent;
+    visibility: hidden;
 }
 
 .drop-modal-content-dropper {

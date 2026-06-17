@@ -1,7 +1,7 @@
 import { parse, serialize } from "parse5";
 import importer from "./importer";
 
-const { WEB_BASE_URL } = await importer('./env.js');
+const { WEB_BASE_URL } = await importer('./env.js', '../env.js');
 
 /**
  * @type {(node: import('parse5').DefaultTreeAdapterMap['childNode'])=> string}

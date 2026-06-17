@@ -8,7 +8,7 @@ import { getThemeDateContext, stripLangFromUrl } from "./methods.dual";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 
-export const getDedupeLoaderData = cache(() => {
+const getDedupeLoaderData = cache(() => {
     let resolve;
     let reject;
 
@@ -27,7 +27,8 @@ export const getDedupeLoaderData = cache(() => {
 export const getLoaderData = () => {
     const engine = getDedupeLoaderData();
 
-    if (!engine.has_root) {
+    if (!engine.attached) {
+        engine.attached = true;
         setTimeout(() => {
             if (!engine.has_page) {
                 installLoaderData({ stopRedirection: true });
@@ -105,6 +106,8 @@ export const installLoaderData = async (options) => {
                 }, { atoken, rtoken });
         } catch (error) {
             console.error('userObj:', error);
+            if (`${error}` === 'TypeError: fetch failed')
+                throw "We're experiencing a temporary issue connecting to our core infrastructure. Please retry in a few minutes";
         }
 
         if (anchorLang) {

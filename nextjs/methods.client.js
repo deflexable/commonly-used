@@ -83,7 +83,7 @@ export const appendScriptSrc = (obj) => {
             document.body.appendChild(scriptNode);
             console.log('importing ', obj.src);
         }
-        return window.__pending_script_append;
+        return window.__pending_script_append[obj.src];
     } else throw '"src" property is required';
 }
 

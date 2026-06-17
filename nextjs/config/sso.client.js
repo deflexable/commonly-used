@@ -72,13 +72,6 @@ export default function SSOClient({ serverTime, theme_config, timezone, machineC
     }
 
     useEffect(() => {
-        if (typeof window.gtag !== "function") return;
-        window.gtag("config", "AW-348171248", {
-            page_path: `${pathname || ''}${location.search}`
-        });
-    }, [pathname]);
-
-    useEffect(() => {
         const iframe = document.getElementById('sso-auth-iframe');
         if (iframe) iframe.contentWindow.postMessage({ __check_ready: true }, '*');
 
