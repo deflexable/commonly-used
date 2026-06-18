@@ -177,6 +177,7 @@ export const installLoaderData = async (options) => {
 
         const result = {
             ...userObj,
+            isbot: thisBot,
             ip_address: headerData.get(process.env.IP_NODE) || process.env.DEV_PUBLIC_IP_ADDRESS,
             url_instance,
             locale: {
