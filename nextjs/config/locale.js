@@ -30,7 +30,7 @@ await Promise.all(
             const files = mainFiles.map(name => [join(dirPrefix, lang, name), name]);
 
             await Promise.all(files.map(async ([file, name]) => {
-                const json = JSON.parse(await readFile(file, { encoding: 'utf8' }).catch(() => '{}'));
+                const json = JSON.parse(await readFile(file, { encoding: 'utf8' }).then(r => r || '{}').catch(() => '{}'));
 
                 await Promise.all(Object.entries(comparable[name]).map(async ([k, v]) => {
                     if (!([k] in json)) {

@@ -1,6 +1,6 @@
 
 export const translateX = async (string, to = 'en') => {
-    if (!process.env.NODE_ENV === 'production') throw 'cannot translate static files in production';
+    if (process.env.NODE_ENV === 'production') throw 'cannot translate static files in production';
 
     const r = await fetch('http://localhost:2739/translate', {
         body: JSON.stringify({ string, to }),
