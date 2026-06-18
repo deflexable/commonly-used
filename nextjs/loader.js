@@ -27,7 +27,7 @@ const getDedupeLoaderData = cache(() => {
 export const getLoaderData = () => {
     const engine = getDedupeLoaderData();
 
-    if (!engine.attached) {
+    if (!engine.attached && !engine.has_page) {
         engine.attached = true;
         setTimeout(() => {
             if (!engine.has_page) {
@@ -212,23 +212,21 @@ export const installLoaderData = async (options) => {
         });
 
         if (!options.ignoreSettle) {
-            const c = getDedupeLoaderData();
-            if (c.settled) {
+            if (engine.settled) {
                 throw 'duplicate method call: installLoaderData(...args) should only be called once per page';
             } else {
-                c.settled = true;
-                c.resolve(result);
+                engine.settled = true;
+                engine.resolve(result);
             }
         }
 
         return result;
     } catch (error) {
-        const c = getDedupeLoaderData();
-        if (!c.settled) {
-            c.settled = true;
+        if (!engine.settled) {
+            engine.settled = true;
             installLoaderData({ stopRedirection: true, ignoreSettle: true })
-                .then(c.resolve)
-                .catch(c.reject);
+                .then(engine.resolve)
+                .catch(engine.reject);
         }
         throw error;
     }

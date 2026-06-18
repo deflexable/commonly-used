@@ -9,6 +9,9 @@ export const importMathjax = () =>
 
 const queue = LimitTask(70);
 
+/**
+ * @type {(props: React.ComponentProps<'div'>) => React.JSX.Element}
+ */
 export default memo(function (props) {
     const ref = useRef();
 

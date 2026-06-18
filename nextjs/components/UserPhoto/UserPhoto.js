@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import Link from "next/link";
+import Link from "../../config/next-link";
 import "./UserPhoto.css";
 
 export default function ({ style, size, src, classes, imgProps, vip, href, target, ...props }) {
