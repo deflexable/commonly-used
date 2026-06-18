@@ -43,4 +43,6 @@ export const stripLangFromUrl = (url = '') => {
 }
 
 export const isLangRoute = (route = '', pathname) =>
-    stripLangFromUrl(pathname) !== route;
+    stripTrailingSlash(stripLangFromUrl(pathname)) !== stripTrailingSlash(route);
+
+export const stripTrailingSlash = (path = '') => path.endsWith('/') ? path.slice(0, -1) : path;

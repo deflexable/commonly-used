@@ -10,5 +10,10 @@ export default function (path, params) {
     if (!(lang = params?.lang) || !SUPPORTED_LANGUAGES[lang]) return path;
     const startSlash = path.startsWith('/');
 
-    return `${startSlash ? '/' : ''}${lang}${startSlash ? path : '/' + path}`;
+    path = `${startSlash ? '/' : ''}${lang}${startSlash ? path : '/' + path}`;
+
+    if (!path.includes('?') && path.endsWith('/'))
+        path = path.slice(0, -1);
+
+    return path;
 }
