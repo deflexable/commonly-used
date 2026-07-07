@@ -1,7 +1,7 @@
 import { View, StyleSheet, StatusBar, Platform } from 'react-native';
 import { useMemo, useState } from 'react';
 import { themeStyle, useStyle } from '../page_helper';
-import { Colors } from '@this_app_root/src/utils/values';
+import { Colors } from '@/src/utils/values';
 import NoInternetBanner from './NoInternetBanner';
 
 export const AppTitleBar = function ({

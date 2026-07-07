@@ -1,7 +1,7 @@
 import RNMT from 'react-native-mosquito-transport';
-import { API_BASE_URL, E2E_Public_Key, ENABLE_CACHE } from '@this_app_root/env';
+import { API_BASE_URL, E2E_Public_Key, ENABLE_CACHE } from '@/env';
 import { useEffect, useState } from "react";
-import { Scope } from '@this_app_root/src/utils/scope';
+import { Scope } from '@/src/utils/scope';
 import { Endpoints, one_mb } from 'core/common_values';
 
 RNMT.initializeCache({

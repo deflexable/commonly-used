@@ -15,6 +15,7 @@ import { listenUserConfig } from "../setting_syncer";
 import { Thumbmark } from "@thumbmarkjs/thumbmarkjs";
 import { usePathname } from "next/navigation";
 import { isLangRoute, stripLangFromUrl } from "../methods.dual";
+import { CONFIG_STATE } from "./state";
 
 if (isBrowser()) {
     if (!WEB_STATE.hasReleaseMosquitoCache) {
@@ -33,10 +34,8 @@ if (isBrowser()) {
     }
 }
 
-let FirebaseApp;
-
 export function configureSSO({ firebase }) {
-    FirebaseApp = firebase;
+    CONFIG_STATE.FIREBASE_APP = firebase;
 }
 
 export default function SSOClient({ serverTime, theme_config, timezone, machineCode, userId, userEntity, userTokenId, userConfig, ignoreRouteReloads = [], geo, onShouldDisableAutoLogin }) {
@@ -152,7 +151,7 @@ export default function SSOClient({ serverTime, theme_config, timezone, machineC
             console.log('currentUser: ', user?.uid, ' machineCode: ', machineCode);
             settingsListener?.();
 
-            setUserId(getAnalytics(FirebaseApp), user?.uid || null);
+            setUserId(getAnalytics(CONFIG_STATE.FIREBASE_APP), user?.uid || null);
             if (!user || !user.authVerified) return;
             settingsListener = listenUserConfig();
         });
@@ -180,7 +179,7 @@ export default function SSOClient({ serverTime, theme_config, timezone, machineC
                 console.log('onSuccess: ', response);
                 if (response?.credential) {
                     const user = await auth().googleSignin(response.credential);
-                    logEvent(getAnalytics(FirebaseApp), user.isNewUser ? 'sign_up' : 'login', {
+                    logEvent(getAnalytics(CONFIG_STATE.FIREBASE_APP), user.isNewUser ? 'sign_up' : 'login', {
                         value: 'google_onetap'
                     });
                 }

@@ -1,9 +1,9 @@
 import { ActivityIndicator, Image, Share, TouchableOpacity, View, StatusBar } from "react-native";
 import { AppTitleBar, commonAppBarStyle } from "./AppBars";
 import { themeStyle } from "../page_helper";
-import { Back, Plus, Refresh } from "@this_app_root/src/utils/assets";
+import { Back, Plus, Refresh } from "@/src/utils/assets";
 import TextView from "./TextView";
-import { Colors } from "@this_app_root/src/utils/values.js";
+import { Colors } from "@/src/utils/values.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { WebView } from 'react-native-webview';
 import Clipboard from "@react-native-clipboard/clipboard";

@@ -1,9 +1,9 @@
 import { ActivityIndicator, Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import TextView from "./TextView";
-import { EmptySpace } from "@this_app_root/src/utils/assets";
+import { EmptySpace } from "@/src/utils/assets";
 import { useDarkMode } from "./../theme_helper";
-import { Colors } from "@this_app_root/src/utils/values";
-import { useTranslation } from "@this_app_root/src/locale";
+import { Colors } from "@/src/utils/values";
+import { useTranslation } from "@/src/locale";
 import { useMemo } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

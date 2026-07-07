@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Appearance } from 'react-native';
-import Listeners, { EVENT_NAMES } from "@this_app_root/src/utils/listeners";
+import Listeners, { EVENT_NAMES } from "@/src/utils/listeners";
 import { ThemeHelperScope } from "./scope";
 
 export const onUserThemeChanged = (value) => {

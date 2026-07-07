@@ -9,8 +9,11 @@ export const getGoogleUser = async () => {
             throw { code: statusCodes.PLAY_SERVICES_NOT_AVAILABLE };
 
         const userInfo = await GoogleSignin.signIn();
+        if (userInfo.type === 'cancelled') throw GoogleSigninCancelledSignal;
         return userInfo;
     } catch (error) {
+        if (error === GoogleSigninCancelledSignal) throw error;
+        
         if (error.code === statusCodes.IN_PROGRESS) {
             throw simplifyError('error', 'google_sign_in_in_progress');
         } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {

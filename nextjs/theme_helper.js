@@ -47,7 +47,7 @@ export const useDarkMode = (config) => {
     const [isDark, setDark] = useState(ThemeHelperScope.isDarkMode ?? config?.init_dark);
 
     useEffect(() => {
-        return listeners.listenTo('themeListener', theme => {
+        return listeners.listenToPersist('themeListener', theme => {
             setDark(theme === 'dark');
         });
     }, []);

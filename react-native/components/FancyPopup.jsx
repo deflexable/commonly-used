@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 import AppModal, { PlainModalBG } from "./AppModal";
-import { Colors } from "@this_app_root/src/utils/values";
-import { locales } from "@this_app_root/src/locale";
-import listeners, { EVENT_NAMES } from "@this_app_root/src/utils/listeners";
+import { Colors } from "@/src/utils/values";
+import { locales } from "@/src/locale";
+import listeners, { EVENT_NAMES } from "@/src/utils/listeners";
 import TextView from "./TextView";
 
 export default function () {

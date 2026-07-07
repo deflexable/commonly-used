@@ -1,8 +1,8 @@
-import { Scope } from "@this_app_root/src/utils/scope";
-import { JSONCacher } from "@this_app_root/src/utils/cacher";
+import { Scope } from "@/src/utils/scope";
+import { JSONCacher } from "@/src/utils/cacher";
 import { DbPath } from "core/common_values";
 import { collection } from "./client_server";
-import listeners, { EVENT_NAMES } from "@this_app_root/src/utils/listeners";
+import listeners, { EVENT_NAMES } from "@/src/utils/listeners";
 import { onUserThemeChanged } from "./theme_helper";
 
 export const setPrefferSettings = (l) => {

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useTranslation } from '@this_app_root/src/locale';
-import { Colors } from '@this_app_root/src/utils/values';
+import { useTranslation } from '@/src/locale';
+import { Colors } from '@/src/utils/values';
 import { useDarkMode } from './../theme_helper';
 import TextView from './TextView';
-import { handleLink } from '@this_app_root/src/utils/link_handler';
+import { handleLink } from '@/src/utils/link_handler';
 
 export function Truncate({
     style,

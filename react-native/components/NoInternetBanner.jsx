@@ -1,8 +1,8 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 import { themeStyle, usePrefferedSettings, useStyle } from '../page_helper';
-import { Colors } from '@this_app_root/src/utils/values';
-import { useTranslation } from '@this_app_root/src/locale';
+import { Colors } from '@/src/utils/values';
+import { useTranslation } from '@/src/locale';
 import TextView from './TextView';
 import { useIsOnline } from '../client_server';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

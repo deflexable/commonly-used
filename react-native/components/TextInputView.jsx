@@ -1,5 +1,5 @@
 import { StyleSheet, TextInput } from "react-native";
-import { Scope } from "@this_app_root/src/utils/scope";
+import { Scope } from "@/src/utils/scope";
 import { forwardRef, useMemo } from "react";
 import { useDarkMode } from "../theme_helper";
 

@@ -2,13 +2,13 @@ import { Alert, Platform, ToastAndroid, useWindowDimensions } from "react-native
 import { useEffect, useState } from "react";
 import { simplifyCaughtError } from "simplify-error";
 import { ThemeHelperScope } from "./scope";
-import { locales } from "@this_app_root/src/locale";
+import { locales } from "@/src/locale";
 import { CustomValue, useCustomStyle } from "./styling";
 import { useDarkMode } from "./theme_helper";
-import { Scope } from "@this_app_root/src/utils/scope";
-import listeners, { EVENT_NAMES } from '@this_app_root/src/utils/listeners';
+import { Scope } from "@/src/utils/scope";
+import listeners, { EVENT_NAMES } from '@/src/utils/listeners';
 import { StandardURL } from "./url_parser.js";
-import { IS_DEV, HOST_NAME } from '@this_app_root/env';
+import { IS_DEV, HOST_NAME } from '@/env';
 
 /**
  * auto optimize image quality

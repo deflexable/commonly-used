@@ -1,5 +1,5 @@
 import { Platform } from "react-native";
-import { JSONCacher } from "@this_app_root/src/utils/cacher";
+import { JSONCacher } from "@/src/utils/cacher";
 import appleAuth, { appleAuthAndroid } from "@invertase/react-native-apple-authentication";
 import { Buffer } from "buffer";
 

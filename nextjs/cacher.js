@@ -113,3 +113,8 @@ export const executeIframe = async ({
         throw error;
     }
 }
+
+export const internal_storage_keys = {
+    AUTO_SEND_VERIFY: 'AUTO_SEND_VERIFY',
+    APPLE_PERSISTED_USER: 'APPLE_PERSISTED_USER'
+}

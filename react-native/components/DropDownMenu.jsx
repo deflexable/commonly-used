@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { themeStyle, useStyle } from '../page_helper';
-import { Colors } from '@this_app_root/src/utils/values';
+import { Colors } from '@/src/utils/values';
 import TextView from './TextView';
-import { DropDown } from '@this_app_root/src/utils/assets';
+import { DropDown } from '@/src/utils/assets';
 import Spinner from './Spinner';
 
 export default function ({

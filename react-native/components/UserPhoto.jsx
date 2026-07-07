@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Image, TouchableOpacity } from 'react-native';
-import { Colors } from '@this_app_root/src/utils/values';
+import { Colors } from '@/src/utils/values';
 import { optimizeImage } from './../page_helper';
 
 export default function ({

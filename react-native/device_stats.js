@@ -1,6 +1,6 @@
 import { Platform } from "react-native";
 import { getApiLevel, getDeviceName, getManufacturer, getIpAddress, getUniqueId, getTotalDiskCapacity, getTotalMemory, getSystemName, getInstallerPackageName, getDeviceType, getFirstInstallTime } from "react-native-device-info";
-import { Scope } from "@this_app_root/src/utils/scope";
+import { Scope } from "@/src/utils/scope";
 import { TIMESTAMP } from "react-native-mosquito-transport";
 import { DbPath, niceTry } from "core/common_values";
 import { collection } from "./client_server";

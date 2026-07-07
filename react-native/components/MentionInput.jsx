@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { View, FlatList, Pressable, TextInput } from "react-native";
-import { WEB_BASE_URL } from "@this_app_root/env";
+import { WEB_BASE_URL } from "@/env";
 import { useMentions } from 'react-native-controlled-mentions';
-import { Colors } from '@this_app_root/src/utils/values';
-import { searchUser } from '@this_app_root/src/utils/processor';
+import { Colors } from '@/src/utils/values';
+import { searchUser } from '@/src/utils/processor';
 import UserPhoto from './UserPhoto';
 import { themeStyle, useStyle } from '../page_helper';
 import TextView from "./TextView";

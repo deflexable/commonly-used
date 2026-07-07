@@ -10,8 +10,8 @@ import {
     ScrollView,
 } from 'react-native';
 import { AppTitleBar } from './AppBars';
-import { Back } from '@this_app_root/src/utils/assets';
-import { Colors } from '@this_app_root/src/utils/values';
+import { Back } from '@/src/utils/assets';
+import { Colors } from '@/src/utils/values';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { devTransformLocalhostURL, optimizeImage, shouldCover, useStyle } from './../page_helper.js';
 import { useBackButton } from "react-native-push-back";

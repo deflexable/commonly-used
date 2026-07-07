@@ -1,0 +1,28 @@
+.suspended-body-heighter {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.suspended-body-cont {
+    width: 80vw;
+    max-width: 500px;
+    padding: 20px 0px;
+    text-align: center;
+}
+
+.suspended-body-cont img {
+    width: 50vw;
+    max-width: 200px;
+}
+
+.suspended-body-cont h2 {
+    margin-top: 7px;
+}
+
+.suspended-body-cont small {
+    color: gray;
+    margin-top: 3px;
+}

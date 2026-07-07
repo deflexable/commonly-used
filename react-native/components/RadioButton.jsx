@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Animated, Image, StyleSheet, useAnimatedValue } from "react-native";
-import { Colors } from "@this_app_root/src/utils/values";
+import { Colors } from "@/src/utils/values";
 import { useDarkMode } from "./../theme_helper";
-import { Mark } from "@this_app_root/src/utils/assets";
+import { Mark } from "@/src/utils/assets";
 
 export default function ({ color = Colors.themeColor, size = 60, on = false, borderColor, style, isCheckBox }) {
     const isDarkMode = useDarkMode();

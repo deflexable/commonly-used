@@ -1,0 +1,49 @@
+.con-verification-x {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.cont-verification-x {
+    margin: auto;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.cont-verification-x img {
+    width: 80px;
+    display: block;
+    margin: 0px auto;
+}
+
+.title-verification-x {
+    font-weight: bold;
+    font-size: 19px;
+    margin-top: 15px;
+}
+
+.des-verification-x {
+    margin-top: 10px;
+}
+
+.device-code-des {
+    margin-top: 7px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.cont-verification-x button {
+    background-color: var(--theme-color);
+    border: none;
+    width: 60%;
+    padding: 10px 0px;
+    margin-top: 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.logout-homepage-btn {
+    color: var(--dblue);
+    margin-top: 30px;
+}

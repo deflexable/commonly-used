@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useMemo, useState } from 'react';
-import { Colors } from '@this_app_root/src/utils/values';
-import { LockedStickyTopModals } from '@this_app_root/src/utils/scope';
-import listeners, { EVENT_NAMES } from '@this_app_root/src/utils/listeners';
+import { Colors } from '@/src/utils/values';
+import { LockedStickyTopModals } from '@/src/utils/scope';
+import listeners, { EVENT_NAMES } from '@/src/utils/listeners';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { SnapSheetModal } from 'react-native-snap-sheet';
 import { useDarkMode } from '../theme_helper';
