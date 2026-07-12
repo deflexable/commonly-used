@@ -1,4 +1,5 @@
-import { DbPath, versionStake } from "core/common_values";
+import { DbPath } from "core/common_values";
+import importer from "../importer";
 
 const { default: mserver, collection } = await importer('./mserver.js');
 

@@ -2,6 +2,7 @@ import { DbPath, Endpoints, CHAR_VALIDATION } from 'core/common_values.js';
 import { guardObject, GuardSignal } from 'guard-object';
 import { simplifyCaughtError } from 'simplify-error';
 import ip_lookup from '../ip_lookup.js';
+import importer from '../importer.js';
 
 const { default: mserver, collection, ensureVerifiedAuth } = await importer('./mserver.js');
 

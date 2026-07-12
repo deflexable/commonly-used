@@ -5,6 +5,7 @@ import { simplifyError } from 'simplify-error';
 import { joinPath, randomString } from "../../common/methods.js";
 import { one_minute } from "../../common/timing.js";
 import { sendEmail } from '../mailer.js';
+import importer from '../importer.js';
 
 const { default: mserver, collection, ensureVerifiedAuth } = await importer('./mserver.js');
 const { APP_NAME, API_BASE_URL } = await importer('./env.js');

@@ -5,6 +5,7 @@ import textToImage from 'text-to-image';
 import { purifyBase64, storageDesinationToLink } from '../peripherals';
 import { timeoutFetch } from "../fetcher";
 import monitor_health from '../monitor_health.js';
+import importer from '../importer.js';
 
 const { API_BASE_URL, INTER_SERVER_PASSKEY } = await importer('../env.js');
 const { default: storage_rules } = await importer('../storage_rules');

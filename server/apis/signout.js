@@ -1,5 +1,6 @@
 import { Endpoints } from 'core/common_values.js';
 import { simplifyCaughtError } from 'simplify-error';
+import importer from '../importer';
 
 const { default: mserver, ensureVerifiedAuth } = await importer('./mserver.js');
 

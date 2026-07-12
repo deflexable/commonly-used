@@ -7,8 +7,8 @@ const importer = (path, ...fallbacks) =>
             if (process.env.NODE_ENV === 'development')
                 return new Proxy({}, {
                     get: (_, n) => {
-                        if (!(n in e))
-                            throw `unable to resolve import of ${n} from ${path}`;
+                        if (n !== 'then' && !(n in e))
+                            throw `unable to resolve import of '${n}' from "${path}"`;
                         return e[n];
                     },
                     set: (_, n, v) => {

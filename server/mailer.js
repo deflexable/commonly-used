@@ -1,11 +1,11 @@
 import { join, resolve } from 'path';
-import { renderFile } from 'ejs';
+import ejs from 'ejs';
 import importer from './importer';
 import { APPSTORE_URL, EMAIL_DOMAINS, PLAYSTORE_URL } from 'core/common_values';
 import LOCALE_STORE from './locale_store';
 import { createTransport } from 'nodemailer';
 
-const { APP_NAME, COMPANY_HQ, COMPANY_NAME, IS_DEV, MAIL_CREDENTIALS, MAIL_HOST, WEB_BASE_URL } = await importer('./env');
+const { APP_NAME, COMPANY_HQ, COMPANY_NAME, IS_DEV, MAIL_CREDENTIALS, MAIL_HOST, WEB_BASE_URL, API_BASE_URL } = await importer('./env');
 
 const TEMPLATE_DIR = resolve(process.cwd(), './email_templates');
 const PLAYSTORE_ICON = API_BASE_URL.concat('/assets/images/get_playstore.png');
@@ -80,7 +80,7 @@ export const sendEmail = async ({
     try {
         const htmlData =
             typeof filepath === 'string'
-                ? await renderFile(join(TEMPLATE_DIR, filepath), hydrationData)
+                ? await ejs.renderFile(join(TEMPLATE_DIR, filepath), hydrationData)
                 : html;
         const content = htmlData ? { html: htmlData } : text ? { text } : undefined;
 
