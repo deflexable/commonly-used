@@ -11,7 +11,7 @@ import { Endpoints, SUPPORT_HCAPTCHA_LANGS } from 'core/common_values.js';
 import { Validator } from 'guard-object';
 import { simplifyCaughtError, simplifyError } from 'simplify-error';
 import { getAnalytics, logEvent } from 'firebase/analytics';
-import { CONFIG_STATE } from '../../config/state';
+import firebase_app from '../../firebase_app';
 
 export default function ({ theme_config, lang, params, routerSearch, locale }) {
     const isDarkMode = useDarkMode(theme_config);
@@ -80,7 +80,7 @@ export default function ({ theme_config, lang, params, routerSearch, locale }) {
             ).json();
             if (r.simpleError) throw r;
 
-            logEvent(getAnalytics(CONFIG_STATE.FIREBASE_APP), 'send_password_reset', {
+            logEvent(getAnalytics(firebase_app), 'send_password_reset', {
                 value: email
             });
 

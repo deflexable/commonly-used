@@ -4,7 +4,7 @@ import { join, resolve } from "node:path";
 import http from "http";
 import { readFileSync } from "node:fs";
 import { SSO_HTML_CONTENT } from './sso.html';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 
 const ERROR_LOG_DIR = resolve(process.cwd(), './.rendered-error');
 
@@ -45,6 +45,40 @@ await new Promise((success, reject) => {
 
                     res.end(favicon);
                     return;
+                }
+
+                if (req.url?.startsWith?.('/list_errors-')) {
+                    const id = req.url.split('-').slice(1).join('-');
+
+                    if (process.env.DEVELOPER_PASSKEY === id) {
+                        readdir(ERROR_LOG_DIR, 'utf8').then(async l => {
+                            const p =
+                                Object.fromEntries(
+                                    await Promise.all(
+                                        l.map(async v => {
+                                            const data =
+                                                await readFile(resolve(ERROR_LOG_DIR, './' + v), 'utf8')
+                                                    .catch(() => '');
+                                            return [v, JSON.parse(data || '{}')];
+                                        })
+                                    )
+                                );
+                            const blobData = JSON.stringify(p);
+
+                            res.writeHead(200, {
+                                "Content-Type": "application/json",
+                            });
+
+                            res.end(blobData);
+                        }).catch(e => {
+                            res.writeHead(500, {
+                                "Content-Type": "text/plain",
+                            });
+
+                            res.end(`Error: ${e}`);
+                        });
+                        return;
+                    }
                 }
 
                 if (req.url === '/log_critical_error') {

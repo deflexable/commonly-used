@@ -9,7 +9,7 @@ import { appendScriptSrc } from '../../methods.client';
 import { auth, useIsOnline } from '../../client_server';
 import { useFancyDialog } from '../../components/ContainerModal/ContainerModals';
 import { getAnalytics, logEvent } from 'firebase/analytics';
-import { CONFIG_STATE } from '../../config/state';
+import firebase_app from '../../firebase_app';
 import { AUTH_PROVIDER_ID } from 'mosquito-transport-js';
 import { deserializeStorage, internal_storage_keys, serializeStorage } from '../../cacher';
 import { FIELD_VALIDATORS, SUPPORT_HCAPTCHA_LANGS } from 'core/common_values';
@@ -107,7 +107,7 @@ export default function ClientPage({ params, translations, theme_config, lang })
                 if (!user.user.authVerified)
                     serializeStorage(internal_storage_keys.AUTO_SEND_VERIFY, user.user.entityOf);
 
-                logEvent(getAnalytics(CONFIG_STATE.FIREBASE_APP), event, {
+                logEvent(getAnalytics(firebase_app), event, {
                     value: AUTH_PROVIDER_ID.PASSWORD
                 });
             }
@@ -330,7 +330,7 @@ export default function ClientPage({ params, translations, theme_config, lang })
                                                     const extras = await getAuthExtras?.(AUTH_PROVIDER_ID.GOOGLE);
 
                                                     const user = await auth().googleSignin(res.code, extras);
-                                                    logEvent(getAnalytics(CONFIG_STATE.FIREBASE_APP), user.isNewUser ? 'sign_up' : 'login', {
+                                                    logEvent(getAnalytics(firebase_app), user.isNewUser ? 'sign_up' : 'login', {
                                                         value: AUTH_PROVIDER_ID.GOOGLE
                                                     });
                                                 } catch (e) {
@@ -367,7 +367,7 @@ export default function ClientPage({ params, translations, theme_config, lang })
                                         ...isDarkMode ? { borderWidth: '1px', borderStyle: 'solid' } : {}
                                     }}
                                     onClick={async () => {
-                                        if (!process.env.APPLE_AUTH_SERVICE_ID) {
+                                        if (!process.env.NEXT_PUBLIC_APPLE_AUTH_SERVICE_ID) {
                                             openFancyDialog({
                                                 title: 'Feature',
                                                 message: 'This feature is currently under development',
@@ -390,9 +390,9 @@ export default function ClientPage({ params, translations, theme_config, lang })
 
                                         try {
                                             window.AppleID.auth.init({
-                                                clientId: process.env.APPLE_AUTH_SERVICE_ID,
+                                                clientId: process.env.NEXT_PUBLIC_APPLE_AUTH_SERVICE_ID,
                                                 scope: 'name email',
-                                                redirectURI: process.env.APPLE_AUTH_REDIRECTION,
+                                                redirectURI: process.env.NEXT_PUBLIC_APPLE_AUTH_REDIRECTION,
                                                 usePopup: true
                                             });
                                             const data = await window.AppleID.auth.signIn();
@@ -414,7 +414,7 @@ export default function ClientPage({ params, translations, theme_config, lang })
                                             console.log('fullName:', fullName);
 
                                             const user = await auth().appleSignin(id_token, { fullName, ...extras });
-                                            logEvent(getAnalytics(CONFIG_STATE.FIREBASE_APP), user.isNewUser ? 'sign_up' : 'login', {
+                                            logEvent(getAnalytics(firebase_app), user.isNewUser ? 'sign_up' : 'login', {
                                                 value: AUTH_PROVIDER_ID.APPLE
                                             });
                                         } catch (e) {

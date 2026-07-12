@@ -11,6 +11,7 @@ export const RadioButton = ({ isSelected, size, style, buttonStyle, themeColor, 
     return (
         <div style={style}>
             <div className={`radio-button-comp${isSelected ? '' : ' radio-button-blurred'}${(!isSelected && className) ? ' ' + className : ''}`}
+                role={isCheckBox ? 'checkbox' : 'radio'}
                 style={{
                     ...themeColor ? { borderColor: themeColor } : {},
                     ...buttonStyle,

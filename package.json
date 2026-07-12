@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "app_locale": "./dev/rn_locale.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deflexable/commonly-used.git"

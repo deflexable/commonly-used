@@ -5,7 +5,7 @@ import { LoadingSpinner } from "../../components/TemplateItem/TemplateItem";
 import { fetchHttp } from "../../client_server";
 import { Endpoints } from "core/common_values";
 import { getAnalytics, logEvent } from "firebase/analytics";
-import { CONFIG_STATE } from "../../config/state";
+import firebase_app from "../../firebase_app";
 import Link from "../../config/next-link";
 
 export default function ({ page_data: { token, initResult }, locale, supportLink }) {
@@ -63,7 +63,7 @@ export default function ({ page_data: { token, initResult }, locale, supportLink
                 return;
             }
 
-            logEvent(getAnalytics(CONFIG_STATE.FIREBASE_APP), 'verify_email', {
+            logEvent(getAnalytics(firebase_app), 'verify_email', {
                 value: res.validated ? 'success' : 'failed'
             });
 

@@ -6,7 +6,7 @@ import { useFancyDialog } from '../../components/ContainerModal/ContainerModals'
 import Link from '../../config/next-link';
 import { Endpoints } from 'core/common_values';
 import { getAnalytics, logEvent } from 'firebase/analytics';
-import { CONFIG_STATE } from '../../config/state';
+import firebase_app from '../../firebase_app';
 import { simplifyCaughtError } from 'simplify-error';
 import { ClickableImg } from '../../components/ClickableDiv/ClickableDiv';
 
@@ -46,7 +46,7 @@ export default function ({ page_data: { errorData, data }, locale }) {
 
             if (r.simpleError) throw r;
 
-            logEvent(getAnalytics(CONFIG_STATE.FIREBASE_APP), 'password_reset', {
+            logEvent(getAnalytics(firebase_app), 'password_reset', {
                 value: data.email.trim()
             });
 
