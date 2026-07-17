@@ -13,7 +13,7 @@ function linkify(text, replacer, WEB_BASE_URL) {
             origin = window.location.origin;
         } catch (e) { }
 
-        const tik = replacer?.(url),
+        const tik = typeof replacer === 'function' ? replacer?.(url) : replacer,
             blankPage = tik?.blank,
             openBlank = typeof blankPage === 'boolean' ? blankPage : !url.startsWith(origin || WEB_BASE_URL),
             mainURL = tik?.url || url || '';
