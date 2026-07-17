@@ -11,7 +11,7 @@ export class IndexNow {
     }
 }
 
-const getEngine = ({ collection, env: { key, origin_url } }) => {
+const getEngine = ({ collection, key, origin_url }) => {
     const MAX_SUBMISSION = 9000;
 
     let submissions = 0;
