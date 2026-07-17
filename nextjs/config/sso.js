@@ -47,23 +47,41 @@ await new Promise((success, reject) => {
                     return;
                 }
 
-                if (req.url?.startsWith?.('/list_errors-')) {
-                    const id = req.url.split('-').slice(1).join('-');
+                if (req.url?.startsWith?.('/list_errors?')) {
+                    const query = new URLSearchParams(req.url.split('?').slice(1).join('?'));
+
+                    const id = query.get('pass');
+
+                    const safeParse = (o) => {
+                        try {
+                            return JSON.parse(o);
+                        } catch (error) {
+                            return { parseError: `${o}` };
+                        }
+                    }
 
                     if (process.env.DEVELOPER_PASSKEY === id) {
                         readdir(ERROR_LOG_DIR, 'utf8').then(async l => {
+                            let start = (query.get('start') || undefined) * 1;
+                            let end = (query.get('end') || undefined) * 1;
+
+                            if (!Number.isInteger(start) || !Number.isInteger(end)) {
+                                start = 0;
+                                end = l.length;
+                            }
+
                             const p =
                                 Object.fromEntries(
                                     await Promise.all(
-                                        l.map(async v => {
+                                        l.slice(start, end).map(async v => {
                                             const data =
                                                 await readFile(resolve(ERROR_LOG_DIR, './' + v), 'utf8')
                                                     .catch(() => '');
-                                            return [v, JSON.parse(data || '{}')];
+                                            return [v, safeParse(data || '{}')];
                                         })
                                     )
                                 );
-                            const blobData = JSON.stringify(p);
+                            const blobData = JSON.stringify({ total: l.length, data: p });
 
                             res.writeHead(200, {
                                 "Content-Type": "application/json",
