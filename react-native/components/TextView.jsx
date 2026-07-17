@@ -21,7 +21,7 @@ const TextView = ({ children, style, invertColor, forceColor, forceSize, ...prop
         ...StyleSheet.flatten(style),
         ...forceColor ? { color: forceColor } : {},
         ...forceSize ? { fontSize: forceSize } : {}
-    }), [invertColor, style, isDarkMode, forceColor]);
+    }), [invertColor, style, isDarkMode, forceColor, forceSize]);
 
     return (
         <Text

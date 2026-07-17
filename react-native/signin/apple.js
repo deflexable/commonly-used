@@ -3,6 +3,8 @@ import { JSONCacher } from "@/src/utils/cacher";
 import appleAuth, { appleAuthAndroid } from "@invertase/react-native-apple-authentication";
 import { Buffer } from "buffer";
 
+JSONCacher.APPLE_PERSISTED_USER;
+
 export const AppleSigninCancelledSignal = Symbol('cancelled_error');
 
 export const getAppleUser = async () => {

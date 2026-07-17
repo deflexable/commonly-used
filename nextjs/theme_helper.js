@@ -48,7 +48,7 @@ export const useDarkMode = (config) => {
 
     useEffect(() => {
         return listeners.listenToPersist('themeListener', theme => {
-            setDark(theme === 'dark');
+            if (theme) setDark(theme === 'dark');
         });
     }, []);
 

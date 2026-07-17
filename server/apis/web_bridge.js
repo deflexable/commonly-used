@@ -1,4 +1,5 @@
 import { COMMON_OBJECT_EXTRACTIONS, DbPath } from "core/common_values";
+import { simplifyCaughtError } from "simplify-error";
 import importer from "../importer";
 
 const { INTER_SERVER_PASSKEY } = await importer('./env.js');
@@ -37,6 +38,10 @@ mserver.listenHttpsRequest('server_bridging', async (req, res) => {
         res.status(200).send({ data, success: true });
     } catch (error) {
         console.error('web_bridging err:', error);
+        if (typeof error !== 'string') {
+            const { error: e, message } = simplifyCaughtError(error).simpleError;
+            error = `${e || 'Error'}: ${message}`;
+        }
         res.status(200).send({ data: `${error}`, success: false });
     }
 });
