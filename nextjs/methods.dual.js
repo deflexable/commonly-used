@@ -2,15 +2,25 @@ import { SUPPORTED_LANGUAGES } from "core/common_values";
 
 const getTimezoneOffset = (tz) => {
     if (!tz) return 0;
-    const tzTime = new Date(new Date().toLocaleString("en", { timeZone: tz })).getTime(),
-        clientTime = Date.now();
+    const tzTime = new Date(new Date().toLocaleString("en", { timeZone: tz })).getTime();
+    const clientTime = Date.now();
 
     return tzTime - clientTime;
 };
 
-export const getThemeDateContext = (timezone) => { // 7am - 7pm (day - night)
+export const getThemeDateContext = (...timezone) => { // 7am - 7pm (day - night)
+    timezone = timezone = timezone.filter(v => v);
     let date = new Date();
-    if (timezone) date = new Date(date.getTime() + (getTimezoneOffset(timezone) || 0));
+
+    if (timezone.length) {
+        try {
+            date = new Date(date.getTime() + (getTimezoneOffset(timezone[0]) || 0));
+        } catch (error) {
+            if (timezone.length > 1)
+                return getThemeDateContext(...timezone.slice(1));
+            throw error;
+        }
+    }
 
     const milisSinceMorning =
         (date.getHours() * 3600000) +

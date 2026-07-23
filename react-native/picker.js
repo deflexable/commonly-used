@@ -2,8 +2,7 @@ import { errorCodes, keepLocalCopy, pick, types as pickerTypes } from "@react-na
 import { recordException } from "./exception";
 import { alertError, prefixStoragePath } from "./page_helper";
 import { Platform } from "react-native";
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import { simplifyError } from "simplify-error";
+import { transformMediaResult, pickMedia } from "./pick_media";
 
 /**
  * Open a file picker dialog to select files from the device storage.
@@ -11,30 +10,20 @@ import { simplifyError } from "simplify-error";
  * @type {(types: string | import('@react-native-documents/picker').PredefinedFileTypes | Array<import('@react-native-documents/picker').PredefinedFileTypes | string>, multiple?: boolean | number) => Promise<import('@react-native-documents/picker').DocumentPickerResponse | Array<import('@react-native-documents/picker').DocumentPickerResponse>>}
  */
 export const pickFile = async (types, multiple = true) => {
-    try {
-        if (typeof multiple === 'number' && multiple <= 0) return [];
+    if (typeof multiple === 'number' && multiple <= 0) return [];
 
+    if (Platform.OS !== 'android') {
         const filterTypes = Array.isArray(types) ? types : [types];
 
-        if (Platform.OS !== 'android') {
-            const isImage = filterTypes.includes(pickerTypes.images);
-            const isVideo = filterTypes.includes(pickerTypes.video);
+        const isImage = filterTypes.includes(pickerTypes.images);
+        const isVideo = filterTypes.includes(pickerTypes.video);
 
-            if (isImage || isVideo) {
-                const res =
-                    await launchImageLibrary({
-                        mediaType: (isImage && isVideo) ? 'mixed' : isImage ? 'photo' : 'video',
-                        includeExtra: false,
-                        selectionLimit: typeof multiple === 'number' ? multiple : multiple ? undefined : 1
-                    });
-                if (res.didCancel) throw { code: errorCodes.OPERATION_CANCELED };
-                if (res.errorMessage || res.errorCode) throw simplifyError(res.errorCode, res.errorMessage);
-                const reformattedResult = res.assets.map(v => reformatGalleryData(v));
-
-                return transformMediaResult(reformattedResult, multiple);
-            }
+        if (isImage || isVideo) {
+            return pickMedia({ isImage, isVideo, multiple });
         }
+    }
 
+    try {
         const results = await Promise.all(
             (
                 await pick({
@@ -67,40 +56,3 @@ export const pickFile = async (types, multiple = true) => {
         throw e;
     }
 };
-
-const transformMediaResult = (results, multiple) =>
-    Number.isInteger(multiple) ? results.slice(0, multiple) : multiple ? results : results[0];
-
-const reformatGalleryData = v => ({
-    uri: v.uri,
-    name: v.fileName,
-    type: v.type,
-    size: v.fileSize,
-    data: { ...v }
-});
-
-/**
- * capture a photo or record a video from in-built camera app of the device
- * 
- * @param {import("react-native-image-picker").CameraOptions} options 
- * @returns {Promise<{uri: string, name: string, type: string, size: string, data: import("react-native-image-picker").ImagePickerResponse}[]>}
- */
-export const openCamera = async (options) => {
-    try {
-        const multiple = options?.multiple;
-        if (typeof multiple === 'number' && multiple <= 0) return [];
-
-        const res = await launchCamera(options);
-        if (res.didCancel) throw { code: errorCodes.OPERATION_CANCELED };
-        if (res.errorMessage || res.errorCode) throw simplifyError(res.errorCode, res.errorMessage);
-        const results = res.assets.map(v => reformatGalleryData(v));
-
-        return transformMediaResult(results, multiple);
-    } catch (e) {
-        if (e?.code !== errorCodes.OPERATION_CANCELED) {
-            alertError(e);
-            recordException(e, 'OPEN_CAMERA');
-        }
-        throw e;
-    }
-}

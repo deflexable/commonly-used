@@ -187,7 +187,7 @@ export const installLoaderData = async (options) => {
             },
             main_locale: mainLocale,
             theme_config: {
-                init_dark: (!userObj || !userTheme) ? !getThemeDateContext(timezone || req_timezone).isDayLight : userTheme === 'dark',
+                init_dark: (!userObj || !userTheme) ? !getThemeDateContext(timezone, req_timezone).isDayLight : userTheme === 'dark',
                 value: userTheme
             },
             geo: {},

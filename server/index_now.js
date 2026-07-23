@@ -25,7 +25,7 @@ const getEngine = ({ collection, key, origin_url }) => {
      */
     const push = (url) => {
         const dispatch = () =>
-            submitIndex(new Set([...stub_arr.splice(0, stub_arr.length)]));
+            submitIndex([...new Set([...stub_arr.splice(0, stub_arr.length)])]);
 
         clearTimeout(stub_timer);
         if (stub_arr.push(url) >= 1000) {
