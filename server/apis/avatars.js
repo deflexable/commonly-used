@@ -1,6 +1,6 @@
 import '../logger.js';
 import MosquitoTransportServer from 'mosquito-transport';
-import { DbPath, Endpoints, MICRO_SERVICES, StoragePath, SERVICE_TASKS } from 'core/common_values';
+import { DbPath, MICRO_SERVICES, StoragePath } from 'core/common_values';
 import textToImage from 'text-to-image';
 import { purifyBase64, storageDesinationToLink } from '../peripherals';
 import { timeoutFetch } from "../fetcher";
@@ -19,7 +19,7 @@ const mserver = new MosquitoTransportServer({
 const collection = mserver.getDatabase().collection;
 monitor_health(collection);
 
-mserver.listenHttpsRequest(Endpoints.storeAvatar, async (req, res) => {
+mserver.listenHttpsRequest('storeAvatar', async (req, res) => {
     const { passkey, photo, name, uid, task_id } = req.headers;
 
     if (passkey !== INTER_SERVER_PASSKEY) {
@@ -57,7 +57,7 @@ const storeAvatar = async (uid, name, photo, taskID) => {
 
 collection(DbPath.microserversTasks).find({
     domain: API_BASE_URL,
-    task: SERVICE_TASKS.initAvatar
+    task: 'initAvatar'
 }).toArray().then(r =>
     Promise.all(r.map(async ({ _id, data }) =>
         storeAvatar(data.uid, data.name, data.photo, _id)

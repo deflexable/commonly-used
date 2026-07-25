@@ -45,6 +45,7 @@ export const reformatGalleryData = v => ({
     name: v.fileName,
     type: v.type,
     size: v.fileSize,
+    ...(v.width && v.height) ? { dim: [v.width, v.height] } : {},
     data: { ...v }
 });
 
