@@ -5,7 +5,7 @@ import { getCountryLangs } from "../common/country_lang.js";
 import { SUPPORTED_LANGUAGES } from "core/common_values.js";
 import { getLocales } from "./config/locale.js";
 import { getThemeDateContext, stripLangFromUrl } from "./methods.dual";
-import { notFound, redirect } from "next/navigation";
+import { notFound, redirect, unauthorized } from "next/navigation";
 import { cache } from "react";
 
 const getDedupeLoaderData = cache(() => {
@@ -83,7 +83,8 @@ export const installLoaderData = async (options) => {
         const session_lang = cookiesData.get('lang')?.value;
         const req_country = headerData.get(process.env.REQUEST_COUNTRY_NODE);
         const req_timezone = headerData.get(process.env.REQUEST_TIMEZONE_NODE);
-        const thisBot = isbot(userAgent) || process.env.NODE_ENV === 'development';
+        const isRobot = isbot(userAgent);
+        const thisBot = isRobot || process.env.NODE_ENV === 'development';
 
         let userObj;
 
@@ -162,7 +163,11 @@ export const installLoaderData = async (options) => {
             }
 
             if (options?.enforceUser && !thisUser) {
-                doRedirect(`${anchorLang ? anchorLang + '/' : ''}auth`);
+                if (isRobot) {
+                    unauthorized();
+                } else {
+                    doRedirect(`${anchorLang ? anchorLang + '/' : ''}auth`);
+                }
             }
         }
 

@@ -1,6 +1,7 @@
 import { DbPath } from "core/common_values.js";
 import { randomString } from "../../common/methods";
 import { timeoutFetch } from "../fetcher";
+import importer from "../importer";
 
 const { collection } = await importer('./mserver.js');
 const { AVATAR_BASE_URL, INTER_SERVER_PASSKEY } = await importer('./env.js');
