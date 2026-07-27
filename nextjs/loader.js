@@ -18,25 +18,32 @@ const getDedupeLoaderData = cache(() => {
             reject = failure;
         });
 
-    return { promise, resolve, reject, settled: false };
+    return { promise, resolve, reject, settled: false, has_root: false, has_install: false };
 });
+
+export const RootLoaderContext = Symbol('root_loader');
+
+export const getLoaderDataSync = () => Object.freeze(getDedupeLoaderData());
 
 /**
  * @returns {Promise<LoaderResult>}
  */
-export const getLoaderData = () => {
+export const getLoaderData = async (context) => {
     const engine = getDedupeLoaderData();
 
-    if (!engine.attached && !engine.has_page) {
-        engine.attached = true;
-        setTimeout(() => {
-            if (!engine.has_page) {
-                installLoaderData({ stopRedirection: true });
-            }
-        }, 300);
+    if (context === RootLoaderContext) {
+        engine.has_root = true;
     }
+    try {
+        const result = await engine.promise;
+        return result;
+    } catch (error) {
+        if (context === RootLoaderContext) {
+            return installLoaderData({ stopRedirection: true, ignoreSettle: true });
+        }
 
-    return engine.promise;
+        throw error;
+    }
 };
 
 /**
@@ -65,7 +72,8 @@ export const getLoaderData = () => {
  */
 export const installLoaderData = async (options) => {
     const engine = getDedupeLoaderData();
-    engine.has_page = true;
+    engine.has_install = true;
+
     try {
         console.log('loader:', options.pathname);
         const anchorLang = (options.params = await options.params)?.lang;
@@ -163,11 +171,7 @@ export const installLoaderData = async (options) => {
             }
 
             if (options?.enforceUser && !thisUser) {
-                if (isRobot) {
-                    unauthorized();
-                } else {
-                    doRedirect(`${anchorLang ? anchorLang + '/' : ''}auth`);
-                }
+                unauthorized();
             }
         }
 
@@ -230,9 +234,7 @@ export const installLoaderData = async (options) => {
     } catch (error) {
         if (!engine.settled) {
             engine.settled = true;
-            installLoaderData({ stopRedirection: true, ignoreSettle: true })
-                .then(engine.resolve)
-                .catch(engine.reject);
+            engine.reject(error);
         }
         throw error;
     }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const showForHashAnchor = true;
+const onBeforeTransition = new Map();
 
 export const usePageTransition = () => {
     const [transitioning, setTransitioning] = useState(false);
@@ -90,12 +92,18 @@ export const usePageTransition = () => {
             setTransitioning(true);
         }
 
+        const ref = {};
+        onBeforeTransition.set(ref, () => {
+            setTransitioning(true);
+        });
+
         window.addEventListener('popstate', handlePop);
         document.addEventListener('click', handleClick);
         window.addEventListener('pagehide', handlePageHide);
 
         return () => {
             scheduleFinish = undefined;
+            onBeforeTransition.delete(ref);
             document.removeEventListener('click', handleClick);
             window.removeEventListener('pagehide', handlePageHide);
             window.removeEventListener('popstate', handlePop);
@@ -103,6 +111,32 @@ export const usePageTransition = () => {
     }, []);
 
     return transitioning;
+}
+
+/**
+ * @type {useRouter}
+ */
+export const useNavigation = () => {
+    const router = useRouter();
+
+    return Object.fromEntries([
+        'back',
+        'forward',
+        'refresh',
+        'push',
+        'replace',
+        'experimental_gesturePush',
+        'prefetch'
+    ].map(n => {
+
+        return [n, (...args) => {
+            if (n !== 'prefetch')
+                onBeforeTransition.forEach(v => {
+                    v(n);
+                });
+            router[n](...args);
+        }];
+    }));
 }
 
 /**

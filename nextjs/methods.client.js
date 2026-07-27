@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { internal_keys, listeners } from "./listeners";
 import { WEB_STATE } from "./scope";
-import { useRouter } from "next/navigation";
+import { useNavigation } from "./page_transition";
 
 export const updateCookie = (...args) => {
     let command;
@@ -233,7 +233,7 @@ export const useBodyLazyScroll = (callback) => {
 const Identifier = '__BackButtonBlocker_';
 
 export function useBackButton({ callback, disable, onreset }) {
-    const router = useRouter();
+    const router = useNavigation();
 
     const instantCallback = useRef();
     instantCallback.current = callback;

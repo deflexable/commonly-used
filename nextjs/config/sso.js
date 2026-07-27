@@ -4,9 +4,12 @@ import { resolve } from "node:path";
 import http from "http";
 import { readFileSync } from "node:fs";
 import { SSO_HTML_CONTENT } from './sso.html';
-import { readdir, readFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 
-const ERROR_LOG_DIR = resolve(process.cwd(), './.rendered-error');
+const LOG_DIR = {
+    SERVER: resolve(process.cwd(), './.rendered-error'),
+    CLIENT: resolve(process.cwd(), './.rendered-error-client')
+};
 
 await new Promise((success, reject) => {
     if (!globalThis.__initedSSO_Config) {
@@ -47,10 +50,39 @@ await new Promise((success, reject) => {
                     return;
                 }
 
+                if (req.url === '/log_critical_error') {
+                    const body_list = [];
+
+                    req.on('data', chunk => {
+                        body_list.push(chunk);
+                    });
+
+                    req.on('end', () => {
+                        mkdir(LOG_DIR.CLIENT, { recursive: true }).finally(() => {
+                            const data = JSON.stringify({
+                                date: new Date().toLocaleString?.(),
+                                time: Date.now(),
+                                headers: req.headers,
+                                info: JSON.parse(body_list.join(''))
+                            });
+
+                            return writeFile(resolve(LOG_DIR.CLIENT, `./${Date.now()}.txt`), data, 'utf8');
+                        });
+
+                        res.writeHead(200, {
+                            "Content-Type": "text/plain"
+                        });
+
+                        res.end('OK');
+                    });
+                    return;
+                }
+
                 if (req.url?.startsWith?.('/list_errors?')) {
                     const query = new URLSearchParams(req.url.split('?').slice(1).join('?'));
 
                     const id = query.get('pass');
+                    const error_dir = query.get('client') === 'true' ? LOG_DIR.CLIENT : LOG_DIR.SERVER;
 
                     const safeParse = (o) => {
                         try {
@@ -61,7 +93,7 @@ await new Promise((success, reject) => {
                     }
 
                     if (process.env.DEVELOPER_PASSKEY === id) {
-                        readdir(ERROR_LOG_DIR, 'utf8').then(async l => {
+                        readdir(error_dir, 'utf8').then(async l => {
                             let start = (query.get('start') || undefined) * 1;
                             let end = (query.get('end') || undefined) * 1;
 
@@ -73,7 +105,7 @@ await new Promise((success, reject) => {
                                     await Promise.all(
                                         l.slice(start, end).map(async v => {
                                             const data =
-                                                await readFile(resolve(ERROR_LOG_DIR, './' + v), 'utf8')
+                                                await readFile(resolve(error_dir, './' + v), 'utf8')
                                                     .catch(() => '');
                                             return [v, safeParse(data || '{}')];
                                         })
@@ -82,13 +114,13 @@ await new Promise((success, reject) => {
                             const blobData = JSON.stringify({ total: l.length, data: p });
 
                             res.writeHead(200, {
-                                "Content-Type": "application/json",
+                                "Content-Type": "application/json"
                             });
 
                             res.end(blobData);
                         }).catch(e => {
                             res.writeHead(500, {
-                                "Content-Type": "text/plain",
+                                "Content-Type": "text/plain"
                             });
 
                             res.end(`Error: ${e}`);

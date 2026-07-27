@@ -5,13 +5,15 @@ import { updateCookie } from "./methods.client";
 import { simplifyCaughtError } from "simplify-error";
 
 export const updateLanguage = async (value) => {
+    if (value === 'auto' || !value) value = undefined;
+
     const url = new URL(location.href),
         urlLang = url.pathname.split('/')[1],
-        isAuto = !value || value === 'auto';
+        isAuto = !value;
 
     if (urlLang && SUPPORTED_LANGUAGES[urlLang]) {
         if (urlLang === value) return;
-        url.pathname = url.pathname.split('/').map(((v, i) => i === 1 ? value : v)).join('/');
+        url.pathname = url.pathname.split('/').map((v, i) => i === 1 ? value : v).filter(v => v !== undefined).join('/');
         location.href = url.href;
         return;
     } else if (AuthScope.uid) {
