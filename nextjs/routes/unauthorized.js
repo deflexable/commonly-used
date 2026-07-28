@@ -1,9 +1,11 @@
-import { getLoaderData, installLoaderData } from "../loader";
+import { getLoaderData, getLoaderDataSync, installLoaderData } from "../loader";
 import ClientPage from "./unauthorized.client";
 
 export default async function () {
+    const nowLoader = getLoaderDataSync();
+
     const loader =
-        (loader.has_root && !loader.has_install)
+        (nowLoader.has_root && !nowLoader.has_install)
             ? installLoaderData({ stopRedirection: true })
             : getLoaderData();
 
