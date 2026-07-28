@@ -5,24 +5,24 @@ import { stripLangFromUrl, stripTrailingSlash } from "./methods.dual";
 
 export const getGraphMetadata = ({ title, description, logoUrl, logoSize, locale, url, locale_list = [] }) => {
     if (!logoUrl) logoUrl = process.env.NEXT_PUBLIC_WEB_BASE_URL.concat('/logo.png');
+    if (!locale_list) locale_list = [];
 
     const link = new URL(url);
     const cleansedPath = stripTrailingSlash(stripLangFromUrl(link.pathname));
-    const isLangLink = cleansedPath !== stripTrailingSlash(link.pathname);
 
     const linkCleansed = new URL(link);
     linkCleansed.pathname = cleansedPath;
 
     return {
         alternates: {
-            canonical: linkCleansed.href,
+            canonical: url || '',
             languages: {
                 ...Object.fromEntries(
                     locale_list.map(v =>
                         [v, langy(linkCleansed.pathname, { lang: v }).concat(link.search)]
                     )
                 ),
-                [locale]: isLangLink ? link.href : linkCleansed.href
+                'x-default': linkCleansed.href
             }
         },
         openGraph: {
