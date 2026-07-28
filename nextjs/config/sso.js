@@ -66,7 +66,7 @@ await new Promise((success, reject) => {
                                 info: JSON.parse(body_list.join(''))
                             });
 
-                            return writeFile(resolve(LOG_DIR.CLIENT, `./${Date.now()}.txt`), data, 'utf8');
+                            return writeFile(resolve(LOG_DIR.CLIENT, `./${Date.now()}.json`), data, 'utf8');
                         });
 
                         res.writeHead(200, {

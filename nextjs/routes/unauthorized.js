@@ -3,16 +3,23 @@ import ClientPage from "./unauthorized.client";
 
 export default async function () {
     const nowLoader = getLoaderDataSync();
+    const o = {};
 
-    const loader =
+    const loader = (
         (nowLoader.has_root && !nowLoader.has_install)
-            ? installLoaderData({ stopRedirection: true })
-            : getLoaderData();
+            ? Promise.reject(o)
+            : getLoaderData()
+    ).catch(e =>
+        installLoaderData({
+            stopRedirection: true,
+            ignoreSettle: e !== o
+        })
+    );
 
     const locale =
         await loader
             .then(v => v.locale.data)
-            .catch(() => null);
+            .catch(_ => null);
 
     return (
         <div style={{

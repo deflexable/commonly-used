@@ -23,7 +23,18 @@ const getDedupeLoaderData = cache(() => {
 
 export const RootLoaderContext = Symbol('root_loader');
 
-export const getLoaderDataSync = () => Object.freeze(getDedupeLoaderData());
+export const getLoaderDataSync = () => {
+    const engine = getDedupeLoaderData();
+
+    return new Proxy({}, {
+        get: (_, n) => {
+            return engine[n];
+        },
+        set: (_, n) => {
+            throw `Cannot assign to read only property '${n}'`;
+        }
+    });
+};
 
 /**
  * @returns {Promise<LoaderResult>}
@@ -72,7 +83,10 @@ export const getLoaderData = async (context) => {
  */
 export const installLoaderData = async (options) => {
     const engine = getDedupeLoaderData();
-    engine.has_install = true;
+
+    if (!options.ignoreSettle) {
+        engine.has_install = true;
+    }
 
     try {
         console.log('loader:', options.pathname);
@@ -232,10 +246,13 @@ export const installLoaderData = async (options) => {
 
         return result;
     } catch (error) {
-        if (!engine.settled) {
-            engine.settled = true;
-            engine.reject(error);
+        if (!options.ignoreSettle) {
+            if (!engine.settled) {
+                engine.settled = true;
+                engine.reject(error);
+            }
         }
+
         throw error;
     }
 }
