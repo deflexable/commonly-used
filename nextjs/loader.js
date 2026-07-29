@@ -23,6 +23,9 @@ const getDedupeLoaderData = cache(() => {
 
 export const RootLoaderContext = Symbol('root_loader');
 
+/**
+ * @type {getDedupeLoaderData}
+ */
 export const getLoaderDataSync = () => {
     const engine = getDedupeLoaderData();
 

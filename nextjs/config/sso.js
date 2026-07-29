@@ -155,7 +155,7 @@ await new Promise((success, reject) => {
             });
         });
 
-        server.listen(process.env.SSO_AUTH_PORT, () => {
+        server.listen(process.env.SSO_AUTH_PORT, process.env.SSO_AUTH_BINDING_HOSTNAME || '0.0.0.0', () => {
             console.log(`sso auth listening at port ${process.env.SSO_AUTH_PORT}, please visit ${process.env.NEXT_PUBLIC_SSO_AUTH_URL}`);
             success();
         });

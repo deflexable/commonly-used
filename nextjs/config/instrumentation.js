@@ -7,6 +7,13 @@ const niceSerialize = (o) => {
     }
 }
 
+export async function register() {
+    if (process.env.NEXT_RUNTIME === 'nodejs') {
+        await import('./sso.js');
+        await import('./locale_prefiller.js');
+    }
+}
+
 export async function onRequestError(error, request, context) {
 
     if (process.env.NEXT_RUNTIME === 'nodejs') {
