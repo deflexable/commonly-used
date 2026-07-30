@@ -3,9 +3,12 @@ import { SUPPORTED_LANGUAGES_LIST } from "core/common_values.js";
 export const getLocales = (lang, page_name) => [
     globalThis.lang_store[lang].common,
     globalThis.lang_store[lang][page_name]
-]
+];
 
 export const mutateLocale = ({ callback, filename, lang_list }) => {
+    const node = `${callback}-${filename}-${lang_list}`;
+
+    if (globalThis.__mutated_langs?.[node] || !globalThis.lang_store) return;
     if (!lang_list) lang_list = SUPPORTED_LANGUAGES_LIST;
 
     lang_list.forEach(lang => {
@@ -14,4 +17,8 @@ export const mutateLocale = ({ callback, filename, lang_list }) => {
                 globalThis.lang_store[lang][filename][k] = callback(k, v, lang);
             });
     });
+
+    if (!globalThis.__mutated_langs)
+        globalThis.__mutated_langs = {};
+    globalThis.__mutated_langs[node] = true;
 }

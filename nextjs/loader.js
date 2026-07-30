@@ -48,8 +48,29 @@ export const getLoaderData = async (context) => {
     if (context === RootLoaderContext) {
         engine.has_root = true;
     }
+
     try {
-        const result = await engine.promise;
+        const fallback = [engine.promise];
+
+        if (!engine.has_root && !engine.has_install) {
+            fallback.push(
+                new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        if (engine.has_install) {
+                            engine.promise
+                                .then(resolve)
+                                .catch(reject);
+                        } else {
+                            installLoaderData({ stopRedirection: true, ignoreSettle: true })
+                                .then(resolve)
+                                .catch(reject);
+                        }
+                    }, 0);
+                })
+            );
+        }
+
+        const result = await Promise.race(fallback);
         return result;
     } catch (error) {
         if (context === RootLoaderContext) {

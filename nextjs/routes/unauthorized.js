@@ -6,17 +6,11 @@ export default async function () {
         new Promise(resolve => {
             setTimeout(() => {
                 const nowLoader = getLoaderDataSync();
-                const o = {};
 
                 (
                     (nowLoader.has_root && !nowLoader.has_install)
-                        ? Promise.reject(o)
+                        ? installLoaderData({ stopRedirection: true })
                         : getLoaderData()
-                ).catch(e =>
-                    installLoaderData({
-                        stopRedirection: true,
-                        ignoreSettle: e !== o
-                    })
                 ).catch(_ => null).then(resolve);
             }, 0);
         });
