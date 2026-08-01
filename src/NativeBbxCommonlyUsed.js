@@ -11,8 +11,8 @@ export interface Spec extends TurboModule {
 
   // event listeners
   // readonly onMessage?: EventEmitter<{ message: string }>;
-  addListener(eventName: string): void;
-  removeListeners(count: number): void;
+  // addListener(eventName: string): void;
+  // removeListeners(count: number): void;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('BbxCommonlyUsed');
