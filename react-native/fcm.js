@@ -3,7 +3,7 @@ import { PermissionsAndroid, Platform } from 'react-native';
 import { DbPath } from 'core/common_values';
 import { getMessaging, getToken, isDeviceRegisteredForRemoteMessages, registerDeviceForRemoteMessages, onTokenRefresh } from '@react-native-firebase/messaging';
 import { collection } from './client_server';
-import bbx_rn_lib, { getMachineCode } from "../rn_lib/index";
+import bbx_rn_lib, { getMachineCode } from "../src/index";
 
 export const updateNotificationToken = (userId) => {
     let canceller;
