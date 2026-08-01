@@ -64,7 +64,7 @@ const getEngine = ({ collection, key, origin_url }) => {
             if (submissions > MAX_SUBMISSION) return { soft_error: 'submission threshold exceeded' };
             if (failures > 3) return { soft_error: 'failure threshold exceeded' };
 
-            const response = await fetch('https://api.indexnow.org', {
+            const response = await fetch('https://api.indexnow.org/indexnow', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'

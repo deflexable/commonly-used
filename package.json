@@ -6,8 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "bin": {
-    "app_locale": "./dev/rn_locale.js"
+  "codegenConfig": {
+    "name": "BbxCommonlyUsedSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.bbxcommonlyused"
+    }
   },
   "repository": {
     "type": "git",
