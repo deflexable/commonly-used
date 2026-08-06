@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface DeviceUID : NSObject
+@interface MachineUID : NSObject
 + (NSString *)syncUid;
 + (NSString *)uid;
 @end

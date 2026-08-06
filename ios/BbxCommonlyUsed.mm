@@ -1,5 +1,5 @@
 #import "BbxCommonlyUsed.h"
-#import "DeviceUID.h"
+#import "MachineUID.h"
 #import <UserNotifications/UserNotifications.h>
 
 @implementation BbxCommonlyUsed
@@ -21,7 +21,7 @@
 
 - (NSString *)uniqueId
 {
-    return [DeviceUID uid];
+    return [MachineUID uid];
 }
 
 - (void)getUniqueId:(RCTPromiseResolveBlock)resolve

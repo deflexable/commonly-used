@@ -2,30 +2,30 @@
 // https://gist.github.com/miguelcma/e8f291e54b025815ca46
 // Modified as the original version crashes.
 
-#import "DeviceUID.h"
+#import "MachineUID.h"
 
 @import UIKit;
 
-@interface DeviceUID ()
+@interface MachineUID ()
 
 @property(nonatomic, strong, readonly) NSString *uid;
 
 @end
 
-NSString * const UIDKey = @"deviceUID";
+NSString * const UIDKey = @"machineUID";
 
-@implementation DeviceUID
+@implementation MachineUID
 
 @synthesize uid = _uid;
 
 #pragma mark - Public methods
 
 + (NSString *)uid {
-    return [[[DeviceUID alloc] init] uid];
+    return [[[MachineUID alloc] init] uid];
 }
 
 + (NSString *)syncUid {
-    return [[[DeviceUID alloc] init] syncUid];
+    return [[[MachineUID alloc] init] syncUid];
 }
 
 #pragma mark - Instance methods
@@ -67,18 +67,18 @@ NSString * const UIDKey = @"deviceUID";
 /*! Persist UID to NSUserDefaults and Keychain
  */
 - (void)save {
-  [DeviceUID setValue:_uid forUserDefaultsKey:UIDKey];
-  [DeviceUID updateValue:_uid forKeychainKey:UIDKey inService:UIDKey];
+  [MachineUID setValue:_uid forUserDefaultsKey:UIDKey];
+  [MachineUID updateValue:_uid forKeychainKey:UIDKey inService:UIDKey];
 }
 
 /*! Persist UID to NSUserDefaults and Keychain, if not yet saved
  */
 - (void)saveIfNeed {
-  if (![DeviceUID valueForUserDefaultsKey:UIDKey]) {
-    [DeviceUID setValue:_uid forUserDefaultsKey:UIDKey];
+  if (![MachineUID valueForUserDefaultsKey:UIDKey]) {
+    [MachineUID setValue:_uid forUserDefaultsKey:UIDKey];
   }
-  if (![DeviceUID valueForKeychainKey:UIDKey service:UIDKey]) {
-    [DeviceUID setValue:_uid forKeychainKey:UIDKey inService:UIDKey];
+  if (![MachineUID valueForKeychainKey:UIDKey service:UIDKey]) {
+    [MachineUID setValue:_uid forKeychainKey:UIDKey inService:UIDKey];
   }
 }
 
@@ -107,7 +107,7 @@ NSString * const UIDKey = @"deviceUID";
     OSStatus status = SecItemAdd((__bridge CFDictionaryRef)keychainItem, NULL);
     
     if (status == errSecDuplicateItem) {
-        [DeviceUID deleteValue:key inService:service];
+        [MachineUID deleteValue:key inService:service];
         status =  SecItemAdd((__bridge CFDictionaryRef)keychainItem, NULL);
     }
     return  status;

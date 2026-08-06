@@ -20,12 +20,12 @@ class BbxCommonlyUsedModule(
         reactContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
     @ReactMethod
-    fun getApiLevel(promise: Promise) {
+    override fun getApiLevel(promise: Promise) {
         promise.resolve(Build.VERSION.SDK_INT)
     }
 
     @ReactMethod
-    fun hasGms(promise: Promise) {
+    override fun hasGms(promise: Promise) {
         var withGms = false
 
         try {
@@ -45,7 +45,7 @@ class BbxCommonlyUsedModule(
 
             val result = isGooglePlayServicesAvailableMethod.invoke(
                 gmsObject,
-                reactContext
+                reactApplicationContext
             ) as Int
 
             withGms = result == 0
@@ -57,7 +57,7 @@ class BbxCommonlyUsedModule(
     }
 
     @ReactMethod
-    fun hasHms(promise: Promise) {
+    override fun hasHms(promise: Promise) {
         var withHms = false
 
         try {
@@ -77,7 +77,7 @@ class BbxCommonlyUsedModule(
 
             val result = isHuaweiMobileServicesAvailableMethod.invoke(
                 hmsObject,
-                reactContext
+                reactApplicationContext
             ) as Int
 
             withHms = result == 0
@@ -90,10 +90,10 @@ class BbxCommonlyUsedModule(
 
     @SuppressLint("HardwareIds")
     @ReactMethod
-    fun getUniqueId(promise: Promise) {
+    override fun getUniqueId(promise: Promise) {
         promise.resolve(
             Settings.Secure.getString(
-                reactContext.contentResolver,
+                reactApplicationContext.contentResolver,
                 Settings.Secure.ANDROID_ID
             )
         )
@@ -101,7 +101,7 @@ class BbxCommonlyUsedModule(
 
     @SuppressLint("HardwareIds")
     @ReactMethod
-    fun isEmulator(promise: Promise) {
+    override fun isEmulator(promise: Promise) {
         val result =
             Build.FINGERPRINT.startsWith("generic") ||
             Build.FINGERPRINT.startsWith("unknown") ||
@@ -134,7 +134,7 @@ class BbxCommonlyUsedModule(
     }
 
     @ReactMethod
-    fun requestNotificationPermission(promise: Promise) {
+    override fun requestNotificationPermission(promise: Promise) {
         promise.resolve(false)
     }
 
