@@ -7,12 +7,10 @@ export const one_day = 86400000,
     one_year = one_day * 365;
 
 export const getSimpleDate = (time, common) => {
-    if (!time || isNaN(time * 1)) return '';
+    const date = new Date(time);
+    const m = MONTHS[date.getMonth()];
 
-    const date = new Date(time),
-        m = MONTHS[date.getMonth()];
-
-    return `${date.getDate()} ${common ? common[m] : m} ${date.getFullYear()}`
+    return `${date.getDate()} ${common ? common[m] : m} ${date.getFullYear()}`;
 }
 
 export const getSimpleTime = (time, option = { showDate: true, format: '24h', common: undefined }) => {

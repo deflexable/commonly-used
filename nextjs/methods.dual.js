@@ -56,3 +56,5 @@ export const isLangRoute = (route = '', pathname) =>
     stripTrailingSlash(stripLangFromUrl(pathname)) !== stripTrailingSlash(route);
 
 export const stripTrailingSlash = (path = '') => path.endsWith('/') ? path.slice(0, -1) : path;
+
+export const shouldBe = (v, l = []) => (v && l.includes(v)) ? v : undefined;

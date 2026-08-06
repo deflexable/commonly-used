@@ -2,9 +2,9 @@ import { isbot } from "isbot";
 import { cookies, headers } from "next/headers";
 import { executeMserver } from "./server_bridge";
 import { getCountryLangs } from "../common/country_lang.js";
-import { SUPPORTED_LANGUAGES } from "core/common_values.js";
+import { SUPPORTED_LANGUAGES, SUPPORTED_LANGUAGES_LIST } from "core/common_values.js";
 import { getLocales } from "./config/locale.js";
-import { getThemeDateContext, stripLangFromUrl } from "./methods.dual";
+import { getThemeDateContext, shouldBe, stripLangFromUrl } from "./methods.dual";
 import { notFound, redirect, unauthorized } from "next/navigation";
 import { cache } from "react";
 
@@ -83,7 +83,7 @@ export const getLoaderData = async (context) => {
 
 /**
  * @typedef {object} LoaderResult
- * @property {{ data: {}, value?: string | undefined, name: string }} [locale]
+ * @property {{ data: {}, value?: string | undefined, name: string, query?: string | undefined }} [locale]
  * @property {{}} [main_locale]
  * @property {boolean} [isbot]
  * @property {import("mosquito-transport-js").AuthData | undefined} [user]
@@ -94,7 +94,7 @@ export const getLoaderData = async (context) => {
  * @property {string | undefined} [session_lang]
  * @property {string | undefined} [timezone]
  * @property {any} [params]
- * @property {{ init_dark: boolean } | undefined} [theme_config]
+ * @property {{ init_dark: boolean, value?: string | undefined, query?: string | undefined }} [theme_config]
  * @property {{ ipcity?: string, ipcontinent?: string, ipcountry?: string, iplatitude?: string, iplongitude?: string, region?: string, region_code?: string, timezone?: string }} [geo]
  * @property {import("next/dist/server/web/spec-extension/adapters/headers").ReadonlyHeaders} [header]
  * @property {URL} [url_instance]
@@ -175,6 +175,9 @@ export const installLoaderData = async (options) => {
             redirect(`/${path}?redirect=${encodeURIComponent(`${url_instance.pathname || ''}${url_instance.search || ''}`)}`, 'push');
         const thisUser = userObj?.user;
 
+        const queryTheme = shouldBe(url_instance.searchParams.get('theme'), ['light', 'dark']);
+        const queryLang = shouldBe(url_instance.searchParams.get('lang'), SUPPORTED_LANGUAGES_LIST);
+
         if (options.stopRedirection) {
             if (options.preventUnverifiedAuth && thisUser && !thisUser.authVerified) {
                 doRedirect('verification');
@@ -215,11 +218,11 @@ export const installLoaderData = async (options) => {
 
         let countryLang;
 
-        const langValue = anchorLang || (userObj ? userObj?.userConfig?.locale : (session_lang || (thisBot ? 'en' : undefined)));
+        const langValue = queryLang || anchorLang || (userObj ? userObj?.userConfig?.locale : (session_lang || (thisBot ? 'en' : undefined)));
 
         const prefferLang = langValue || (SUPPORTED_LANGUAGES[countryLang = getCountryLangs(req_country)?.[0]] ? countryLang : 'en');
 
-        const userTheme = userObj?.userConfig?.theme;
+        const userTheme = queryTheme || userObj?.userConfig?.theme;
         const [commomLocale, mainLocale] = getLocales(prefferLang, options.lang);
 
         const result = {
@@ -230,12 +233,14 @@ export const installLoaderData = async (options) => {
             locale: {
                 data: { ...commomLocale, ...mainLocale },
                 value: langValue,
-                name: prefferLang
+                name: prefferLang,
+                query: queryLang
             },
             main_locale: mainLocale,
             theme_config: {
                 init_dark: (!userObj || !userTheme) ? !getThemeDateContext(timezone, req_timezone).isDayLight : userTheme === 'dark',
-                value: userTheme
+                value: userTheme,
+                query: queryTheme
             },
             geo: {},
             machineCode,

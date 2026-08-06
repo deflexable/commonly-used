@@ -23,7 +23,8 @@ export default function ({
     keyExtractor,
     itemTextProps,
     itemRowHeight,
-    hideDropIcon
+    hideDropIcon,
+    ...restProps
 }) {
     const { styles, isDarkMode } = useStyle(dynamicStyle);
 
@@ -60,6 +61,7 @@ export default function ({
 
     return (
         <Spinner
+            {...restProps}
             style={conStyle}
             renderChildren={s =>
                 <View style={buttonStyle}>

@@ -12,7 +12,7 @@ import firebase_app from "../firebase_app";
 import { one_day } from "../../common/timing";
 import { randomString, wait } from "../../common/methods";
 import { AuthScope, WEB_STATE } from "../scope";
-import { listenUserConfig } from "../setting_syncer";
+import { useUserConfig } from "../setting_syncer";
 import { Thumbmark } from "@thumbmarkjs/thumbmarkjs";
 import { usePathname } from "next/navigation";
 import { isLangRoute, stripLangFromUrl } from "../methods.dual";
@@ -37,6 +37,7 @@ if (isBrowser()) {
 export default function SSOClient({ serverTime, theme_config, timezone, machineCode, userId, userEntity, userTokenId, userConfig, ignoreRouteReloads = [], geo, onShouldDisableAutoLogin }) {
     const isDarkMode = useDarkMode(theme_config);
     const pathname = usePathname();
+    const loadUserConfig = useUserConfig();
 
     const shouldIgnoreReloads = useRef();
     shouldIgnoreReloads.current = ignoreRouteReloads.some(v => typeof v === 'function' ? v(pathname) : v === pathname);
@@ -149,7 +150,7 @@ export default function SSOClient({ serverTime, theme_config, timezone, machineC
 
             setUserId(getAnalytics(firebase_app), user?.uid || null);
             if (!user || !user.authVerified) return;
-            settingsListener = listenUserConfig();
+            settingsListener = loadUserConfig();
         });
 
         return () => {

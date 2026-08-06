@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "fs/promises";
 import { resolve } from 'path';
 import { SUPPORTED_LANGUAGES } from "core/common_values.js";
-import { translateX } from "./translate";
+import { translateX } from "./translate.js";
 
 const compareLang = 'en';
 const dirPrefix = resolve(process.cwd(), './src/locale/lang');

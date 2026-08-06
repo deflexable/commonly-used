@@ -14,8 +14,6 @@ export const updateLanguage = async (value) => {
     if (urlLang && SUPPORTED_LANGUAGES[urlLang]) {
         if (urlLang === value) return;
         url.pathname = url.pathname.split('/').map((v, i) => i === 1 ? value : v).filter(v => v !== undefined).join('/');
-        location.href = url.href;
-        return;
     } else if (AuthScope.uid) {
         await collection(DbPath.prefferedSettings).mergeOne({ _id: AuthScope.uid }, {
             [isAuto ? '$unset' : '$set']: { locale: isAuto || value }
@@ -26,5 +24,10 @@ export const updateLanguage = async (value) => {
     } else {
         await updateCookie('lang', isAuto ? null : value);
     }
-    location.reload();
+
+    url.searchParams.delete('lang');
+    
+    if (url.href !== location.href) {
+        location.href = url.href;
+    } else location.reload();
 }

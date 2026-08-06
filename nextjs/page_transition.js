@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { mutateLink } from "./config/link-middleware";
 
 const showForHashAnchor = true;
 const onBeforeTransition = new Map();
@@ -134,6 +135,10 @@ export const useNavigation = () => {
                 onBeforeTransition.forEach(v => {
                     v(n);
                 });
+            if (n === 'push' || n === 'replace') {
+                const href = mutateLink(args[0], location.search);
+                if (href) args[0] = href;
+            }
             router[n](...args);
         }];
     }));
