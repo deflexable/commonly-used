@@ -21,7 +21,9 @@ export const useUserConfig = () => {
             theme: theme || realTheme.current
         };
         onUserThemeChanged(WEB_STATE.prefferedSettingsValue?.theme);
-        listeners.dispatch(internal_keys.PREFFED_SETTINGS, { ...l });
+        listeners.dispatch(internal_keys.PREFFED_SETTINGS, {
+            ...WEB_STATE.prefferedSettingsValue
+        });
     }
 
     useEffect(trigger, [theme]);
