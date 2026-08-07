@@ -2,6 +2,7 @@ import { getLoaderData, installLoaderData } from "../../loader";
 import ClientPage from "./page.client";
 import { Endpoints } from "core/common_values";
 import { apiFeeder } from "../../server_bridge";
+import { simplifyCaughtError } from "simplify-error";
 import "../auth/page.css";
 import "./page.css";
 
@@ -33,7 +34,11 @@ export default async function ({ params, searchParams, supportLink }) {
                 ip: ip_address,
                 body: { token, code: url_instance.searchParams.get('req_code') }
             }
-        }).then(r => r.response);
+        }).then(r => r.response)
+            .catch(e => {
+                const { error, message } = simplifyCaughtError(e).simpleError;
+                return { errorMessage: `${error}: ${message}` };
+            });
 
     return (
         <ClientPage

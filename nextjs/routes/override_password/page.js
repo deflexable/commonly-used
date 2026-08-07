@@ -3,6 +3,7 @@ import ClientPage from "./page.client";
 import { Endpoints } from "core/common_values";
 import { apiFeeder } from "../../server_bridge";
 import "../auth/page.css";
+import "../verification/page.css";
 
 export async function generateMetadata() {
     const loader = await getLoaderData();

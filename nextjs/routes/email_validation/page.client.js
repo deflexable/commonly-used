@@ -7,6 +7,7 @@ import { Endpoints } from "core/common_values";
 import { getAnalytics, logEvent } from "firebase/analytics";
 import firebase_app from "../../firebase_app";
 import Link from "../../config/next-link";
+import { simplifyCaughtError } from "simplify-error";
 
 export default function ({ page_data: { token, initResult }, locale, supportLink }) {
     const [result, setResult] = useState();
@@ -42,6 +43,9 @@ export default function ({ page_data: { token, initResult }, locale, supportLink
         if (initResult?.validated || initResult?.expired) {
             makeResultData(initResult);
             return;
+        } else if (initResult?.errorMessage) {
+            setResult({ validated: false, message: initResult.errorMessage });
+            return;
         }
         setShowDeviceCode(true);
     }, []);
@@ -70,7 +74,8 @@ export default function ({ page_data: { token, initResult }, locale, supportLink
             makeResultData(res);
         } catch (e) {
             console.error('validation Error: ', e);
-            setResult({ validated: false, message: `${e}` });
+            const { error, message } = simplifyCaughtError(e).simpleError;
+            setResult({ validated: false, message: `${error}: ${message}` });
         }
     }
 
@@ -159,9 +164,9 @@ export default function ({ page_data: { token, initResult }, locale, supportLink
 
                     {(expired || validated) ? null :
                         <>
-                            {locale.contact_support_prefix}
+                            {' '}{locale.contact_support_prefix}{' '}
                             <a href={supportLink || '/support'}>
-                                {locale.support_team}
+                                {' '}{locale.support_team}
                             </a>
                         </>}
                 </div>

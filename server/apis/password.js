@@ -11,7 +11,7 @@ import { sendEmail } from '../mailer.js';
 const { default: mserver, collection } = await importer('./mserver.js');
 const { APP_NAME, IS_DEV, WEB_BASE_URL } = await importer('./env.js');
 
-const PendingPasswordResetAction = (globalThis.__pwdResetActionMapData = {});
+const PendingPasswordResetAction = {};
 
 mserver.listenHttpsRequest(Endpoints.resetPassword, async (req, res) => {
     try {
@@ -77,22 +77,20 @@ mserver.listenHttpsRequest(Endpoints.resetPassword, async (req, res) => {
 });
 
 mserver.listenHttpsRequest(Endpoints.updatePassword, async (req, res) => {
-    const { token, newPassword, action } = req.body;
+    const { token, newPassword } = req.body;
     try {
         guardObject({
             token: GuardSignal.STRING,
-            newPassword: GuardSignal.STRING,
-            action: GuardSignal.STRING
+            newPassword: GuardSignal.STRING
         }).validate(req.body);
 
-        if (action === 'reset') {
-            const { user: uid, used } = PendingPasswordResetAction[token]?.[0] || {};
-            if (!uid || used) throw simplifyError('action_not_found', 'This link has either been deleted or doesn\'t exist on our database');
-            PendingPasswordResetAction[token][0].used = true;
+        const { user: uid, used } = PendingPasswordResetAction[token]?.[0] || {};
+        if (!uid || used) throw simplifyError('action_not_found', 'This link has either been deleted or doesn\'t exist on our database');
+        PendingPasswordResetAction[token][0].used = true;
 
-            await mserver.updateUserPassword(uid, newPassword);
-            await mserver.updateUserPasswordVerified(uid, true);
-        } else throw simplifyError('unknown_action_provided', 'The action provided to the request is invalid');
+        await mserver.updateUserPassword(uid, newPassword);
+        await mserver.updateUserPasswordVerified(uid, true);
+
         res.status(200).send({ status: 'done' });
     } catch (e) {
         res.status(500).send({
@@ -100,4 +98,31 @@ mserver.listenHttpsRequest(Endpoints.updatePassword, async (req, res) => {
             ...simplifyCaughtError(e)
         });
     }
+});
+
+mserver.listenHttpsRequest(Endpoints.getPasswordAction, async (req, res) => {
+    guardObject({ key: GuardSignal.TRIMMED_NON_EMPTY_STRING }).validate(req.body);
+    const { key } = req.body;
+    const actionData = PendingPasswordResetAction[key]?.[0];
+
+    const result =
+        !actionData ? {
+            errorData: {
+                error: 'invalid_reset_link',
+                message: 'invalid_reset_link_des'
+            }
+        } : actionData.used ? {
+            errorData: {
+                error: 'reset_link_expired',
+                message: 'reset_link_expired_des',
+                img: '/assets/expired.png'
+            }
+        } : await collection(DbPath.users).findOne({ _id: actionData.user }).then(u => ({
+            data: {
+                email: u?.email,
+                token: key
+            }
+        }));
+
+    res.status(200).send({ result });
 });
