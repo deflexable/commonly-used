@@ -152,7 +152,7 @@ export const installLoaderData = async (options) => {
                     return { user, userData, userConfig };
                 }, { atoken, rtoken });
         } catch (error) {
-            console.error('userObj:', error);
+            console.error('userObj:', error, ' tokens:', { atoken, rtoken });
             if (`${error}` === 'TypeError: fetch failed')
                 throw "We're experiencing a temporary issue connecting to our core infrastructure. Please retry in a few minutes";
         }
