@@ -53,7 +53,7 @@ readFile(`${dirPrefix}/${compareLang}.json`, 'utf8').then(async mainFile => {
 });
 
 /**
- * @type {{[key: string]: import('./lang/en.json')}}
+ * @type {{[key: string]: import('../../../locale/en.json')}}
  */
 const LOCALE_STORE = new Proxy({}, {
     get: (_, n) => {

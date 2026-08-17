@@ -29,7 +29,8 @@ export default function ({ route: { params: { date, onDate, maximumValue, minimu
                     insets={insets}
                     onComplete={e => {
                         modalRef.current.close();
-                        onDate(e);
+                        onDate?.(e);
+                        onDate = undefined;
                     }} />
             </ModalScreen>
         </View>
