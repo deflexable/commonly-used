@@ -3,6 +3,7 @@ import { Button, Image, ScrollView, TouchableOpacity, View } from "react-native"
 import { PlainModalBG, ModalScreen } from "./AppModal";
 import { alertNull, themeStyle, useStyle } from "../page_helper";
 import WheelPicker, { DatePicker } from '@quidone/react-native-wheel-picker';
+import WheelPickerFeedback from '@quidone/react-native-wheel-picker-feedback';
 import { one_hour, one_minute } from "../../common/timing";
 import { Colors } from "@/src/utils/values";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -64,6 +65,8 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
 
     const maximumDate = getMaxDate();
 
+    console.log('minimumDate:', date.toLocaleDateString(), ' toLoc:', toDateString(date));
+
     const onDone = (millis) => {
         if (minimumValue === undefined) {
             const min = getMinDate();
@@ -122,6 +125,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
             ref={scrollRef}
             style={styling.flexer}
             horizontal
+            scrollEnabled={false}
             showsHorizontalScrollIndicator={false}
             snapToAlignment="start"
             decelerationRate={'fast'}
@@ -132,6 +136,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                 : renderChild({
                     elem:
                         <DatePicker
+                            dodge_keyboard_scan_off
                             date={toDateString(date)}
                             locale={lang}
                             minDate={toDateString(minimumDate)}
@@ -139,6 +144,15 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                             enableScrollByTapOnItem
                             overlayItemStyle={isDarkMode ? { backgroundColor: 'white' } : undefined}
                             itemTextStyle={styles.pickerItemTxt}
+                            renderDate={() => (
+                                <DatePicker.Date onValueChanging={feedback} />
+                            )}
+                            renderMonth={() => (
+                                <DatePicker.Month onValueChanging={feedback} />
+                            )}
+                            renderYear={() => (
+                                <DatePicker.Year onValueChanging={feedback} />
+                            )}
                             onDateChanged={d => {
                                 console.log('date:', d.date);
                                 setDate(new Date(d.date));
@@ -159,6 +173,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                 : renderChild({
                     elem:
                         <TimeWheel
+                            dodge_keyboard_scan_off
                             isDarkMode={isDarkMode}
                             locale={lang}
                             value={time}
@@ -203,8 +218,12 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
 
 const toDateString = (date) =>
     date instanceof Date
-        ? date.toLocaleDateString().split('/').reverse().join('-')
+        ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
         : undefined;
+
+const feedback = () => {
+    WheelPickerFeedback.triggerSoundAndImpact();
+}
 
 const styling = {
     flexer: { flex: 1 },
@@ -303,6 +322,7 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale }) => {
         const retime = (time) => {
             const h = time[0];
 
+            console.log('retime now:', now, ' re:', time);
             if (is12Hours) {
                 const d = h % 12;
                 setHour(d === 0 ? 12 : d);
@@ -363,6 +383,7 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale }) => {
                 width={80}
                 itemTextStyle={textStyle}
                 enableScrollByTapOnItem
+                onValueChanging={feedback}
             />
 
             <WheelPicker
@@ -374,6 +395,7 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale }) => {
                     const retime = time => {
                         setMinute(time[1]);
                         if (time[1] === minute) setRefresher({});
+                        console.log('reMinute time:', time[1], ' minute:', minute);
                     }
 
                     if (minTime !== undefined && now < minTime[2]) {
@@ -386,11 +408,13 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale }) => {
                         return;
                     }
 
+                    console.log('good minutes:', item.value);
                     setMinute(item.value);
                 }}
                 width={80}
                 itemTextStyle={textStyle}
                 enableScrollByTapOnItem
+                onValueChanging={feedback}
             />
 
             {is12Hours ?
@@ -421,6 +445,7 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale }) => {
                     width={80}
                     itemTextStyle={textStyle}
                     enableScrollByTapOnItem
+                    onValueChanging={feedback}
                 /> : null}
         </View>
     );
