@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Image, ScrollView, TouchableOpacity, View } from "react-native";
-import { PlainModalBG, ModalScreen } from "./AppModal";
+import { PlainModalBG, ModalScreen, MaxModalWidth } from "./AppModal";
 import { alertNull, themeStyle, useStyle } from "../page_helper";
 import WheelPicker, { DatePicker } from '@quidone/react-native-wheel-picker';
 import WheelPickerFeedback from '@quidone/react-native-wheel-picker-feedback';
@@ -20,7 +20,7 @@ export default function ({ route: { params: { date, onDate, maximumValue, minimu
             <ModalScreen
                 modalRef={modalRef}
                 modalBackGround={PlainModalBG}
-                modalHeight={330 + insets.bottom}
+                modalHeight={320 + insets.bottom}
                 keyboardDodgingBehaviour="off">
                 <Template
                     dodge_keyboard_scan_off
@@ -46,8 +46,11 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
 
     const [date, setDate] = useState(() => initDate ? new Date(initDate) : new Date());
     const [time, setTime] = useState(() => new Date(date));
+    const [index, setIndex] = useState(0);
 
     const scrollRef = useRef();
+
+    const scrollWidth = Math.min(MaxModalWidth, windowWidth);
 
     const getMinDate = () =>
         (minimumValue instanceof Date || Number.isInteger(minimumValue))
@@ -89,7 +92,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
 
     const renderChild = ({ elem, onPress, done, onPressBack }) =>
         <View style={{
-            width: windowWidth,
+            width: scrollWidth,
             height: '100%',
             alignItems: 'center',
             justifyContent: 'center'
@@ -108,17 +111,22 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                         }} />
                 </TouchableOpacity> : null}
 
-            <View style={{ marginBottom: 7 }}
+            <View style={{ paddingHorizontal: 15 }}
                 scroll_anchor_snap_avoid>
                 {elem}
             </View>
-            <View style={{ marginTop: 7, paddingBottom: insets.bottom }}>
-                <Button
-                    title={translations[done ? 'done' : 'continue'].toUpperCase()}
-                    onPress={onPress}
-                    color={Colors.themeColor} />
+            <View style={{ paddingTop: 7, paddingBottom: insets.bottom + 7, width: '80%', alignItems: 'center' }}
+                scroll_anchor_snap_avoid>
+                <View style={{ paddingHorizontal: 15 }}>
+                    <Button
+                        title={translations[done ? 'done' : 'continue'].toUpperCase()}
+                        onPress={onPress}
+                        color={Colors.themeColor} />
+                </View>
             </View>
         </View>;
+
+    const ThisFeedback = index === 0 ? feedback : undefined;
 
     return (
         <ScrollView
@@ -129,8 +137,11 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
             showsHorizontalScrollIndicator={false}
             snapToAlignment="start"
             decelerationRate={'fast'}
-            snapToInterval={windowWidth}
-            disableIntervalMomentum>
+            snapToInterval={scrollWidth}
+            disableIntervalMomentum
+            onScroll={e => {
+                setIndex(Math.round(e.nativeEvent.contentOffset.x / scrollWidth));
+            }}>
             {dateOff
                 ? null
                 : renderChild({
@@ -145,13 +156,13 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                             overlayItemStyle={isDarkMode ? { backgroundColor: 'white' } : undefined}
                             itemTextStyle={styles.pickerItemTxt}
                             renderDate={() => (
-                                <DatePicker.Date onValueChanging={feedback} />
+                                <DatePicker.Date onValueChanging={ThisFeedback} />
                             )}
                             renderMonth={() => (
-                                <DatePicker.Month onValueChanging={feedback} />
+                                <DatePicker.Month onValueChanging={ThisFeedback} />
                             )}
                             renderYear={() => (
-                                <DatePicker.Year onValueChanging={feedback} />
+                                <DatePicker.Year onValueChanging={ThisFeedback} />
                             )}
                             onDateChanged={d => {
                                 console.log('date:', d.date);
@@ -163,7 +174,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                             date.setHours(0, 0, 0, 0);
                             onDone(date.getTime());
                         } else {
-                            scrollRef.current.scrollTo({ x: windowWidth, animated: true });
+                            scrollRef.current.scrollTo({ x: scrollWidth, animated: true });
                         }
                     }
                 })}
@@ -173,6 +184,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                 : renderChild({
                     elem:
                         <TimeWheel
+                            index={index}
                             dodge_keyboard_scan_off
                             isDarkMode={isDarkMode}
                             locale={lang}
@@ -263,7 +275,7 @@ const PERIODS = [
     { value: 'PM', label: 'PM' }
 ];
 
-const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale }) => {
+const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale, index }) => {
 
     const { is12Hours, hh, mm, init_period } =
         useMemo(() => {
@@ -348,9 +360,17 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale }) => {
 
     const overlayItemStyle = isDarkMode ? { backgroundColor: 'white' } : undefined;
 
+    const extras = {
+        width: 80,
+        itemTextStyle: textStyle,
+        enableScrollByTapOnItem: true,
+        onValueChanging: index === 1 ? feedback : undefined
+    };
+
     return (
         <View style={styles.pickers}>
             <WheelPicker
+                {...extras}
                 data={is12Hours ? HOURS : HOURS_24}
                 value={hour}
                 overlayItemStyle={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, ...overlayItemStyle }}
@@ -380,13 +400,10 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale }) => {
 
                     setHour(item.value);
                 }}
-                width={80}
-                itemTextStyle={textStyle}
-                enableScrollByTapOnItem
-                onValueChanging={feedback}
             />
 
             <WheelPicker
+                {...extras}
                 data={MINUTES}
                 value={minute}
                 overlayItemStyle={{ borderRadius: 0, ...overlayItemStyle }}
@@ -411,14 +428,11 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale }) => {
                     console.log('good minutes:', item.value);
                     setMinute(item.value);
                 }}
-                width={80}
-                itemTextStyle={textStyle}
-                enableScrollByTapOnItem
-                onValueChanging={feedback}
             />
 
             {is12Hours ?
                 <WheelPicker
+                    {...extras}
                     data={PERIODS.map((v, i) => ({ ...v, label: is12Hours[i] }))}
                     value={period}
                     overlayItemStyle={{ ...overlayItemStyle, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
@@ -442,10 +456,6 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale }) => {
 
                         setPeriod(item.value);
                     }}
-                    width={80}
-                    itemTextStyle={textStyle}
-                    enableScrollByTapOnItem
-                    onValueChanging={feedback}
                 /> : null}
         </View>
     );
