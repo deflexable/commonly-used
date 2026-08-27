@@ -134,7 +134,7 @@ await new Promise((success, reject) => {
                         "Content-Type": "text/plain",
                     });
 
-                    res.end(`User-agent: *\nAllow: /\nDisallow: /list_errors`);
+                    res.end(`User-agent: *\nAllow: /\nDisallow: /list_errors\nDisallow: /log_critical_error`);
                     return;
                 }
 

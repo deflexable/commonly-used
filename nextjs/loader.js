@@ -127,8 +127,8 @@ export const installLoaderData = async (options) => {
         const machineCode = cookiesData.get('mcode')?.value;
         const timezone = cookiesData.get('tz')?.value;
         const session_lang = cookiesData.get('lang')?.value;
-        const req_country = headerData.get(process.env.REQUEST_COUNTRY_NODE);
-        const req_timezone = headerData.get(process.env.REQUEST_TIMEZONE_NODE);
+        const req_country = headerData.get('CF-IPCountry');
+        const req_timezone = headerData.get('CF-Timezone');
         const isRobot = isbot(userAgent);
         const thisBot = isRobot || process.env.NODE_ENV === 'development';
 
