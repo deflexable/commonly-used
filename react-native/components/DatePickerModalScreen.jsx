@@ -119,7 +119,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                 scroll_anchor_snap_avoid>
                 <View style={{ paddingHorizontal: 15 }}>
                     <Button
-                        title={translations[done ? 'done' : 'continue'].toUpperCase()}
+                        title={`   ${translations[done ? 'done' : 'continue'].toUpperCase()}   `}
                         onPress={onPress}
                         color={Colors.themeColor} />
                 </View>
