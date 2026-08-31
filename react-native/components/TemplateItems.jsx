@@ -3,7 +3,7 @@ import TextView from "./TextView";
 import { EmptySpace } from "@/src/utils/assets";
 import { useDarkMode } from "./../theme_helper";
 import { Colors } from "@/src/utils/values";
-import { useTranslation } from "@/src/locale";
+import { useTranslation } from "../locale";
 import { useMemo } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

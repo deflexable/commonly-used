@@ -2,7 +2,7 @@ import { Linking, Platform } from "react-native";
 import InAppReview from 'react-native-in-app-review';
 import { TIMESTAMP } from "react-native-mosquito-transport";
 import { APPSTORE_REVIEW_URL, DbPath, PLAYSTORE_REVIEW_URL } from "core/common_values";
-import { locales } from "@/src/locale";
+import { locales } from "./locale";
 import { showFancyDialog } from "./components/FancyPopup";
 import { RateAppImg } from "@/src/utils/assets";
 import { Scope } from '@/src/utils/scope';

@@ -2,7 +2,7 @@ import { Alert, Platform, ToastAndroid, useWindowDimensions } from "react-native
 import { useEffect, useState } from "react";
 import { simplifyCaughtError } from "simplify-error";
 import { ThemeHelperScope } from "./scope";
-import { locales } from "@/src/locale";
+import { locales } from "./locale";
 import { CustomValue, useCustomStyle } from "./styling";
 import { useDarkMode } from "./theme_helper";
 import { Scope } from "@/src/utils/scope";

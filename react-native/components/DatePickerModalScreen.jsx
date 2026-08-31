@@ -8,8 +8,9 @@ import { one_hour, one_minute } from "../../common/timing";
 import { Colors } from "@/src/utils/values";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import app_navigator from "../app_navigator";
-import { useTranslation } from "@/src/locale";
+import { useTranslation } from "../locale";
 import { Back } from "@/src/utils/assets";
+import { uses12HourClock } from "../../common/use12HoursClock";
 
 export default function ({ route: { params: { date, onDate, maximumValue, minimumValue, dateOff, timeOff } } }) {
     const modalRef = useRef();
@@ -459,32 +460,6 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale, index }) => {
                 /> : null}
         </View>
     );
-}
-
-const Locale_12h = {
-    en: true,
-    zh: ['上午', '下午'],
-    hi: true,
-    bn: true,
-    ar: true,
-    ja: ['午前', '午後'],
-    ko: ['오전', '오후'],
-    th: true,
-    id: true,
-    ms: true,
-    tl: true,
-    he: true,
-    fa: true,
-    sw: true,
-    el: ['πμ', 'μμ']
-};
-
-const uses12HourClock = (lang) => {
-    lang = Locale_12h[lang];
-    if (lang) {
-        if (lang === true) return PERIODS.map(v => v.label);
-        return lang;
-    }
 };
 
 const styles = {

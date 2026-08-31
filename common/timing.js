@@ -1,3 +1,4 @@
+import { uses12HourClock } from "./use12HoursClock";
 
 export const one_day = 86400000,
     one_minute = 60000,
@@ -10,19 +11,30 @@ export const getSimpleDate = (time, common) => {
     const date = new Date(time);
     const m = MONTHS[date.getMonth()];
 
-    return `${date.getDate()} ${common ? common[m] : m} ${date.getFullYear()}`;
-}
+    return `${date.getDate()} ${common?.[m] || m} ${date.getFullYear()}`;
+};
 
-export const getSimpleTime = (time, option = { showDate: true, format: '24h', common: undefined }) => {
-    const { showDate = true, format = '12h', common } = option;
+export const getSimpleTime = ({ time, showDate = true, locale = { data: {}, lang: 'en' } }) => {
+    const is12Hours = uses12HourClock(locale?.lang);
 
-    const dateObj = new Date(time),
-        minuteSize = dateObj.getMinutes().toString().length,
-        isPM = dateObj.getHours() > 12,
-        h = dateObj.getHours() - ((format === '12h' && isPM) ? 12 : 0);
+    const date = new Date(time);
+    let hh = date.getHours();
+    let mm = date.getMinutes();
+    let init_period = '';
 
-    return `${showDate ? getSimpleDate(time, common) + ', ' : ''}${h}:${minuteSize === 1 ? '0' + dateObj.getMinutes() : dateObj.getMinutes()} ${format === '12h' ? (isPM ? 'PM' : 'AM') : ''}`.trim();
-}
+    if (is12Hours) {
+        init_period = ` ${is12Hours[hh >= 12 ? 1 : 0]}`;
+        hh = hh % 12;
+        if (hh === 0) hh = 12;
+    }
+
+    return `${showDate ? getSimpleDate(time, locale?.data) + ', ' : ''}${hh}:${`${mm}`.padStart(2, '0')}${init_period}`.trim();
+};
+
+export const aboutAgoTime = (date, locales) => {
+    const isAgo = date > Date.now() - one_day;
+    return isAgo ? getTimeAgoShort(date, locales) : getSimpleDate(date, locales);
+};
 
 export const getTimeAgo = (dateString, common, currentTime) => {
     return timeSince(dateString, { currentTime, format: false, addAgo: true, addAbout: true, common });

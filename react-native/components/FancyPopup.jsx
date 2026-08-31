@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 import AppModal, { PlainModalBG } from "./AppModal";
 import { Colors } from "@/src/utils/values";
-import { locales } from "@/src/locale";
+import { locales } from "../locale";
 import listeners, { EVENT_NAMES } from "@/src/utils/listeners";
 import TextView from "./TextView";
 

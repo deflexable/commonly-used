@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useTranslation } from '@/src/locale';
+import { useTranslation } from '../locale';
 import { Colors } from '@/src/utils/values';
 import { useDarkMode } from './../theme_helper';
 import TextView from './TextView';
