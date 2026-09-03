@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, Share, TouchableOpacity, View, StatusBar } from "react-native";
+import { ActivityIndicator, Image, Share, TouchableOpacity, View } from "react-native";
 import { AppTitleBar, commonAppBarStyle } from "./AppBars";
 import { themeStyle } from "../page_helper";
 import { Back, Plus, Refresh } from "@/src/utils/assets";
@@ -14,6 +14,7 @@ import { useCustomStyle } from "../styling.js";
 import { getColorLuminance } from "../../common/color_status";
 import { useIsFocused } from "@react-navigation/native";
 import { KeyboardPlaceholderView } from "react-native-dodge-keyboard";
+import StatusBarColor from "./StatusBarColor.jsx";
 
 export default function ({
     navigation,
@@ -236,7 +237,7 @@ export default function ({
 
     return (
         <View style={pageStyles.main}>
-            <StatusBar barStyle={thisBarDark ? 'light-content' : 'dark-content'} />
+            <StatusBarColor barStyle={thisBarDark ? 'light-content' : 'dark-content'} />
             {renderTitleBar()}
             <View style={pageStyles.centerFlexer}>
                 <View style={pageStyles.filler}>

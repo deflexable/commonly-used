@@ -1,8 +1,9 @@
-import { View, StyleSheet, StatusBar, Platform } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { useMemo, useState } from 'react';
 import { themeStyle, useStyle } from '../page_helper';
 import { Colors } from '@/src/utils/values';
 import NoInternetBanner from './NoInternetBanner';
+import StatusBarColor from './StatusBarColor';
 
 export const AppTitleBar = function ({
   leading,
@@ -61,8 +62,8 @@ export const AppTitleBar = function ({
     return (
       statusTint === false ? null :
         statusTint === true ?
-          <StatusBar barStyle={(Platform.OS === 'ios' || shouldLightup) ? 'light-content' : "dark-content"} /> :
-          <StatusBar barStyle={shouldLightup ? 'light-content' : 'dark-content'} />
+          <StatusBarColor barStyle={(Platform.OS === 'ios' || shouldLightup) ? 'light-content' : "dark-content"} /> :
+          <StatusBarColor barStyle={shouldLightup ? 'light-content' : 'dark-content'} />
     );
   }
 

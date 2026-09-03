@@ -46,7 +46,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
     const { translations, lang } = useTranslation();
 
     const [date, setDate] = useState(() => initDate ? new Date(initDate) : new Date());
-    const [time, setTime] = useState(() => new Date(date));
+    const [time, setTime] = useState(0);
     const [index, setIndex] = useState(0);
 
     const scrollRef = useRef();
@@ -68,8 +68,6 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
     const minimumDate = getMinDate();
 
     const maximumDate = getMaxDate();
-
-    console.log('minimumDate:', date.toLocaleDateString(), ' toLoc:', toDateString(date));
 
     const onDone = (millis) => {
         if (minimumValue === undefined) {
@@ -172,8 +170,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                     done: timeOff,
                     onPress: () => {
                         if (timeOff) {
-                            date.setHours(0, 0, 0, 0);
-                            onDone(date.getTime());
+                            onDone(date.setHours(0, 0, 0, 0));
                         } else {
                             scrollRef.current.scrollTo({ x: scrollWidth, animated: true });
                         }
@@ -189,7 +186,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                             dodge_keyboard_scan_off
                             isDarkMode={isDarkMode}
                             locale={lang}
-                            value={time}
+                            defaultValue={date}
                             min={
                                 (minimumDate &&
                                     date.getDate() <= minimumDate.getDate() &&
@@ -206,17 +203,11 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                             }
                             onValue={v => {
                                 console.log('time:', v);
-                                const time = new Date(v);
-                                time.setHours(0, 0, 0, v);
-                                setTime(time);
+                                setTime(v);
                             }} />,
                     done: true,
                     onPress: () => {
-                        date.setHours(0, 0, 0, 0);
-                        onDone(
-                            (dateOff ? 0 : date.getTime()) +
-                            (time.getHours() * one_hour) + (time.getMinutes() * one_minute)
-                        );
+                        onDone((dateOff ? 0 : date.setHours(0, 0, 0, 0)) + time);
                     },
                     onPressBack:
                         dateOff
@@ -276,15 +267,15 @@ const PERIODS = [
     { value: 'PM', label: 'PM' }
 ];
 
-const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale, index }) => {
+const TimeWheel = ({ defaultValue, onValue, min, max, isDarkMode, locale, index }) => {
 
     const { is12Hours, hh, mm, init_period } =
         useMemo(() => {
             const is12Hours = uses12HourClock(locale);
             const time =
-                value === undefined || value === null
+                defaultValue === undefined || defaultValue === null
                     ? new Date()
-                    : new Date(value);
+                    : new Date(defaultValue);
             let hh = time.getHours();
             let mm = time.getMinutes();
             let init_period;
@@ -327,8 +318,18 @@ const TimeWheel = ({ value, onValue, min, max, isDarkMode, locale, index }) => {
             return { minTime, maxTime };
         }, [min, max]);
 
-    const getDayTime = (h = hour, m = minute, p = period) =>
-        (h * one_hour) + (m * one_minute) + (is12Hours ? p === PERIODS[1].value ? (12 * one_hour) : 0 : 0);
+    const getDayTime = (h = hour, m = minute, p = period) => {
+        let millis = m * one_minute;
+
+        if (is12Hours) {
+            const isPM = p === PERIODS[1].value;
+
+            if (isPM) millis += 12 * one_hour;
+            millis += h === 12 ? 0 : h * one_hour;
+        } else millis += h * one_hour;
+
+        return millis;
+    }
 
     useEffect(() => {
         const now = getDayTime();
