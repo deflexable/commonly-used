@@ -10,7 +10,7 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { useDarkMode } from "../theme_helper.js";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBackButton } from "react-native-push-back";
-import { useCustomStyle } from "../styling.js";
+import { useProxyFunction } from "../../common/proxy-function.js";
 import { getColorLuminance } from "../../common/color_status";
 import { useIsFocused } from "@react-navigation/native";
 import { KeyboardPlaceholderView } from "react-native-dodge-keyboard";
@@ -64,8 +64,16 @@ export default function ({
     const thisPageDark = (forcePageDarkMode ?? (pageDark || barDark)) ?? defaultDarkMode;
     const thisBarDark = (forceBarDarkMode ?? (barDark || pageDark)) ?? defaultDarkMode;
 
-    const pageStyles = useCustomStyle(pageStyling, { prioritiseMap: [thisPageDark ? 'dark' : 'light'] }).styles;
-    const barStyles = useCustomStyle(barStyling, { prioritiseMap: [thisBarDark ? 'dark' : 'light'] }).styles;
+    const [pageFeeder, barFeeder] =
+        useMemo(() => {
+            return [
+                { isDarkMode: !!thisPageDark },
+                { isDarkMode: !!thisBarDark }
+            ];
+        }, [thisPageDark, thisBarDark]);
+
+    const pageStyles = useProxyFunction(pageStyling, pageFeeder);
+    const barStyles = useProxyFunction(barStyling, barFeeder);
 
     const pressBackBtn = useBackButton(() => {
         if (canGoBack) {

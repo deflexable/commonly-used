@@ -1,9 +1,9 @@
 import { Alert, Platform, ToastAndroid, useWindowDimensions } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { simplifyCaughtError } from "simplify-error";
 import { ThemeHelperScope } from "./scope";
 import { locales } from "./locale";
-import { CustomValue, useCustomStyle } from "./styling";
+import { proxyFunction } from "../common/proxy-function.js";
 import { useDarkMode } from "./theme_helper";
 import { Scope } from "@/src/utils/scope";
 import listeners, { EVENT_NAMES } from '@/src/utils/listeners';
@@ -65,14 +65,55 @@ export const usePrefferedSettings = () => {
     return prefferedSettings || {};
 };
 
-export const themeStyle = (light, dark) => new CustomValue({ dark, light });
+export const themeStyle = (light, dark) => {
+    return (feeder) => feeder.isDarkMode ? dark : light;
+};
 
 /**
- * @type {import('./styling').useCustomStyle}
+ * @template T
+ * @param {T | Array<T>} styling
+ * @param {F} feeder
+ * @returns {{ isDarkMode: boolean, styles: T, feeder: F }}
  */
-export const useStyle = (styles) => {
+export const useStyle = (styling, feeder) => {
     const isDarkMode = useDarkMode();
-    return { isDarkMode, ...useCustomStyle(styles, { prioritiseMap: [isDarkMode ? 'dark' : 'light'] }) };
+
+    const cache = useMemo(() => new Map(), []);
+
+    return useMemo(() => {
+        feeder = { isDarkMode, feeder };
+
+        if (Array.isArray(styling)) {
+            const list = styling.map(v => proxyFunction(v, feeder, true, cache)).slice(0).reverse();
+
+            return {
+                isDarkMode,
+                styles:
+                    new Proxy({}, {
+                        get: (_, p) =>
+                            list.find(v => v?.hasOwnProperty?.(p))?.[p],
+                        set: (_, p) => {
+                            throw `Cannot assign to read only property '${p}'`;
+                        }
+                    }),
+                feeder
+            };
+        } else {
+            return { isDarkMode, styles: proxyFunction(styling, feeder, true, cache), feeder };
+        }
+    }, [styling, isDarkMode, feeder]);
+};
+
+/**
+ * @template T
+ * @param {T | Array<T>} styling
+ * @returns {{ isDarkMode: boolean, styles: T, feeder: import("react-native").ScaledSize }}
+ */
+export const useScalingStyle = (styling) => {
+    const sizing = useWindowDimensions();
+    const feeder = useMemo(() => ({ ...sizing }), ['width', 'height', 'fontScale', 'scale'].map(n => sizing[n]));
+
+    return useStyle(styling, feeder);
 };
 
 export const shouldCover = ([w1, h1], [w2, h2], threshold = .2) => Math.abs((w1 / h1) - (w2 / h2)) < threshold;
