@@ -81,10 +81,10 @@ export const useStyle = (styling, feeder) => {
     const cache = useMemo(() => new Map(), []);
 
     return useMemo(() => {
-        feeder = { isDarkMode, feeder };
+        const thisFeeder = { isDarkMode, feeder };
 
         if (Array.isArray(styling)) {
-            const list = styling.map(v => proxyFunction(v, feeder, true, cache)).slice(0).reverse();
+            const list = styling.map(v => proxyFunction(v, thisFeeder, true, cache)).slice(0).reverse();
 
             return {
                 isDarkMode,
@@ -99,7 +99,7 @@ export const useStyle = (styling, feeder) => {
                 feeder
             };
         } else {
-            return { isDarkMode, styles: proxyFunction(styling, feeder, true, cache), feeder };
+            return { isDarkMode, styles: proxyFunction(styling, thisFeeder, true, cache), feeder };
         }
     }, [styling, isDarkMode, feeder]);
 };
@@ -118,19 +118,28 @@ export const useScalingStyle = (styling) => {
 
 export const shouldCover = ([w1, h1], [w2, h2], threshold = .2) => Math.abs((w1 / h1) - (w2 / h2)) < threshold;
 
-export const useGridSpacing = ({ widthCountMap, spacing, maxWidth }) => {
-    const { width, height } = useWindowDimensions();
-    const fullWidth = maxWidth ? Math.min(maxWidth, width) : width;
+export const createGridSpacing = ({ grid, spacing }) =>
+    (viewWidth, maxWidth) => {
+        if (typeof maxWidth === 'function') maxWidth = maxWidth(viewWidth);
 
-    const gridCount = widthCountMap.find(v => fullWidth <= v[0])?.[1] || widthCountMap.slice(-1)[0][1];
-    return {
-        width: ((fullWidth - (spacing * (gridCount + 1))) / gridCount),
-        spacing,
-        counts: gridCount,
-        windowWidth: width,
-        windowHeight: height
+        const fullWidth = maxWidth ? Math.min(maxWidth, viewWidth) : viewWidth;
+
+        const gridCount = grid.find(v => fullWidth <= v[0])?.[1] || grid.slice(-1)[0][1];
+
+        return {
+            width: ((fullWidth - (spacing * (gridCount + 1))) / gridCount),
+            spacing,
+            counts: gridCount
+        };
     };
-};
+
+export const useGridSpacing = ({ grid, spacing, maxWidth, forceCheck }) => {
+    const dim = useWindowDimensions();
+
+    return useMemo(() => {
+        return createGridSpacing({ grid, spacing })(dim.width, maxWidth);
+    }, [spacing, dim.width, ...forceCheck ? [grid, maxWidth] : typeof maxWidth === 'function' ? [] : [maxWidth]]);
+}
 
 export const createSegmentList = (list, row) => {
     const segmentList = [];

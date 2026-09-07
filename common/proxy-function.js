@@ -12,7 +12,6 @@ export const createCacheFunction = (callback, depsCallback) => {
     return { __proxy_signal: CacheSignal, callback, deps: depsCallback };
 }
 
-// windowWidth: number; windowHeight: number
 /**
  * @template T
  * @param {T} styling

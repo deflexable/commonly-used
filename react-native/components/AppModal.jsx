@@ -1,15 +1,16 @@
 import React, { forwardRef, useEffect, useMemo, useState } from 'react';
+import { View, useWindowDimensions } from "react-native";
 import { Colors } from '@/src/utils/values';
 import { LockedStickyTopModals } from '@/src/utils/scope';
 import listeners, { EVENT_NAMES } from '@/src/utils/listeners';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { SnapSheetModal } from 'react-native-snap-sheet';
 import { useDarkMode } from '../theme_helper';
-import { View } from "react-native";
 
 /**
  * @typedef {object} SnapSheetModalExtraProps
  * @property {string} [modalName]
+ * @property {number | ((dim: import("react-native").ScaledSize) => number) | [import("react-native").ScaledSize, Array<>]} [modalHeight]
  * @property {[string, string] | undefined} [modalBackGround]
  */
 
@@ -25,6 +26,7 @@ const AppModal = forwardRef(({
   centered,
   style,
   disableBackHandler,
+  modalHeight,
   ...restProps
 }, ref) => {
   const isDarkMode = useDarkMode();
@@ -33,6 +35,16 @@ const AppModal = forwardRef(({
 
   const isFocused = modalName || useIsFocused();
   const navigation = !modalName && useNavigation();
+
+  if (typeof modalHeight === 'function') {
+    const sizing = useWindowDimensions();
+
+    modalHeight = useMemo(() => modalHeight(sizing), [sizing]);
+  } else if (Array.isArray(modalHeight)) {
+    const sizing = useWindowDimensions();
+
+    modalHeight = useMemo(() => modalHeight[0](sizing), [sizing, ...modalHeight[1]]);
+  }
 
   const toggleGestureEnabled = (enabled) => {
     if (navigation) {
@@ -79,7 +91,7 @@ const AppModal = forwardRef(({
   return (
     <SnapSheetModal
       {...restProps}
-      {...(restProps.fillScreen && !modalName && !isFocused) ? { containerStyle: { opacity: 0, zIndex: -99, elevation: 0 } } : {}}
+      {...(restProps.fillScreen && !modalName && !isFocused) ? { containerStyle: fillScreenStyle } : {}}
       ref={ref}
       disabled={disabled}
       disableBackHandler={disableBackHandler || !isFocused}
@@ -87,6 +99,7 @@ const AppModal = forwardRef(({
       style={modalStyle}
       centered={centered}
       handleColor={isDarkMode ? Colors.gray : Colors.borderColor}
+      modalHeight={modalHeight}
       onStateChanged={s => {
         setOpen(s !== 'closed');
         onStateChanged?.(s);
@@ -95,6 +108,8 @@ const AppModal = forwardRef(({
     </SnapSheetModal>
   );
 });
+
+const fillScreenStyle = { opacity: 0, zIndex: -99, elevation: 0 };
 
 export default AppModal;
 
