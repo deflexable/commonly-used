@@ -19,24 +19,24 @@ export const createCacheFunction = (callback, depsCallback) => {
  * @returns {T}
  */
 export const useProxyFunction = (styling, feeder) =>
-    useMemo(() => proxyFunction(styling, feeder, true), [styling, feeder]);
+    useMemo(() => {
+        const result = proxyFunction(styling, feeder, true);
+        return result.proxable || result.object;
+    }, [styling, feeder]);
 
 export function proxyFunction(object, feeder, deepNested = true, cacheMap) {
-    let shouldProxy;
     let remaps;
 
     for (const key in object) {
         if (!Object.hasOwn(object, key)) continue;
 
-        const value = object[key];
+        const value = object?.[key];
 
         if (typeof value === 'function') {
-            shouldProxy = true;
             if (!remaps) remaps = {};
             remaps[key] = value(feeder);
         } else if (value?.__proxy_signal === CacheSignal) {
             if (!(cacheMap instanceof Map)) throw 'cache map was not provided internally';
-            shouldProxy = true;
             if (!remaps) remaps = {};
             const { callback, deps } = value;
             const prevCache = cacheMap.get(callback);
@@ -58,25 +58,21 @@ export function proxyFunction(object, feeder, deepNested = true, cacheMap) {
 
             remaps[key] = result;
         } else if (deepNested && isObject(value)) {
-            const data = proxyFunction(value, feeder, deepNested);
+            const data = proxyFunction(value, feeder, deepNested, cacheMap);
 
             if (data.proxable) {
-                shouldProxy = true;
+                if (!remaps) remaps = {};
                 remaps[key] = data.proxable;
             }
         }
     }
 
-    if (shouldProxy) {
+    if (remaps) {
         return {
-            proxable:
-                new Proxy(object, {
-                    get: (_, n) => {
-                        if (remaps.hasOwnProperty(n))
-                            return remaps[n];
-                        return object[n];
-                    }
-                })
+            proxable: {
+                ...object,
+                ...remaps
+            }
         };
     }
 

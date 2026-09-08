@@ -84,7 +84,10 @@ export const useStyle = (styling, feeder) => {
         const thisFeeder = { isDarkMode, feeder };
 
         if (Array.isArray(styling)) {
-            const list = styling.map(v => proxyFunction(v, thisFeeder, true, cache)).slice(0).reverse();
+            const list = styling.map(v => {
+                const result = proxyFunction(v, thisFeeder, true, cache);
+                return result.proxable || result.object;
+            }).slice(0).reverse();
 
             return {
                 isDarkMode,
@@ -99,7 +102,8 @@ export const useStyle = (styling, feeder) => {
                 feeder
             };
         } else {
-            return { isDarkMode, styles: proxyFunction(styling, thisFeeder, true, cache), feeder };
+            const result = proxyFunction(styling, thisFeeder, true, cache);
+            return { isDarkMode, styles: result.proxable || result.object, feeder };
         }
     }, [styling, isDarkMode, feeder]);
 };

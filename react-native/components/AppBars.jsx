@@ -1,4 +1,4 @@
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, Platform } from 'react-native';
 import { useMemo, useState } from 'react';
 import { themeStyle, useStyle } from '../page_helper';
 import { Colors } from '@/src/utils/values';
@@ -87,7 +87,7 @@ export const AppTitleBar = function ({
   );
 };
 
-const appTitleBarStyle = StyleSheet.create({
+const appTitleBarStyle = {
   containerBG: {
     backgroundColor: themeStyle(Colors.white, Colors.dark)
   },
@@ -112,7 +112,7 @@ const appTitleBarStyle = StyleSheet.create({
     marginHorizontal: 14,
     justifyContent: 'center'
   }
-});
+};
 
 export const commonAppBarStyle = {
   flexer: { flex: 1 },

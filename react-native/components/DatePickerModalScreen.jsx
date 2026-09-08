@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button, Image, ScrollView, TouchableOpacity, View } from "react-native";
+import { Button, Image, ScrollView, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import { PlainModalBG, ModalScreen, MaxModalWidth } from "./AppModal";
 import { alertNull, themeStyle, useStyle } from "../page_helper";
 import WheelPicker, { DatePicker } from '@quidone/react-native-wheel-picker';
@@ -42,7 +42,8 @@ export default function ({ route: { params: { date, onDate, maximumValue, minimu
 };
 
 const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, timeOff, insets }) => {
-    const { styles, windowWidth, isDarkMode } = useStyle(styling);
+    const { styles, isDarkMode } = useStyle(styling);
+    const { width: windowWidth } = useWindowDimensions();
     const { translations, lang } = useTranslation();
 
     const [date, setDate] = useState(() => initDate ? new Date(initDate) : new Date());

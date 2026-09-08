@@ -15,7 +15,8 @@ export default function ({
     tabIndex = 0,
     onTabIndexChange
 }) {
-    const { isDarkMode, windowWidth: vw, styles } = useStyle(styling);
+    const { styles } = useStyle(styling);
+    const { width: vw } = useWindowDimensions();
     if (windowWidth === undefined) windowWidth = vw;
 
     const [currentSlide, setCurrentSlide] = useState(tabIndex);

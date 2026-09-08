@@ -4,22 +4,22 @@ import {
     Image,
     Animated,
     PanResponder,
-    StyleSheet,
     useAnimatedValue,
     TouchableOpacity,
     ScrollView,
+    useWindowDimensions
 } from 'react-native';
 import { AppTitleBar } from './AppBars';
 import { Back } from '@/src/utils/assets';
 import { Colors } from '@/src/utils/values';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { devTransformLocalhostURL, optimizeImage, shouldCover, useStyle } from './../page_helper.js';
+import { devTransformLocalhostURL, optimizeImage, shouldCover } from './../page_helper.js';
 import { useBackButton } from "react-native-push-back";
 import app_navigator from '../app_navigator.js';
 
 export default function ({ route: { params: { item = [], initialIndex } }, navigation }) {
     const { top: statusHeight } = useSafeAreaInsets();
-    const { windowHeight, windowWidth } = useStyle();
+    const { height: windowHeight, width: windowWidth } = useWindowDimensions();
 
     const initList = useMemo(() => {
         return (Array.isArray(item) ? item : [item]).map(v =>
@@ -138,7 +138,6 @@ export default function ({ route: { params: { item = [], initialIndex } }, navig
             scrollRef.current.scrollTo({ x: windowWidth * initialIndex, animated: false });
     }, []);
 
-    console.log('mounted: ', results, ' currentIndex:', currentIndex);
     return (
         <View style={styles.flexer}>
             <Animated.View style={[styles.container, { opacity }]}>
@@ -176,7 +175,7 @@ export default function ({ route: { params: { item = [], initialIndex } }, navig
     );
 }
 
-const styles = StyleSheet.create({
+const styles = {
     flexer: { flex: 1 },
 
     container: {
@@ -200,7 +199,7 @@ const styles = StyleSheet.create({
     scroller: { flex: 1 },
 
     imageContent: { width: '100%', height: '100%' }
-});
+};
 
 
 /**

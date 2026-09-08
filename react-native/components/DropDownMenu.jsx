@@ -34,12 +34,12 @@ export default function ({
             { ...styles.buttonStyle, ...StyleSheet.flatten(style) },
             { ...styles.buttonTextStyle, ...StyleSheet.flatten(textStyle) }
         ];
-    }, [styles, textStyle, style, containerStyle]);
+    }, [isDarkMode, textStyle, style, containerStyle]);
 
     const [itemRowStyle, selectedItemStyle] = useMemo(() => [
         { ...styles.itemStyle, ...itemStyle },
         { ...styles.itemStyle, ...itemStyle, backgroundColor: Colors.themeColor, ...StyleSheet.flatten(selectedStyle) }
-    ], [styles, itemStyle, selectedStyle]);
+    ], [isDarkMode, itemStyle, selectedStyle]);
 
     const dropperStyle = useMemo(() => ({
         backgroundColor: itemRowStyle.backgroundColor,
@@ -57,7 +57,7 @@ export default function ({
             ...StyleSheet.flatten(itemTextStyle),
             ...StyleSheet.flatten(selectedTextStyle)
         }
-    ], [styles, itemTextStyle, selectedTextStyle]);
+    ], [isDarkMode, itemTextStyle, selectedTextStyle]);
 
     return (
         <Spinner
