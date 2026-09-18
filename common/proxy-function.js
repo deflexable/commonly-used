@@ -74,6 +74,20 @@ export function proxyFunction(object, feeder, deepNested = true, cacheMap) {
                 ...remaps
             }
         };
+        // return {
+        //     proxable:
+        //         new Proxy(object, {
+        //             get: (target, n) => {
+        //                 if (remaps.hasOwnProperty(n))
+        //                     return remaps[n];
+        //                 return target[n];
+        //             },
+        //             set: (_, n, v) => {
+        //                 throw `Cannot assign to read only property '${n}' of value '${v}'`;
+        //             },
+        //             defineProperty: () => true
+        //         })
+        // };
     }
 
     return { object };

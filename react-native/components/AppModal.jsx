@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useMemo, useState } from 'react';
-import { View, useWindowDimensions } from "react-native";
+import { Dimensions, View } from "react-native";
 import { Colors } from '@/src/utils/values';
 import { LockedStickyTopModals } from '@/src/utils/scope';
 import listeners, { EVENT_NAMES } from '@/src/utils/listeners';
@@ -36,15 +36,37 @@ const AppModal = forwardRef(({
   const isFocused = modalName || useIsFocused();
   const navigation = !modalName && useNavigation();
 
-  if (typeof modalHeight === 'function') {
-    const sizing = useWindowDimensions();
+  const [sizing, setSizing] = useState(() => Dimensions.get('window'));
 
-    modalHeight = useMemo(() => modalHeight(sizing), [sizing]);
-  } else if (Array.isArray(modalHeight)) {
-    const sizing = useWindowDimensions();
+  const isHeightFunc = typeof modalHeight === 'function';
+  const isHeightArray = Array.isArray(modalHeight);
 
-    modalHeight = useMemo(() => modalHeight[0](sizing), [sizing, ...modalHeight[1]]);
+  const thisHeight =
+    useMemo(() => {
+      if (isHeightFunc) {
+        return [modalHeight(sizing)];
+      } else if (isHeightArray) {
+        return [modalHeight[0](sizing)];
+      }
+    },
+      isHeightFunc ? [sizing, undefined]
+        : isHeightArray ? [sizing, ...modalHeight[1]]
+          : [undefined, undefined]
+    );
+
+  if (thisHeight) {
+    modalHeight = thisHeight[0];
   }
+
+  useEffect(() => {
+    if (!thisHeight) return;
+    const listener = Dimensions.addEventListener('change', ({ window }) => {
+      setSizing(window);
+    });
+    return () => {
+      listener.remove();
+    }
+  }, [!thisHeight]);
 
   const toggleGestureEnabled = (enabled) => {
     if (navigation) {

@@ -1,6 +1,6 @@
 import { ActivityIndicator, Image, Share, TouchableOpacity, View } from "react-native";
 import { AppTitleBar, commonAppBarStyle } from "./AppBars";
-import { themeStyle } from "../page_helper";
+import { themeStyle, useStyle } from "../page_helper";
 import { Back, Plus, Refresh } from "@/src/utils/assets";
 import TextView from "./TextView";
 import { Colors } from "@/src/utils/values.js";
@@ -10,7 +10,6 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { useDarkMode } from "../theme_helper.js";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBackButton } from "react-native-push-back";
-import { useProxyFunction } from "../../common/proxy-function.js";
 import { getColorLuminance } from "../../common/color_status";
 import { useIsFocused } from "@react-navigation/native";
 import { KeyboardPlaceholderView } from "react-native-dodge-keyboard";
@@ -72,8 +71,8 @@ export default function ({
             ];
         }, [thisPageDark, thisBarDark]);
 
-    const pageStyles = useProxyFunction(pageStyling, pageFeeder);
-    const barStyles = useProxyFunction(barStyling, barFeeder);
+    const pageStyles = useStyle(pageStyling, pageFeeder);
+    const barStyles = useStyle(barStyling, barFeeder);
 
     const pressBackBtn = useBackButton(() => {
         if (canGoBack) {

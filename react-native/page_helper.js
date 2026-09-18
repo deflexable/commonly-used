@@ -66,7 +66,10 @@ export const usePrefferedSettings = () => {
 };
 
 export const themeStyle = (light, dark) => {
-    return (feeder) => feeder.isDarkMode ? dark : light;
+    return (feeder) =>
+        (feeder.feeder?.isDarkMode ?? feeder.isDarkMode)
+            ? dark
+            : light;
 };
 
 /**
@@ -83,28 +86,48 @@ export const useStyle = (styling, feeder) => {
     return useMemo(() => {
         const thisFeeder = { isDarkMode, feeder };
 
-        if (Array.isArray(styling)) {
-            const list = styling.map(v => {
-                const result = proxyFunction(v, thisFeeder, true, cache);
-                return result.proxable || result.object;
-            }).slice(0).reverse();
+        const prefillNodes = (object) => {
+            let remaps;
 
-            return {
-                isDarkMode,
-                styles:
-                    new Proxy({}, {
-                        get: (_, p) =>
-                            list.find(v => v?.hasOwnProperty?.(p))?.[p],
-                        set: (_, p) => {
-                            throw `Cannot assign to read only property '${p}'`;
-                        }
-                    }),
-                feeder
-            };
-        } else {
-            const result = proxyFunction(styling, thisFeeder, true, cache);
-            return { isDarkMode, styles: result.proxable || result.object, feeder };
+            for (const key in object) {
+                if (!Object.hasOwn(object, key)) continue;
+
+                const result = proxyFunction(object[key], thisFeeder, false, cache);
+
+                if (result.proxable) {
+                    if (!remaps) remaps = {};
+                    remaps[key] = result.proxable;
+                }
+            }
+
+            if (remaps) {
+                return new Proxy({}, {
+                    get: (_, p) => {
+                        if (remaps[p]) return remaps[p];
+                        return object[p];
+                    },
+                    set: (_, p) => {
+                        throw `Cannot assign to read only property '${p}'`;
+                    }
+                });
+            }
+
+            return object;
         }
+
+        if (Array.isArray(styling)) {
+            let thisStyling = {};
+
+            styling.map(v => {
+                thisStyling = {
+                    ...thisStyling,
+                    ...v
+                };
+            });
+            styling = thisStyling;
+        }
+
+        return { isDarkMode, styles: prefillNodes(styling), feeder };
     }, [styling, isDarkMode, feeder]);
 };
 
