@@ -1,5 +1,5 @@
 // @flow
-import { TurboModuleRegistry, type TurboModule } from 'react-native';
+import { TurboModuleRegistry, type TurboModule, type EventEmitter } from 'react-native';
 
 export interface Spec extends TurboModule {
   getApiLevel(): Promise<number>;
@@ -8,11 +8,10 @@ export interface Spec extends TurboModule {
   getUniqueId(): Promise<string>;
   isEmulator(): Promise<boolean>;
   requestNotificationPermission(): Promise<boolean>;
+  getCurrentLocale(): Promise<string>;
 
-  // event listeners
-  // readonly onMessage?: EventEmitter<{ message: string }>;
-  // addListener(eventName: string): void;
-  // removeListeners(count: number): void;
+  // events
+  readonly onLocaleChanged: EventEmitter<string>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('BbxCommonlyUsed');

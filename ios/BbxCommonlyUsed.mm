@@ -95,6 +95,14 @@
            nil);
 }
 
+- (void)getCurrentLocale:(RCTPromiseResolveBlock)resolve
+             reject:(RCTPromiseRejectBlock)reject
+{
+    reject(@"NOT_SUPPORTED",
+           @"getCurrentLocale() method is unsupported on iOS",
+           nil);
+}
+
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {

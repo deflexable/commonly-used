@@ -11,6 +11,8 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactMethod
 import java.lang.reflect.Method
 import java.util.Locale
+import android.content.ComponentCallbacks
+import android.content.res.Configuration
 
 class BbxCommonlyUsedModule(
     reactContext: ReactApplicationContext
@@ -136,6 +138,45 @@ class BbxCommonlyUsedModule(
     @ReactMethod
     override fun requestNotificationPermission(promise: Promise) {
         promise.resolve(false)
+    }
+
+    private var currentLocale = getCurrentLocale().toLanguageTag()
+
+    @ReactMethod
+    override fun getCurrentLocale(promise: Promise) {
+        promise.resolve(getLocale(reactContext.resources.configuration).toLanguageTag())
+    }
+    
+    private val componentCallbacks = object : ComponentCallbacks {
+
+        override fun onConfigurationChanged(newConfig: Configuration) {
+            val newLocale = getLocale(newConfig).toLanguageTag()
+
+            if (newLocale != currentLocale) {
+                currentLocale = newLocale
+                emitOnLocaleChanged(newLocale)
+            }
+        }
+
+        override fun onLowMemory() {}
+    }
+
+    private fun getLocale(configuration: Configuration): Locale {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            configuration.locales[0]
+        } else {
+            @Suppress("DEPRECATION")
+            configuration.locale
+        }
+    }
+
+    init {
+        reactContext.registerComponentCallbacks(componentCallbacks)
+    }
+
+    override fun invalidate() {
+        reactContext.unregisterComponentCallbacks(componentCallbacks)
+        super.invalidate()
     }
 
     private fun hasKeyboard(name: String): Boolean {

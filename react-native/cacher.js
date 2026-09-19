@@ -58,15 +58,16 @@ export const makeCacher = (init = []) => {
 
     const resolution = {};
 
-    resolution.promise = Promise.all(init.map(v =>
-        new Promise(resolve => {
-            promiseMapper[v] = resolve;
-            proxy[v];
-        })
-    )).then(r => {
-        resolution.fullfilled = true;
-        return r;
-    });
+    resolution.promise =
+        Promise.all(init.map(v =>
+            new Promise(resolve => {
+                promiseMapper[v] = resolve;
+                proxy[v];
+            })
+        )).then(async r => {
+            resolution.fullfilled = true;
+            return r;
+        });
 
     return { proxy, resolution, storage: InstantCacheData };
 }
