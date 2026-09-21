@@ -71,8 +71,8 @@ export default function ({
             ];
         }, [thisPageDark, thisBarDark]);
 
-    const pageStyles = useStyle(pageStyling, pageFeeder);
-    const barStyles = useStyle(barStyling, barFeeder);
+    const { styles: pageStyles } = useStyle(pageStyling, pageFeeder);
+    const { styles: barStyles } = useStyle(barStyling, barFeeder);
 
     const pressBackBtn = useBackButton(() => {
         if (canGoBack) {

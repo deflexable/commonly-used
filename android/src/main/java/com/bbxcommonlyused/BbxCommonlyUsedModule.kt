@@ -15,7 +15,7 @@ import android.content.ComponentCallbacks
 import android.content.res.Configuration
 
 class BbxCommonlyUsedModule(
-    reactContext: ReactApplicationContext
+    private val reactContext: ReactApplicationContext
 ) : NativeBbxCommonlyUsedSpec(reactContext) {
 
     private val inputMethodManager: InputMethodManager =
@@ -140,7 +140,7 @@ class BbxCommonlyUsedModule(
         promise.resolve(false)
     }
 
-    private var currentLocale = getCurrentLocale().toLanguageTag()
+    private var currentLocale = getLocale(reactContext.resources.configuration).toLanguageTag()
 
     @ReactMethod
     override fun getCurrentLocale(promise: Promise) {
