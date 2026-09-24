@@ -1,16 +1,16 @@
-import { Scope } from "@/src/utils/scope";
 import { JSONCacher } from "@/src/utils/cacher";
 import { DbPath } from "core/common_values";
-import { collection } from "./client_server";
-import listeners, { EVENT_NAMES } from "@/src/utils/listeners";
+import mserver, { collection } from "./client_server";
+import listeners, { EVENT_NAMES } from "./listeners";
 import { onUserThemeChanged } from "./theme_helper";
 
 export const setPrefferSettings = (l) => {
-    Scope.prefferedSettingsValue = { ...l };
     JSONCacher.USER_SETTINGS = { ...l };
     onUserThemeChanged(l?.theme);
-    listeners.dispatch(EVENT_NAMES.prefferedSettings, { ...l });
+    listeners.dispatch(EVENT_NAMES.userConfig, { ...l });
 }
 
 export const startListeningToUserSettings = () =>
-    collection(DbPath.prefferedSettings).findOne({ _id: Scope.user.uid }).listen(setPrefferSettings);
+    collection(DbPath.prefferedSettings)
+        .findOne({ _id: mserver.user.uid })
+        .listen(setPrefferSettings);

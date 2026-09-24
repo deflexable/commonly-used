@@ -5,8 +5,7 @@ import { APPSTORE_REVIEW_URL, DbPath, PLAYSTORE_REVIEW_URL } from "core/common_v
 import { locales } from "./locale";
 import { showFancyDialog } from "./components/FancyPopup";
 import { RateAppImg } from "@/src/utils/assets";
-import { Scope } from '@/src/utils/scope';
-import { collection } from './client_server';
+import { collection, mserver } from './client_server';
 import { JSONCacher } from '@/src/utils/cacher';
 import { getBusy } from "./uptime";
 import { wait } from '../common/methods';
@@ -17,7 +16,7 @@ JSONCacher.RATED_IN_APP;
 let hasRequested;
 
 export async function requestReview({ withUser, withBusy }) {
-    if (Scope.prefferedSettingsValue?.has_rated || isNaN(withBusy) || (withUser && !Scope.user?.authVerified)) return;
+    if (JSONCacher.USER_SETTINGS?.has_rated || isNaN(withBusy) || (withUser && !mserver.user?.authVerified)) return;
     if ((await getBusy(withUser)).time < withBusy) return;
     if (hasRequested) return;
     hasRequested = true;
@@ -50,8 +49,8 @@ export async function requestReview({ withUser, withBusy }) {
                 onYes: () => {
                     Linking.openURL(Platform.OS === 'android' ? PLAYSTORE_REVIEW_URL : APPSTORE_REVIEW_URL);
                     JSONCacher.RATED_APP = true;
-                    if (Scope.user)
-                        collection(DbPath.prefferedSettings).mergeOne({ _id: Scope.user.uid }, {
+                    if (mserver.user)
+                        collection(DbPath.prefferedSettings).mergeOne({ _id: mserver.user.uid }, {
                             $set: { has_rated: TIMESTAMP }
                         });
                 },

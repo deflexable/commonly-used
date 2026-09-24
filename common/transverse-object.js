@@ -1,4 +1,3 @@
-import { useMemo } from "react"
 
 function isObject(o) {
     if (typeof o !== 'object' || o === null) return false;
@@ -6,25 +5,13 @@ function isObject(o) {
         && Object.getPrototypeOf(o) === Object.prototype;
 }
 
-const CacheSignal = Symbol('proxy-function-cache');
+const CacheSignal = Symbol('transversion-cache');
 
-export const createCacheFunction = (callback, depsCallback) => {
+export const withCache = (callback, depsCallback) => {
     return { __proxy_signal: CacheSignal, callback, deps: depsCallback };
-}
+};
 
-/**
- * @template T
- * @param {T} styling
- * @param {any} feeder
- * @returns {T}
- */
-export const useProxyFunction = (styling, feeder) =>
-    useMemo(() => {
-        const result = proxyFunction(styling, feeder, true);
-        return result.proxable || result.object;
-    }, [styling, feeder]);
-
-export function proxyFunction(object, feeder, deepNested = true, cacheMap) {
+export function transverse(object, feeder, deepNested = true, cacheMap) {
     let remaps;
 
     for (const key in object) {

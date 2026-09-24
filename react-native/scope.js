@@ -5,3 +5,7 @@ export const ThemeHelperScope = {
     themeValue: undefined,
     isDarkMode: undefined
 };
+
+export const rn_bbx_scope = {
+    ipData: undefined
+};

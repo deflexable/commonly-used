@@ -1,8 +1,7 @@
 import React, { forwardRef, useEffect, useMemo, useState } from 'react';
 import { Dimensions, View } from "react-native";
 import { Colors } from '@/src/utils/values';
-import { LockedStickyTopModals } from '@/src/utils/scope';
-import listeners, { EVENT_NAMES } from '@/src/utils/listeners';
+import listeners, { EVENT_NAMES } from '../listeners';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { SnapSheetModal } from 'react-native-snap-sheet';
 import { useDarkMode } from '../theme_helper';
@@ -79,14 +78,14 @@ const AppModal = forwardRef(({
   useEffect(() => {
     if (isOpen && isFocused) {
       if (disabled) {
-        if (modalName) LockedStickyTopModals[modalName] = true;
+        if (modalName) LockedFixedModal[modalName] = true;
         toggleGestureEnabled(false);
       }
 
       return () => {
         if (disabled) {
-          if (modalName && Object.hasOwn(LockedStickyTopModals, modalName)) {
-            delete LockedStickyTopModals[modalName];
+          if (modalName && Object.hasOwn(LockedFixedModal, modalName)) {
+            delete LockedFixedModal[modalName];
           }
           toggleGestureEnabled(true);
         }
@@ -132,6 +131,10 @@ const AppModal = forwardRef(({
 });
 
 const fillScreenStyle = { opacity: 0, zIndex: -99, elevation: 0 };
+
+export const LockedFixedModal = {
+  loadingTrans: false
+};
 
 export default AppModal;
 

@@ -1,7 +1,7 @@
 import RNMT from 'react-native-mosquito-transport';
 import { API_BASE_URL, E2E_Public_Key, ENABLE_CACHE } from '@/env';
 import { useEffect, useState } from "react";
-import { Scope } from '@/src/utils/scope';
+import { rn_bbx_scope } from './scope';
 import { Endpoints, one_mb } from 'core/common_values';
 
 RNMT.initializeCache({
@@ -31,13 +31,8 @@ const collection = mserver.collection,
     storage = mserver.storage,
     fetchHttp = mserver.fetchHttp;
 
-mserver.listenReachableServer(connected => {
-    Scope.IS_ONLINE = connected;
-    console.warn('appConnection:', connected);
-});
-
 const useIsOnline = () => {
-    const [isOnline, setOnline] = useState(Scope.IS_ONLINE);
+    const [isOnline, setOnline] = useState(mserver.isOnline);
 
     useEffect(() => {
         return mserver.listenReachableServer(connected => {
@@ -51,7 +46,7 @@ const useIsOnline = () => {
 if (Endpoints?.getIpAddresslocation)
     fetchHttp(Endpoints.getIpAddresslocation, undefined, { disableAuth: true, retrieval: 'cache-await' }).then(async r => {
         r = await r.json();
-        Scope.ipAddressData = r;
+        rn_bbx_scope.ipData = r;
     });
 
 export {

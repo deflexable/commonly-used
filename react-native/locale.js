@@ -1,5 +1,5 @@
 import { usePrefferedSettings } from './page_helper.js';
-import { Scope } from '@/src/utils/scope';
+import { JSONCacher } from "@/src/utils/cacher";
 import { LanguageMap } from "@/src/locale/index";
 import { getLocale, listenLocale } from '../src/index.js';
 import listeners, { EVENT_NAMES } from './listeners.js';
@@ -17,7 +17,7 @@ listenLocale(r => {
     listeners.dispatch(EVENT_NAMES.systemLanguage, SystemLang = sanitizeLang(r));
 });
 
-export const getSupportedLang = (locale = Scope.prefferedSettingsValue?.locale) => {
+export const getSupportedLang = (locale = JSONCacher.USER_SETTINGS?.locale) => {
     let lang = locale || SystemLang || 'en';
     if (!(lang in LanguageMap)) lang = 'en';
     return lang;

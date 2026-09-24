@@ -1,5 +1,5 @@
 import { StyleSheet, Text } from "react-native";
-import { Scope } from "@/src/utils/scope";
+import { JSONCacher } from "@/src/utils/cacher";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import { useDarkMode } from "../theme_helper";
 
@@ -25,7 +25,7 @@ const TextView = ({ children, style, invertColor, forceColor, forceSize, ...prop
 
     return (
         <Text
-            allowFontScaling={!Scope.prefferedSettingsValue?.no_scale_font}
+            allowFontScaling={!JSONCacher.USER_SETTINGS?.no_scale_font}
             style={thisStyle}
             {...props}>
             {children}

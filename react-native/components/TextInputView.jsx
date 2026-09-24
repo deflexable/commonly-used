@@ -1,5 +1,5 @@
 import { StyleSheet, TextInput } from "react-native";
-import { Scope } from "@/src/utils/scope";
+import { JSONCacher } from "@/src/utils/cacher";
 import { forwardRef, useMemo } from "react";
 import { useDarkMode } from "../theme_helper";
 
@@ -19,7 +19,7 @@ const TextInputView = forwardRef(function TextInputView({ style, invertColor, fo
     return (
         <TextInput
             ref={ref}
-            allowFontScaling={!Scope.prefferedSettingsValue?.no_scale_font}
+            allowFontScaling={!JSONCacher.USER_SETTINGS?.no_scale_font}
             placeholderTextColor={isDarkMode ? 'gray' : undefined}
             keyboardAppearance={isDarkMode ? 'dark' : 'light'}
             dodge_keyboard_input

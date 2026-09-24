@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Appearance } from 'react-native';
-import Listeners, { EVENT_NAMES } from "@/src/utils/listeners";
+import listeners, { EVENT_NAMES } from "./listeners";
 import { ThemeHelperScope } from "./scope";
 
 export const onUserThemeChanged = (value) => {
@@ -31,7 +31,7 @@ export const onUserThemeChanged = (value) => {
     console.log('onUserThemeChanged theme:', theme, ' themeValue:', themeValue);
     ThemeHelperScope.isDarkMode = theme === 'dark';
     ThemeHelperScope.themeValue = themeValue;
-    Listeners.dispatchPersist(EVENT_NAMES.themeListener, theme);
+    listeners.dispatchPersist(EVENT_NAMES.themeListener, theme);
     try {
         Appearance.setColorScheme(ThemeHelperScope.isDarkMode ? 'dark' : 'light');
     } catch (error) {
@@ -39,7 +39,8 @@ export const onUserThemeChanged = (value) => {
     }
 }
 
-const listenDayLight = (callback) => Listeners.listenToPersist(EVENT_NAMES.themeListener, callback);
+const listenDayLight = (callback) =>
+    listeners.listenToPersist(EVENT_NAMES.themeListener, callback);
 
 const useAppTheme = () => {
     const [theme, setTheme] = useState(ThemeHelperScope.isDarkMode ? 'dark' : 'light');

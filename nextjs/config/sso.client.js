@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react";
 import { onUserThemeChanged, useDarkMode } from "../theme_helper";
 import { appendScriptSrc, updateCookie } from "../methods.client";
 import { auth } from "../client_server";
+import { parseToken } from 'mosquito-transport-js';
 import { getAnalytics, logEvent, setUserId } from "firebase/analytics";
 import firebase_app from "../firebase_app";
 import { one_day } from "../../common/timing";
@@ -88,7 +89,7 @@ export default function SSOClient({ serverTime, theme_config, timezone, machineC
 
         const authTokenListener = auth().listenAuthToken(async token => {
             AuthScope.token = token;
-            const tokenData = token && auth().parseToken(token);
+            const tokenData = token && parseToken(token);
             const thisEntity = tokenData?.entityOf || null;
             const thisTokenId = tokenData?.tokenID || null;
 

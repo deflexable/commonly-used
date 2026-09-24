@@ -3,10 +3,10 @@ import { useEffect, useMemo, useState } from "react";
 import { simplifyCaughtError } from "simplify-error";
 import { ThemeHelperScope } from "./scope";
 import { locales } from "./locale";
-import { proxyFunction } from "../common/proxy-function.js";
+import { transverse } from "../common/transverse-object.js";
 import { useDarkMode } from "./theme_helper";
-import { Scope } from "@/src/utils/scope";
-import listeners, { EVENT_NAMES } from '@/src/utils/listeners';
+import { JSONCacher } from "@/src/utils/cacher";
+import listeners, { EVENT_NAMES } from "./listeners.js";
 import { StandardURL } from "./url_parser.js";
 import { IS_DEV, HOST_NAME } from '@/env';
 
@@ -54,11 +54,11 @@ export const devTransformLocalhostURL = (url) => {
 };
 
 export const usePrefferedSettings = () => {
-    const [prefferedSettings, setPrefferedSettings] = useState({ ...Scope.prefferedSettingsValue });
+    const [prefferedSettings, setPrefferedSettings] = useState(() => JSONCacher.USER_SETTINGS);
 
     useEffect(() => {
-        return listeners.listenTo(EVENT_NAMES.prefferedSettings, l => {
-            setPrefferedSettings({ ...l });
+        return listeners.listenTo(EVENT_NAMES.userConfig, l => {
+            setPrefferedSettings(l);
         });
     }, []);
 
@@ -92,7 +92,7 @@ export const useStyle = (styling, feeder) => {
             for (const key in object) {
                 if (!Object.hasOwn(object, key)) continue;
 
-                const result = proxyFunction(object[key], thisFeeder, false, cache);
+                const result = transverse(object[key], thisFeeder, false, cache);
 
                 if (result.proxable) {
                     if (!remaps) remaps = {};

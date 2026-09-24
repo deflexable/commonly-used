@@ -1,4 +1,4 @@
-import { DbPath, Endpoints, CHAR_VALIDATION } from 'core/common_values.js';
+import { DbPath, Endpoints } from 'core/common_values.js';
 import { guardObject, GuardSignal } from 'guard-object';
 import { simplifyCaughtError } from 'simplify-error';
 import ip_lookup from '../ip_lookup.js';
@@ -47,17 +47,22 @@ mserver.listenHttpsRequest(Endpoints.wordSuggestion, async (req, res, user) => {
             ];
 
             res.status(200).send({
-                result: suggestedSearch.map(v => ({ name: v })).slice(0, CHAR_VALIDATION.SEARCH_SUGGESTION_LIMIT)
+                result: suggestedSearch.map(v => ({ name: v })).slice(0, 7)
             });
         } else {
             const suggestions = await Promise.all([
-                location ? collection(DbPath.trendingGeoSearchIndexer).find({
-                    country: location.country
-                }).sort('importance', 'desc').limit(7).toArray() : Promise.resolve([]),
-                collection(DbPath.trendingSearchIndexer).find({}).sort('importance', 'desc').limit(7).toArray(),
-                location ? collection(DbPath.geoSearchIndexer).find({
-                    country: location.country
-                }).sort('importance', 'desc').limit(7).toArray() : Promise.resolve([]),
+                location
+                    ? collection(DbPath.trendingGeoSearchIndexer)
+                        .find({ country: location.country })
+                        .sort('importance', 'desc').limit(7).toArray()
+                    : Promise.resolve([]),
+                collection(DbPath.trendingSearchIndexer)
+                    .find({}).sort('importance', 'desc').limit(7).toArray(),
+                location
+                    ? collection(DbPath.geoSearchIndexer)
+                        .find({ country: location.country })
+                        .sort('importance', 'desc').limit(7).toArray()
+                    : Promise.resolve([]),
                 collection(DbPath.searchIndexer).find({}).sort('importance', 'desc').limit(7).toArray()
             ]);
 
@@ -70,7 +75,7 @@ mserver.listenHttpsRequest(Endpoints.wordSuggestion, async (req, res, user) => {
             ];
 
             res.status(200).send({
-                result: suggestedSearch.map(v => ({ name: v })).slice(0, CHAR_VALIDATION.SEARCH_SUGGESTION_LIMIT)
+                result: suggestedSearch.map(v => ({ name: v })).slice(0, 7)
             });
         }
     } catch (e) {
