@@ -1,27 +1,23 @@
-import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
+import { GoogleSignIn } from "@thoughtbot/react-native-social-auth/src/google/GoogleSignIn";
+import { GoogleSignInErrorCode } from "@thoughtbot/react-native-social-auth/src/google/errors";
 import { simplifyError } from "simplify-error";
 
 export const GoogleSigninCancelledSignal = Symbol('cancelled_error');
 
+/**
+ * @type {import('@thoughtbot/react-native-social-auth')['GoogleSignIn']['signIn']}
+ */
 export const getGoogleUser = async () => {
     try {
-        if (!(await GoogleSignin.hasPlayServices()))
-            throw { code: statusCodes.PLAY_SERVICES_NOT_AVAILABLE };
-
-        const userInfo = await GoogleSignin.signIn();
-        if (userInfo.type === 'cancelled') throw GoogleSigninCancelledSignal;
+        const userInfo = await GoogleSignIn.signIn();
         return userInfo;
     } catch (error) {
-        if (error === GoogleSigninCancelledSignal) throw error;
-        
-        if (error.code === statusCodes.IN_PROGRESS) {
-            throw simplifyError('error', 'google_sign_in_in_progress');
-        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-            throw simplifyError('error', 'google_sign_in_play_services');
-        } else if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        if (error?.code === GoogleSignInErrorCode.SIGN_IN_CANCELLED)
             throw GoogleSigninCancelledSignal;
-        } else {
-            throw simplifyError('error', `${error}`);
-        }
+
+        if (error?.code === GoogleSignInErrorCode.PLAY_SERVICES_NOT_AVAILABLE)
+            throw simplifyError('error', 'google_sign_in_play_services');
+
+        throw error;
     }
 }

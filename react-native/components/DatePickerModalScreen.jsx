@@ -12,7 +12,7 @@ import { useTranslation } from "../locale";
 import { Back } from "@/src/utils/assets";
 import { uses12HourClock } from "../../common/use12HoursClock";
 
-export default function ({ route: { params: { date, onDate, maximumValue, minimumValue, dateOff, timeOff } } }) {
+export default function ({ route: { params: { date, onDate, maximumValue, minimumValue, dateOff, timeOff, centered } } }) {
     const modalRef = useRef();
     const insets = useSafeAreaInsets();
 
@@ -22,6 +22,7 @@ export default function ({ route: { params: { date, onDate, maximumValue, minimu
                 modalRef={modalRef}
                 modalBackGround={PlainModalBG}
                 modalHeight={320 + insets.bottom}
+                centered={centered}
                 keyboardDodgingBehaviour="off">
                 <Template
                     dodge_keyboard_scan_off
@@ -31,6 +32,7 @@ export default function ({ route: { params: { date, onDate, maximumValue, minimu
                     dateOff={dateOff}
                     timeOff={timeOff}
                     insets={insets}
+                    centered={centered}
                     onComplete={e => {
                         modalRef.current.close();
                         onDate?.(e);
@@ -41,7 +43,7 @@ export default function ({ route: { params: { date, onDate, maximumValue, minimu
     );
 };
 
-const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, timeOff, insets }) => {
+const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, timeOff, insets, centered }) => {
     const { styles, isDarkMode } = useStyle(styling);
     const { width: windowWidth } = useWindowDimensions();
     const { translations, lang } = useTranslation();
@@ -115,7 +117,7 @@ const Template = ({ onComplete, initDate, minimumValue, maximumValue, dateOff, t
                 scroll_anchor_snap_avoid>
                 {elem}
             </View>
-            <View style={{ paddingTop: 7, paddingBottom: insets.bottom + 7, width: '80%', alignItems: 'center' }}
+            <View style={{ paddingTop: 7, paddingBottom: (centered ? 3 : insets.bottom) + 7, width: '80%', alignItems: 'center' }}
                 scroll_anchor_snap_avoid>
                 <View style={{ paddingHorizontal: 15 }}>
                     <Button
@@ -472,8 +474,8 @@ const styles = {
     }
 };
 
-export const openDatePicker = ({ date, onDate, maximumValue, minimumValue, dateOff, timeOff }) => {
+export const openDatePicker = ({ date, onDate, maximumValue, minimumValue, dateOff, timeOff, centered }) => {
     app_navigator.navigate('DatePickerModalScreen', {
-        date, onDate, maximumValue, minimumValue, dateOff, timeOff
+        date, onDate, maximumValue, minimumValue, dateOff, timeOff, centered
     });
 };

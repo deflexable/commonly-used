@@ -1,0 +1,1 @@
+export * from "bbx-commonly-used/nextjs/routes/locale_data/route.js";

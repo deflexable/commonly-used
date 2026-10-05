@@ -8,20 +8,24 @@ import { useDarkMode } from "../theme_helper";
  * @property {string} [forceColor]
  * @property {boolean} [invertColor]
  * @property {number} [forceSize]
+ * @property {boolean} [bold]
+ * @property {boolean} [center]
  */
 
 /**
  * @type {React.FC<React.ComponentProps<typeof import('react-native').Text> & TextExtraProps>}
  */
-const TextView = ({ children, style, invertColor, forceColor, forceSize, ...props }) => {
+const TextView = ({ children, style, invertColor, forceColor, forceSize, bold, center, ...props }) => {
     const isDarkMode = useDarkMode();
 
     const thisStyle = useMemo(() => ({
         ...forceColor ? {} : { color: isDarkMode ? invertColor ? 'black' : 'white' : invertColor ? 'white' : 'black' },
         ...StyleSheet.flatten(style),
         ...forceColor ? { color: forceColor } : {},
-        ...forceSize ? { fontSize: forceSize } : {}
-    }), [invertColor, style, isDarkMode, forceColor, forceSize]);
+        ...forceSize ? { fontSize: forceSize } : {},
+        ...bold === undefined ? {} : { fontWeight: 'bold' },
+        ...center === undefined ? {} : { textAlign: 'center' }
+    }), [invertColor, style, isDarkMode, forceColor, forceSize, bold, center]);
 
     return (
         <Text

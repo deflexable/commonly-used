@@ -6,6 +6,11 @@ const IS_DEV =
             ? process?.env?.NODE_ENV === 'development'
             : undefined;
 
+/**
+ * @template T
+ * @param {T} o 
+ * @returns {T}
+ */
 export const warnObject = (o) => {
     if (!IS_DEV) return o;
 

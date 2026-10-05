@@ -12,7 +12,7 @@ import { useTranslation } from '../locale';
 import { handleLink } from '@/src/utils/link_handler';
 import listeners, { EVENT_NAMES } from '../listeners';
 import { APPSTORE_URL, DbPath, PLAYSTORE_URL } from 'core/common_values';
-import { auth, collection, fetchHttp } from '../client_server';
+import { auth, collection, fetchHttp, mserver } from '../client_server';
 import FancyPopup from './FancyPopup';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 import TextView from './TextView';
@@ -69,10 +69,12 @@ export default function useAppRootView({ user }) {
 
     const { styles, isDarkMode } = useStyle(styling);
 
-    const thisCurrentScreen = useRef();
-    const onScreenChanged = useRef();
+    const onPromptScreen = useRef();
+    const canPromptScreen = useRef();
 
     const hasAppError = !!(isDiscontinued || isMachineBanned || !!user?.disabled);
+
+    canPromptScreen.current = enableGesture && !pageTransObj && !hasAppError;
 
     useEffect(() => {
         if (pageTransObj) {
@@ -238,13 +240,12 @@ export default function useAppRootView({ user }) {
                                         screen_class: currentScreen,
                                         screen_name: currentScreen
                                     });
-                                    thisCurrentScreen.current = currentScreen;
                                     if (!JSONCacher.EXPLORED_SCREENS?.[currentScreen]) {
                                         const n = JSONCacher.EXPLORED_SCREENS || {};
                                         n[currentScreen] = true;
                                         JSONCacher.EXPLORED_SCREENS = n;
                                     }
-                                    onScreenChanged.current();
+                                    if (canPromptScreen.current && mserver.isOnline) onPromptScreen.current(currentScreen);
                                 }}>
                                 <StackScreen.Navigator
                                     screenOptions={{
@@ -273,8 +274,8 @@ export default function useAppRootView({ user }) {
         enableGesture,
         pageTransObj,
         openCounter,
-        onScreenChanged,
-        currentScreen: thisCurrentScreen
+        onPromptScreen,
+        isDarkMode
     };
 };
 
@@ -301,8 +302,8 @@ const AppErrorElement = ({ isMachineBanned, isDiscontinued }) => {
 
     useEffect(() => {
         setLocaleData();
-        const prefix = isMachineBanned ? 'banned' : isDiscontinued ? 'version' : 'suspended';
-        fetchHttp(WEB_BASE_URL.concat(`/locale_data/${lang}/${prefix}-app-error`), undefined, { retrieval: 'sticky' })
+        const suffix = isMachineBanned ? 'banned' : isDiscontinued ? 'version' : 'suspended';
+        fetchHttp(WEB_BASE_URL.concat(`/locale_data/${lang}/app-error-${suffix}`), undefined, { retrieval: 'sticky' })
             .then(async r => {
                 setLocaleData(await r.json());
             })
@@ -360,16 +361,11 @@ const AppErrorElement = ({ isMachineBanned, isDiscontinued }) => {
                                 onPress={() => {
                                     if (isDiscontinued) {
                                         onPressUpate();
-                                    } else {
-                                        auth().signOut();
-                                    }
+                                    } else auth().signOut();
                                 }}>
                                 <TextView
                                     invertColor
-                                    style={{
-                                        fontWeight: 'bold',
-                                        fontSize: 20
-                                    }}>
+                                    style={styles.discontinueUpdateBtnTxt}>
                                     {isDiscontinued ? translations.update : translations.logout}
                                 </TextView>
                             </TouchableOpacity>}
@@ -423,5 +419,10 @@ const appErrorStyles = {
         marginTop: 15,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+
+    discontinueUpdateBtnTxt: {
+        fontWeight: 'bold',
+        fontSize: 20
     }
 };

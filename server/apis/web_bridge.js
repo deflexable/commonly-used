@@ -1,5 +1,6 @@
 import { COMMON_OBJECT_EXTRACTIONS, DbPath } from "core/common_values";
 import { simplifyCaughtError } from "simplify-error";
+import { callInternalApi } from "../monkey_patch_mhttp";
 import importer from "../importer";
 
 const { INTER_SERVER_PASSKEY } = await importer('./env.js');
@@ -24,7 +25,7 @@ mserver.listenHttpsRequest('server_bridging', async (req, res) => {
         let data;
         if (apiCommand) {
             const { route, obj } = apiCommand;
-            data = await globalThis.mosquitoApis[route](obj);
+            data = await callInternalApi(route, obj);
         } else if (mserverCommand) {
             const { executor, info } = mserverCommand;
             data = await new AsyncFunction('server', `return (${executor})(server)`)({

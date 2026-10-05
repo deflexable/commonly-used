@@ -74,11 +74,12 @@ export default function ({
     const { styles: pageStyles } = useStyle(pageStyling, pageFeeder);
     const { styles: barStyles } = useStyle(barStyling, barFeeder);
 
-    const pressBackBtn = useBackButton(() => {
-        if (canGoBack) {
-            webviewRef.current.goBack()
-        } else navigation.goBack();
-    }, !isFocused);
+    const pressBackBtn =
+        useBackButton(() => {
+            if (canGoBack) {
+                webviewRef.current.goBack()
+            } else navigation.goBack();
+        }, !isFocused);
 
     const addWebviewTask = (ref, script, timeout = 15_000) => new Promise((resolve, reject) => {
         const taskTimeout = setTimeout(() => {
@@ -115,7 +116,7 @@ export default function ({
             if (ignore) return;
             let baseColor;
 
-            console.log('computeWindowTheme res:', { domColor, bodyColor, barColor });
+            // console.log('computeWindowTheme res:', { domColor, bodyColor, barColor });
             try {
                 baseColor = bodyColor || (domColor === 'rgba(0, 0, 0, 0)' ? undefined : domColor);
 
@@ -135,7 +136,7 @@ export default function ({
                 setBarDark();
             }
         } catch (error) {
-            console.log('computeWindowTheme err:', error);
+            // console.log('computeWindowTheme err:', error);
             setBarColor();
             setPageDark();
         }
@@ -251,7 +252,7 @@ export default function ({
                     <WebView
                         {...webProps}
                         ref={webviewRef}
-                        style={pageStyles.flexer}
+                        style={pageStyles.webView}
                         source={{ uri }}
                         cacheEnabled
                         originWhitelist={['*']}
@@ -320,6 +321,11 @@ const pageStyling = {
     filler: {
         width: '100%',
         height: '100%'
+    },
+
+    webView: {
+        flex: 1,
+        backgroundColor: 'transparent'
     },
 
     main: commonAppBarStyle.main

@@ -201,16 +201,16 @@ const styles = {
     imageContent: { width: '100%', height: '100%' }
 };
 
-
 /**
  * @typedef {object} FullscreenImageParams
  * @property {{placeholder?: string | undefined, src: string, dim?: [number, number]}} [item]
- * @property {number | undefined} [initialIndex]
  */
 
 /**
- * @param {{item: FullscreenImageParams['item'] | FullscreenImageParams['item'][], initialIndex?: FullscreenImageParams['initialIndex']}} param0 
+ * 
+ * @param {FullscreenImageParams['item'] | FullscreenImageParams['item'][]} item 
+ * @param {number | undefined} initialIndex 
  */
-export const openFullscreenImage = ({ item, initialIndex }) => {
+export const openFullscreenImage = (item, initialIndex) => {
     app_navigator.navigate('ImageFullscreen', { item, initialIndex });
 }
