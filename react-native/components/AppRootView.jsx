@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Image, Linking, Platform, StatusBar, TouchableOpacity, View } from 'react-native';
+import { AppState, Image, Linking, Platform, StatusBar, TouchableOpacity, View } from 'react-native';
 import { APP_NAME, WEB_BASE_URL, CURRENT_APP_VERSION } from '@/env';
 import { getAnalytics, logEvent } from '@react-native-firebase/analytics';
 import { getCrashlytics, log as logCrashlytics } from '@react-native-firebase/crashlytics';
@@ -245,7 +245,13 @@ export default function useAppRootView({ user }) {
                                         n[currentScreen] = true;
                                         JSONCacher.EXPLORED_SCREENS = n;
                                     }
-                                    if (canPromptScreen.current && mserver.isOnline) onPromptScreen.current(currentScreen);
+                                    if (
+                                        canPromptScreen.current &&
+                                        mserver.isOnline &&
+                                        AppState.currentState === 'active'
+                                    ) {
+                                        onPromptScreen.current(currentScreen);
+                                    }
                                 }}>
                                 <StackScreen.Navigator
                                     screenOptions={{
@@ -307,11 +313,8 @@ const AppErrorElement = ({ isMachineBanned, isDiscontinued }) => {
             .then(async r => {
                 setLocaleData(await r.json());
             })
-            .catch(e => {
-                onCloseModal?.();
-                alertError(e);
-            });
-    }, [lang]);
+            .catch(alertError);
+    }, [lang, !isMachineBanned, !isDiscontinued]);
 
 
     if (!localeData) return <PageLoader />;
@@ -337,14 +340,14 @@ const AppErrorElement = ({ isMachineBanned, isDiscontinued }) => {
                         </TextView>
 
                         <Image
+                            style={styles.image}
                             source={
                                 isMachineBanned
                                     ? require('@/src/assets/blocked.png')
                                     : isDiscontinued
                                         ? require('@/src/assets/updating.png')
                                         : require('@/src/assets/user_blocked.png')
-                            }
-                            style={styles.image} />
+                            } />
 
                         <TextView style={styles.discontinueDes}>
                             {isMachineBanned
