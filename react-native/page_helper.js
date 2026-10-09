@@ -164,7 +164,7 @@ export const useGridSpacing = ({ grid, spacing, maxWidth, forceCheck }) => {
     const dim = useWindowDimensions();
 
     return useMemo(() => {
-        return createGridSpacing({ grid, spacing })(dim.width, maxWidth);
+        return { ...createGridSpacing({ grid, spacing })(dim.width, maxWidth), windowWidth: dim.width };
     }, [spacing, dim.width, ...forceCheck ? [grid, maxWidth] : typeof maxWidth === 'function' ? [] : [maxWidth]]);
 }
 

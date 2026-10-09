@@ -1,5 +1,4 @@
-import { GoogleSignIn } from "@thoughtbot/react-native-social-auth/src/google/GoogleSignIn";
-import { GoogleSignInErrorCode } from "@thoughtbot/react-native-social-auth/src/google/errors";
+import { GoogleSignIn, GoogleSignInErrorCode } from "@thoughtbot/react-native-social-auth";
 import { simplifyError } from "simplify-error";
 
 export const GoogleSigninCancelledSignal = Symbol('cancelled_error');

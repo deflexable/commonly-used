@@ -10,12 +10,14 @@ import { useDarkMode } from "../theme_helper";
  * @property {number} [forceSize]
  * @property {boolean} [bold]
  * @property {boolean} [center]
+ * @property {number | number[]} [margin]
+ * @property {number | number[]} [padding]
  */
 
 /**
  * @type {React.FC<React.ComponentProps<typeof import('react-native').Text> & TextExtraProps>}
  */
-const TextView = ({ children, style, invertColor, forceColor, forceSize, bold, center, ...props }) => {
+const TextView = ({ children, style, invertColor, forceColor, forceSize, bold, center, margin, padding, ...props }) => {
     const isDarkMode = useDarkMode();
 
     const thisStyle = useMemo(() => ({
@@ -24,8 +26,10 @@ const TextView = ({ children, style, invertColor, forceColor, forceSize, bold, c
         ...forceColor ? { color: forceColor } : {},
         ...forceSize ? { fontSize: forceSize } : {},
         ...bold === undefined ? {} : { fontWeight: 'bold' },
-        ...center === undefined ? {} : { textAlign: 'center' }
-    }), [invertColor, style, isDarkMode, forceColor, forceSize, bold, center]);
+        ...center === undefined ? {} : { textAlign: 'center' },
+        ...margin === undefined ? {} : transformSpacing('margin', margin),
+        ...padding === undefined ? {} : transformSpacing('padding', padding)
+    }), [invertColor, style, isDarkMode, forceColor, forceSize, bold, center, `${margin}`, `${padding}`]);
 
     return (
         <Text
@@ -35,7 +39,26 @@ const TextView = ({ children, style, invertColor, forceColor, forceSize, bold, c
             {children}
         </Text>
     )
-}
+};
+
+const transformSpacing = (node, value = []) =>
+    !Array.isArray(value)
+        ? ({ [node]: value }) :
+        value.length === 1
+            ? ({ [`${node}Top`]: value[0] }) :
+            value.length === 2 ? ({
+                [`${node}Vertical`]: value[0],
+                [`${node}Horizontal`]: value[1]
+            }) :
+                (value.length === 3 || value.length === 4)
+                    ? ({
+                        [`${node}Top`]: value[0],
+                        [`${node}Right`]: value[1],
+                        [`${node}Bottom`]: value[2],
+                        ...value.length === 4 ? { [`${node}Left`]: value[3] } : {}
+                    }) : (() => {
+                        throw `invalid ${node} with value ${value}`;
+                    })();
 
 export default TextView;
 
