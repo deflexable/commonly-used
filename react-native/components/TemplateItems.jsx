@@ -94,9 +94,10 @@ export const EmptyLogo = ({ message, messageStyle, des, onPressTxt, onPress, onP
 
     return (
         <View style={conStyle}>
-            <Image
-                source={src || EmptySpace}
-                style={imgStyle} />
+            {(src || EmptySpace) ?
+                <Image
+                    source={src || EmptySpace}
+                    style={imgStyle} /> : null}
             <TextView style={mstyle}>
                 {message || translations.no_result_found}
             </TextView>
@@ -124,7 +125,7 @@ export const EmptyLogo = ({ message, messageStyle, des, onPressTxt, onPress, onP
     );
 };
 
-const emptyStying = {
+export const emptyStying = {
     baseTxt: {
         fontWeight: 'bold',
         fontSize: 25,
@@ -132,7 +133,8 @@ const emptyStying = {
         marginTop: 7,
         color: Colors.gray,
         fontStyle: 'italic',
-        marginHorizontal: 15
+        marginHorizontal: 15,
+        textTransform: 'capitalize'
     },
 
     baseInfoCon: { alignItems: 'center' },

@@ -269,7 +269,7 @@ export default function useAppRootView({ user }) {
                                 backgroundOpacity={.65} /> : null}
                     </SnapSheetProvider>
                     <FancyPopup />
-                    {renderChild()}
+                    {renderChild?.()}
                 </SafeAreaProvider>
             </GestureHandlerRootView>
         );
