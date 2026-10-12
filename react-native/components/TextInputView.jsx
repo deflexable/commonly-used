@@ -20,7 +20,7 @@ const TextInputView = forwardRef(function TextInputView({ style, invertColor, fo
         <TextInput
             ref={ref}
             allowFontScaling={!JSONCacher.USER_SETTINGS?.no_scale_font}
-            placeholderTextColor={isDarkMode ? 'gray' : undefined}
+            placeholderTextColor={isDarkMode ? 'rgb(180, 180, 180)' : undefined}
             keyboardAppearance={isDarkMode ? 'dark' : 'light'}
             dodge_keyboard_input
             autoComplete="off"
