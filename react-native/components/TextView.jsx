@@ -21,9 +21,13 @@ const TextView = ({ children, style, invertColor, forceColor, forceSize, bold, c
     const isDarkMode = useDarkMode();
 
     const thisStyle = useMemo(() => ({
-        ...forceColor ? {} : { color: isDarkMode ? invertColor ? 'black' : 'white' : invertColor ? 'white' : 'black' },
+        ...forceColor ? {} : { color: isDarkMode ? 'white' : 'black' },
         ...StyleSheet.flatten(style),
-        ...forceColor ? { color: forceColor } : {},
+        ...forceColor
+            ? { color: forceColor }
+            : invertColor === undefined
+                ? {}
+                : { color: isDarkMode ? invertColor ? 'black' : 'white' : invertColor ? 'white' : 'black' },
         ...forceSize ? { fontSize: forceSize } : {},
         ...bold === undefined ? {} : { fontWeight: 'bold' },
         ...center === undefined ? {} : { textAlign: 'center' },

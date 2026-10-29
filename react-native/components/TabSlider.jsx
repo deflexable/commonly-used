@@ -1,4 +1,4 @@
-import { Animated, FlatList, Text, TouchableOpacity, useAnimatedValue, View } from "react-native";
+import { Animated, FlatList, Text, TouchableOpacity, useAnimatedValue, useWindowDimensions, View } from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { themeStyle, useStyle } from "./../page_helper";
 
@@ -16,8 +16,11 @@ export default function ({
     onTabIndexChange
 }) {
     const { styles } = useStyle(styling);
-    const { width: vw } = useWindowDimensions();
-    if (windowWidth === undefined) windowWidth = vw;
+
+    if (windowWidth === undefined) {
+        const { width: vw } = useWindowDimensions();
+        windowWidth = vw;
+    }
 
     const [currentSlide, setCurrentSlide] = useState(tabIndex);
     const [__, refreshState] = useState();
@@ -78,27 +81,28 @@ export default function ({
         onTabIndexChange?.(currentSlide);
     }, [currentSlide]);
 
-    const tabbarConStyle = useMemo(() => {
-        return [{ height: 45 }, tabBarStyle];
-    }, [tabBarStyle]);
+    const tabbarConStyle =
+        useMemo(() => {
+            return [{ height: 45 }, tabBarStyle];
+        }, [tabBarStyle]);
 
-    const slideItemConStyle = useMemo(() => {
-        return { width: windowWidth, height: '100%' };
-    }, [windowWidth]);
+    const slideItemConStyle =
+        useMemo(() => {
+            return { width: windowWidth, height: '100%' };
+        }, [windowWidth]);
 
-    const indicatorStyle = useMemo(() => {
-        return [
-            {
+    const indicatorStyle =
+        useMemo(() => {
+            return {
                 width: useStatic ? '100%' : indicatorWidth,
                 height: 3,
                 position: 'absolute',
                 bottom: 0,
                 backgroundColor: indicatorColor || 'burlywood',
-                borderRadius: 15
-            },
-            useStatic ? { left: 0 } : { transform: [{ translateX: indicatorTranslateX }] }
-        ];
-    }, [useStatic, indicatorWidth, indicatorColor, indicatorTranslateX]);
+                borderRadius: 15,
+                ...useStatic ? { left: 0 } : { transform: [{ translateX: indicatorTranslateX }] }
+            };
+        }, [useStatic, indicatorWidth, indicatorColor, indicatorTranslateX]);
 
     return (
         <View style={styles.flexer}>

@@ -23,6 +23,7 @@ export default function ({ route: { params: { date, onDate, maximumValue, minimu
                 modalBackGround={PlainModalBG}
                 modalHeight={320 + insets.bottom}
                 centered={centered}
+                __forceDisableDodging
                 keyboardDodgingBehaviour="off">
                 <Template
                     dodge_keyboard_scan_off

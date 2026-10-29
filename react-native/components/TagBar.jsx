@@ -42,7 +42,7 @@ export default function ({ tagsList = [], selectedIndex, onChangeTag, renderEndI
 
 const CommonBtnStyle = {
     alignSelf: 'flex-start',
-    paddingVertical: 5,
+    paddingVertical: 7,
     paddingHorizontal: 12,
     marginRight: 10,
     marginTop: 10,
@@ -80,7 +80,7 @@ const tabBarStyle = {
     },
 
     btnTxt: {
-        fontSize: 13,
+        fontSize: 14,
         fontWeight: 'bold'
     }
 };

@@ -50,9 +50,10 @@ export const convertByteToWord = (bytes) => {
     return (gb < 10 ? roundToDecimalPlace(gb) : Math.round(gb)) + 'GB';
 };
 
-export const wait = (ms = 1000) => new Promise(resolve => {
-    setTimeout(resolve, ms);
-});
+export const wait = (ms = 1000) =>
+    new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
 
 export const formatTimeCounter = (ms = 0) => {
     const bomb = s => ((s + '').length > 1 ? s : ('0' + s));
