@@ -14,13 +14,13 @@ export function parseToTimezone(when, tz) {
     return new Date(year, month - 1, day, hour, minute, second);
 }
 
-export function getATZ(tz) {
+export function getATZ(tz, date = new Date()) {
     try {
-        const date = new Date();
-        const formatter = new Intl.DateTimeFormat('en-US', {
-            timeZone: tz,
-            timeZoneName: 'short'
-        });
+        const formatter =
+            new Intl.DateTimeFormat('en-US', {
+                timeZone: tz,
+                timeZoneName: 'short'
+            });
 
         const parts = formatter.formatToParts(date);
         let result = '';
