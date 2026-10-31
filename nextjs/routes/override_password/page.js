@@ -34,6 +34,7 @@ export default async function ({ params, searchParams }) {
         <ClientPage
             page_data={result}
             locale={loader.main_locale}
+            isNative={loader.url_instance.searchParams.get('native') === 'yes'}
         />
     );
 }

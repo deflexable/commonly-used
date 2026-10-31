@@ -10,8 +10,7 @@ import firebase_app from '../../firebase_app';
 import { simplifyCaughtError } from 'simplify-error';
 import { ClickableImg } from '../../components/ClickableDiv/ClickableDiv';
 
-export default function ({ page_data: { errorData, data }, locale }) {
-
+export default function ({ page_data: { errorData, data }, locale, isNative }) {
     const [isPageLoading, setPageLoading] = useState(),
         [isPasswordValid, setPasswordValid] = useState(),
         [overrideSuccess, setOverrideSuccess] = useState(),
@@ -50,7 +49,15 @@ export default function ({ page_data: { errorData, data }, locale }) {
                 value: data.email.trim()
             });
 
-            await auth().customSignin(data.email.trim(), newPassword);
+            if (isNative) {
+                window?.ReactNativeWebView?.postMessage?.(
+                    JSON.stringify({
+                        action: 'native-signin',
+                        email: data.email,
+                        password: newPassword
+                    })
+                );
+            } else await auth().customSignin(data.email.trim(), newPassword);
 
             setPageLoading(false);
             setOverrideSuccess(true);
@@ -148,7 +155,7 @@ export default function ({ page_data: { errorData, data }, locale }) {
                                             required
                                             placeholder={locale.enter_new_password}
                                             id='password-auth-input'
-                                            disabled={isPageLoading}
+                                            disabled={!!isPageLoading}
                                             onChange={e => {
                                                 if (typeof isPasswordValid === 'boolean')
                                                     setPasswordValid(checkValidForm(e.currentTarget.value.trim()));
