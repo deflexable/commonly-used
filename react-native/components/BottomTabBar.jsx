@@ -18,6 +18,7 @@ function TabNavigator({
     renderBarItemStart,
     renderBarItemEnd,
     onScreenFocused,
+    onPressTab,
     children
 }) {
     const { state, descriptors, navigation, NavigationContent } = useNavigationBuilder(TabRouter, { ...navigationOption, children });
@@ -41,6 +42,7 @@ function TabNavigator({
             renderBarItem={renderBarItem}
             renderBarItemStart={renderBarItemStart}
             renderBarItemEnd={renderBarItemEnd}
+            onPressTab={onPressTab}
         />;
 
     const [screenStyleActive, screenStyleInActive] = useMemo(() => {
@@ -91,7 +93,7 @@ function TabNavigator({
 
 export const createFlexibleTab = createNavigatorFactory(TabNavigator);
 
-function TabBarPlacement({ state, navigation, style, itemStyle, renderBarItem, renderBarItemStart, renderBarItemEnd }) {
+function TabBarPlacement({ state, navigation, style, itemStyle, renderBarItem, renderBarItemStart, renderBarItemEnd, onPressTab }) {
 
     return (
         <View style={style || styling.barCon}>
@@ -104,6 +106,16 @@ function TabBarPlacement({ state, navigation, style, itemStyle, renderBarItem, r
                         <TouchableOpacity
                             style={itemStyle || styling.barItem}
                             onPress={() => {
+                                let prevented;
+
+                                onPressTab?.({
+                                    index,
+                                    preventDefault: () => {
+                                        prevented = true;
+                                    }
+                                });
+
+                                if (prevented) return;
                                 navigation.dispatch({
                                     ...TabActions.jumpTo(route.name),
                                     target: state.key

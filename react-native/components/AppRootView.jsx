@@ -121,13 +121,12 @@ export default function useAppRootView({ user }) {
         const handleFcmEvent = async event => {
             console.log('handleFcmEvent event:', event);
             const { link, nodeId, targetUid } = event?.data || {};
-            let thisUid;
 
             if (
                 targetUid &&
-                (targetUid !== (thisUid = (await auth().getAuth()).uid))
+                (targetUid !== (await auth().getAuth())?.uid)
             ) {
-                console.log('skipped fcm:', { thisUid, targetUid });
+                console.log('skipped target user fcm:', targetUid);
                 return;
             }
 
@@ -145,28 +144,43 @@ export default function useAppRootView({ user }) {
         const fcmListener = onNotificationOpenedApp(getMessaging(), handleFcmEvent);
 
         const foregroundFcmListener =
-            onMessage(getMessaging(), event => {
-                // const { targetUid, ref: key, action, title, body, subText, profilePic, templatedImage, overridenNotification } = data;
-                // TODO: do in-app toast
+            onMessage(getMessaging(), async event => {
                 console.log('foregroundFcmListener event:', event);
                 const { data, notification } = event;
-                const alertion = data?.alertion;
+                const { targetUid, alertion, nodeId, link } = data || {};
 
-                if (alertion) {
-                    const { title, body } = notification || {};
-                    const { positiveLink, negativeLink, positive, negative } = Validator.OBJECT(alertion) ? alertion : {};
-                    const onPositive = () => {
-                        if (positiveLink === false) return;
-                        handleLink(positiveLink || data?.link);
-                    }
+                if (!alertion) return;
 
-                    if (negativeLink) {
-                        alertDialog(`${title}`, `${body}`, onPositive, () => {
-                            handleLink(negativeLink);
-                        }, positive || locales.view || 'View', negative || locales.dismiss || 'Dismiss', false);
-                    } else {
-                        alertNull(`${title}`, `${body}`, onPositive, positive || locales.view || 'View', true);
-                    }
+                if (
+                    targetUid &&
+                    (targetUid !== (await auth().getAuth())?.uid)
+                ) {
+                    console.log('skipped target user fcm:', targetUid);
+                    return;
+                }
+
+                const viewAlert = (to) => {
+                    handleLink(to);
+
+                    if (nodeId)
+                        collection(DbPath.myNotification).updateOne({ _id: nodeId }, {
+                            $unset: { unread: true }
+                        });
+                }
+
+                const { title, body } = notification || {};
+                const { positiveLink, negativeLink, positive, negative } = Validator.OBJECT(alertion) ? alertion : {};
+                const onPositive = () => {
+                    if (positiveLink === false) return;
+                    viewAlert(positiveLink || link);
+                }
+
+                if (negativeLink) {
+                    alertDialog(`${title}`, `${body}`, onPositive, () => {
+                        viewAlert(negativeLink);
+                    }, positive || locales.view || 'View', negative || locales.dismiss || 'Dismiss', false);
+                } else {
+                    alertNull(`${title}`, `${body}`, onPositive, positive || locales.view || 'View', true);
                 }
             });
 
