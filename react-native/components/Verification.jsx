@@ -6,7 +6,7 @@ import TextView from "./TextView";
 import { useTranslation } from '../locale';
 import { Scope } from "@/src/utils/scope";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { auth, fetchHttp } from "../client_server";
+import { auth, fetchHttp, mserver } from "../client_server";
 import { simplifyCaughtError } from "simplify-error";
 import { Back } from "@/src/utils/assets";
 import { alertDialog, alertNull, useStyle } from "../page_helper.js";
@@ -112,7 +112,7 @@ export default function () {
                         {translations.check_your_inbox}
                     </TextView>
                     <TextView style={styles.inboxDes}>
-                        {`${translations.sent_verification_email_prefix} ${Scope.user?.email}, ${translations.sent_verification_email_suffix}`}
+                        {`${translations.sent_verification_email_prefix} ${mserver.user?.email}. ${translations.sent_verification_email_suffix}`}
                     </TextView>
                     {deviceCode ?
                         <TextView style={styles.deviceCodeTxt}>

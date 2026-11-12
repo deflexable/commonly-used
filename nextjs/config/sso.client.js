@@ -4,7 +4,7 @@ import "../client_server";
 import { deserializeStorage, serializeStorage, SSO_Resolution } from "../cacher";
 import { isBrowser } from "../is_browser";
 import { useEffect, useRef } from "react";
-import { onUserThemeChanged, useDarkMode } from "../theme_helper";
+import { useDarkMode } from "../theme_helper";
 import { appendScriptSrc, updateCookie } from "../methods.client";
 import { auth } from "../client_server";
 import { parseToken } from 'mosquito-transport-js';
@@ -72,8 +72,6 @@ export default function SSOClient({ serverTime, theme_config, timezone, machineC
         const iframe = document.getElementById('sso-auth-iframe');
         if (iframe) iframe.contentWindow.postMessage({ __check_ready: true }, '*');
 
-        if (!userId) onUserThemeChanged(theme_config.value);
-
         const thisTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
         if (timezone !== thisTZ) {
             updateCookie('tz', thisTZ || null);
@@ -87,72 +85,74 @@ export default function SSOClient({ serverTime, theme_config, timezone, machineC
         let lastEntity = userEntity || null;
         let lastTokenId = userTokenId || null;
 
-        const authTokenListener = auth().listenAuthToken(async token => {
-            AuthScope.token = token;
-            const tokenData = token && parseToken(token);
-            const thisEntity = tokenData?.entityOf || null;
-            const thisTokenId = tokenData?.tokenID || null;
+        const authTokenListener =
+            auth().listenAuthToken(async token => {
+                AuthScope.token = token;
+                const tokenData = token && parseToken(token);
+                const thisEntity = tokenData?.entityOf || null;
+                const thisTokenId = tokenData?.tokenID || null;
 
-            const enableReload =
-                !['/email_validation/', '/pay/'].some(v => location.pathname.startsWith(v)) &&
-                !shouldIgnoreReloads.current;
+                const enableReload =
+                    !['/email_validation/', '/pay/'].some(v => location.pathname.startsWith(v)) &&
+                    !shouldIgnoreReloads.current;
 
-            if (lastEntity === thisEntity) {
-                if (lastTokenId !== thisTokenId) {
-                    await updateCookie('atoken', token);
-                }
-            } else {
-                await updateCookie('atoken', token, 'rtoken', await auth().getRefreshToken());
-                if (
-                    thisEntity && (
-                        ['/auth'].includes(location.pathname) ||
-                        ['/auth'].some(v => isLangRoute(v, location.pathname)) ||
-                        ['/override_password/'].some(v => location.pathname.startsWith(v))
-                    )
-                ) {
-                    const url_instance = new URL(location.href);
-                    const redoUrl = stripLangFromUrl(decodeURIComponent(url_instance.searchParams.get('redirect') || ''));
-
-                    if (enableReload) location.href = redoUrl || '/';
-                } else if (enableReload) {
-                    location.reload();
-                }
-                return;
-            }
-
-            if (tokenData && enableReload) {
-                if (tokenData.disabled) {
-                    if (location.pathname !== '/suspended') {
-                        location.reload();
+                if (lastEntity === thisEntity) {
+                    if (lastTokenId !== thisTokenId) {
+                        await updateCookie('atoken', token);
                     }
                 } else {
-                    if (location.pathname === '/suspended') {
+                    await updateCookie('atoken', token, 'rtoken', await auth().getRefreshToken());
+                    if (
+                        thisEntity && (
+                            ['/auth'].includes(location.pathname) ||
+                            ['/auth'].some(v => isLangRoute(v, location.pathname)) ||
+                            ['/override_password/'].some(v => location.pathname.startsWith(v))
+                        )
+                    ) {
+                        const url_instance = new URL(location.href);
+                        const redoUrl = stripLangFromUrl(decodeURIComponent(url_instance.searchParams.get('redirect') || ''));
+
+                        if (enableReload) location.href = redoUrl || '/';
+                    } else if (enableReload) {
                         location.reload();
-                    } else if (tokenData.authVerified) {
-                        if (location.pathname === '/verification') {
+                    }
+                    return;
+                }
+
+                if (tokenData && enableReload) {
+                    if (tokenData.disabled) {
+                        if (location.pathname !== '/suspended') {
                             location.reload();
                         }
                     } else {
-                        if (location.pathname !== '/verification') {
+                        if (location.pathname === '/suspended') {
                             location.reload();
+                        } else if (tokenData.authVerified) {
+                            if (location.pathname === '/verification') {
+                                location.reload();
+                            }
+                        } else {
+                            if (location.pathname !== '/verification') {
+                                location.reload();
+                            }
                         }
                     }
                 }
-            }
-            lastEntity = thisEntity;
-            lastTokenId = thisTokenId;
-        });
+                lastEntity = thisEntity;
+                lastTokenId = thisTokenId;
+            });
 
         let settingsListener;
-        const authListener = auth().listenAuth(user => {
-            AuthScope.uid = user?.uid;
-            console.log('currentUser: ', user?.uid, ' machineCode: ', machineCode);
-            settingsListener?.();
+        const authListener =
+            auth().listenAuth(user => {
+                AuthScope.uid = user?.uid;
+                console.log('currentUser: ', user?.uid, ' machineCode: ', machineCode);
+                settingsListener?.();
 
-            setUserId(getAnalytics(firebase_app), user?.uid || null);
-            if (!user || !user.authVerified) return;
-            settingsListener = loadUserConfig();
-        });
+                setUserId(getAnalytics(firebase_app), user?.uid || null);
+                if (!user || !user.authVerified) return;
+                settingsListener = loadUserConfig();
+            });
 
         return () => {
             authTokenListener?.();

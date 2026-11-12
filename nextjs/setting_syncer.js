@@ -5,33 +5,26 @@ import { onUserThemeChanged } from "./theme_helper";
 import { internal_keys, listeners } from "./listeners";
 import { useSearchParams } from "next/navigation";
 import { shouldBe } from "./methods.dual";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+
+const DefaultTheme = shouldBe(process.env.NEXT_PUBLIC_DEFAULT_THEME, ['light', 'dark']);
 
 export const useUserConfig = () => {
     const search = useSearchParams();
     const theme = shouldBe(search.get('theme'), ['light', 'dark']);
 
-    const realTheme = useRef();
-
     const trigger = () => {
-        const o = WEB_STATE.prefferedSettingsValue;
-        if (!o) return;
-        WEB_STATE.prefferedSettingsValue = {
-            ...o,
-            theme: theme || realTheme.current
-        };
-        onUserThemeChanged(WEB_STATE.prefferedSettingsValue?.theme);
-        listeners.dispatch(internal_keys.PREFFED_SETTINGS, {
-            ...WEB_STATE.prefferedSettingsValue
-        });
+        onUserThemeChanged(theme || WEB_STATE.prefferedSettingsValue?.theme || DefaultTheme);
     }
 
     useEffect(trigger, [theme]);
 
     return () =>
-        collection(DbPath.prefferedSettings).findOne({ _id: AuthScope.uid }).listen(l => {
-            realTheme.current = l?.theme;
-            WEB_STATE.prefferedSettingsValue = { ...l };
-            trigger();
-        });
+        collection(DbPath.prefferedSettings)
+            .findOne({ _id: AuthScope.uid })
+            .listen(l => {
+                WEB_STATE.prefferedSettingsValue = { ...l };
+                trigger();
+                listeners.dispatch(internal_keys.PREFFED_SETTINGS, { ...l });
+            });
 }

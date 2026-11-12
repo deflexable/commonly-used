@@ -81,6 +81,8 @@ export const getLoaderData = async (context) => {
     }
 };
 
+const DefaultTheme = shouldBe(process.env.NEXT_PUBLIC_DEFAULT_THEME, ['light', 'dark']);
+
 /**
  * @typedef {object} LoaderResult
  * @property {{ data: {}, value?: string | undefined, name: string, query?: string | undefined }} [locale]
@@ -137,10 +139,11 @@ export const installLoaderData = async (options) => {
         try {
             if (atoken && rtoken)
                 userObj = await executeMserver(async ({ mserver, info: { atoken, rtoken }, DbPath }) => {
-                    const [user, ruser] = await Promise.all([
-                        mserver.verifyToken(atoken),
-                        mserver.validateToken(rtoken, true)
-                    ]);
+                    const [user, ruser] =
+                        await Promise.all([
+                            mserver.verifyToken(atoken),
+                            mserver.validateToken(rtoken, true)
+                        ]);
                     if (user.uid !== ruser.uid) throw 'token uid mismatch';
                     if (user.entityOf !== ruser.tokenID) throw 'token entity mismatch';
 
@@ -238,7 +241,14 @@ export const installLoaderData = async (options) => {
             },
             main_locale: mainLocale,
             theme_config: {
-                init_dark: userTheme ? userTheme === 'dark' : !getThemeDateContext(timezone, req_timezone).isDayLight,
+                init_dark:
+                    userTheme
+                        ? userTheme === 'dark'
+                        : (
+                            DefaultTheme === undefined
+                                ? !getThemeDateContext(timezone, req_timezone).isDayLight
+                                : DefaultTheme === 'dark'
+                        ),
                 value: userTheme,
                 query: queryTheme
             },
