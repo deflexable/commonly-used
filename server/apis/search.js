@@ -4,10 +4,9 @@ import { simplifyCaughtError } from 'simplify-error';
 import ip_lookup from '../ip_lookup.js';
 import importer from '../importer.js';
 
-const { default: mserver, collection, ensureVerifiedAuth } = await importer('./mserver.js');
+const { default: mserver, collection } = await importer('./mserver.js');
 
 mserver.listenHttpsRequest(Endpoints.wordSuggestion, async (req, res, user) => {
-    if (user) ensureVerifiedAuth(user);
     try {
         guardObject({ word: GuardSignal.STRING }).validate(req.body);
 

@@ -74,6 +74,8 @@ mserver.listenHttpsRequest(Endpoints.resetPassword, async (req, res) => {
         });
         if (IS_DEV) throw e;
     }
+}, {
+    allowUnverifiedAuth: true
 });
 
 mserver.listenHttpsRequest(Endpoints.updatePassword, async (req, res) => {
@@ -98,6 +100,8 @@ mserver.listenHttpsRequest(Endpoints.updatePassword, async (req, res) => {
             ...simplifyCaughtError(e)
         });
     }
+}, {
+    allowUnverifiedAuth: true
 });
 
 mserver.listenHttpsRequest(Endpoints.getPasswordAction, async (req, res) => {

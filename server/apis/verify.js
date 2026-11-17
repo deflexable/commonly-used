@@ -49,6 +49,8 @@ mserver.listenHttpsRequest(Endpoints.createVerificationEmail, async (req, res, u
         res.status(500).send(simplifyCaughtError(e));
         throw e;
     }
+}, {
+    allowUnverifiedAuth: true
 });
 
 mserver.listenHttpsRequest(Endpoints.validateEmail, async (req, res) => {
@@ -105,6 +107,8 @@ mserver.listenHttpsRequest(Endpoints.validateEmail, async (req, res) => {
     }
 
     res.status(200).send({ validated, expired, alreadyVerified });
+}, {
+    allowUnverifiedAuth: true
 });
 
 let doWelcomeEmail = async () => ({ filepath: 'welcome_email.html' });
