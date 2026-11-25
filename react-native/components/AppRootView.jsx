@@ -147,7 +147,14 @@ export default function useAppRootView({ user }) {
             onMessage(getMessaging(), async event => {
                 console.log('foregroundFcmListener event:', event);
                 const { data, notification } = event;
-                const { targetUid, alertion, nodeId, link } = data || {};
+                const { targetUid, nodeId, link } = data || {};
+
+                let alertion;
+
+                try {
+                    if (data.alertion)
+                        alertion = JSON.parse(data.alertion);
+                } catch (_) { }
 
                 if (!alertion) return;
 

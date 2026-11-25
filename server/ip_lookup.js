@@ -1,11 +1,11 @@
 
 const DEFAULT_OBJ = {
     fake: true,
-    country: 'NG',
-    timezone: 'Africa/Lagos',
-    city: 'Lagos',
-    ll: [6.4474, 3.3903]
-};
+    country: 'US',
+    timezone: 'America/New_York',
+    city: 'New York',
+    ll: [40.7128, -74.0060]
+}
 
 export default function ip_lookup(headers) {
     const obj = {};

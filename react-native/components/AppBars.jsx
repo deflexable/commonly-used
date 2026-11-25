@@ -4,6 +4,7 @@ import { themeStyle, useStyle } from '../page_helper';
 import { Colors } from '@/src/utils/values';
 import NoInternetBanner from './NoInternetBanner';
 import StatusBarColor from './StatusBarColor';
+import TextView from "./TextView";
 
 export const AppTitleBar = function ({
   leading,
@@ -79,7 +80,13 @@ export const AppTitleBar = function ({
 
         <View style={tabbarContStyle}>
           {renderSideView(leading, leftSizing, setLeftSizing)}
-          <View style={tabbarTitleStyle}>{title}</View>
+          <View style={tabbarTitleStyle}>
+            {typeof title === 'string'
+              ? <TextView style={styles.screenTitle}>
+                {title}
+              </TextView>
+              : title}
+          </View>
           {renderSideView(trailing, rightSizing, setRightSizing, { right: 0 })}
         </View>
       </View>
@@ -111,6 +118,11 @@ const appTitleBarStyle = {
     flex: 1,
     marginHorizontal: 14,
     justifyContent: 'center'
+  },
+
+  screenTitle: {
+    fontSize: 17,
+    fontWeight: 'bold'
   }
 };
 
